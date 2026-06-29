@@ -1,0 +1,33 @@
+node_modules/
+dist/
+work/
+src-tauri/target/
+src-tauri/gen/
+*.tsbuildinfo
+.DS_Store
+
+# Local Codex work, diagnostics, recordings, and backups
+.codex-backups/
+backups/
+artifacts/
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.mobileprovision
+netease-session*
+qqmusic-session.json*
+spotify-session.json*
+
+# Local diagnostics and packaged binaries
+*.log
+*.trace
+*.har
+*.app/
+*.dmg
+*.exe
+*.zip
