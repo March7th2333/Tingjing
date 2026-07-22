@@ -726,3 +726,743 @@
   contain: layout paint style;
   isolation: isolate;
 }
+
+.welcome__space-reveal-frame {
+  position: absolute;
+  z-index: 8;
+  top: var(--login-portal-top);
+  left: var(--login-portal-left);
+  width: var(--login-portal-seed-width);
+  height: var(--login-portal-seed-height);
+  border: 1px solid color-mix(
+    in srgb,
+    var(--theme-foreground) 22%,
+    transparent
+  );
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 0, 0) scale(1, 1);
+  transform-origin: left top;
+  backface-visibility: hidden;
+}
+
+.welcome__library-reveal {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  contain: layout paint style;
+}
+
+.welcome[data-phase="transitioning"] .welcome__space-reveal {
+  visibility: visible;
+  opacity: 1;
+  animation: login-portal-master var(--login-transition-master) linear both;
+  will-change: clip-path;
+}
+
+/* The Home environment is painted by the portal surface during the hand-off.
+   Keeping the page-level environment hidden prevents a second full-screen
+   fade outside the expanding window. It becomes irrelevant behind the opaque
+   full-screen portal at commit. */
+.welcome[data-phase="transitioning"] .welcome__library-environment {
+  opacity: 0;
+  transition: none;
+}
+
+.welcome[data-phase="library"] .welcome__space-reveal {
+  visibility: visible;
+  opacity: 1;
+  animation: none;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0) scale(1);
+  clip-path: inset(0 round 0);
+  will-change: auto;
+}
+
+.welcome[data-phase="transitioning"] .welcome__space-reveal-frame {
+  animation: login-space-frame-master var(--login-transition-master)
+    linear both;
+}
+
+.welcome[data-phase="transitioning"] .welcome__library-reveal {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: none;
+  animation: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.welcome[data-phase="library"] .welcome__library-reveal {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  animation: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.welcome[data-phase="transitioning"]
+  .welcome__library-reveal
+  .library-home {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: none;
+  animation: none;
+  transform: translate3d(0, 0, 0);
+}
+
+/* The Home instance is already at its stable RAF-authored coordinates inside
+   the portal. Only its inner visual surfaces reveal; slot transforms and
+   focus opacity remain untouched, so commit cannot resize or relight cards. */
+.welcome[data-phase="transitioning"]
+  .library-home__cover-slot[data-track-offset="0"]
+  .magazine-cover {
+  animation: login-home-center-master var(--login-transition-master)
+    linear both;
+}
+
+.welcome[data-phase="transitioning"]
+  .library-home__cover-slot[data-track-offset="-1"]
+  .magazine-cover,
+.welcome[data-phase="transitioning"]
+  .library-home__cover-slot[data-track-offset="1"]
+  .magazine-cover {
+  animation: login-home-side-master var(--login-transition-master)
+    linear both;
+}
+
+.welcome[data-phase="transitioning"] .library-home__topbar,
+.welcome[data-phase="transitioning"] .library-home__carousel-status,
+.welcome[data-phase="transitioning"] .library-home__intro,
+.welcome[data-phase="transitioning"] .library-home__caption {
+  animation: login-home-interface-master var(--login-transition-master)
+    linear both;
+}
+
+.welcome[data-phase="library"][data-login-transition="complete"]
+  .welcome__library-reveal {
+  visibility: visible;
+  opacity: 1;
+  animation: none;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Safety end-frame for the imperative/React hand-off. The normal code path
+   now writes `complete` only after the Library phase commits, but this keeps
+   the final frame continuous if a future caller commits the data attribute
+   first. */
+.welcome[data-phase="transitioning"][data-login-transition="complete"]
+  .welcome__space-reveal {
+  visibility: visible;
+  opacity: 1;
+  animation: none;
+  transform: translate3d(0, 0, 0) scale(1);
+  clip-path: inset(0 round 0);
+}
+
+.welcome[data-phase="transitioning"][data-login-transition="complete"]
+  .welcome__library-reveal {
+  visibility: visible;
+  opacity: 1;
+  animation: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.welcome[data-phase="transitioning"][data-login-transition="complete"]
+  .welcome__library-reveal
+  .library-home {
+  visibility: visible;
+  opacity: 1;
+  animation: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.welcome[data-phase="library"] .welcome__space-reveal-frame,
+.welcome[data-phase="transitioning"][data-login-transition="complete"]
+  .welcome__space-reveal-frame {
+  opacity: 0;
+  animation: none;
+}
+
+/* Space Reveal already authored the Home entrance. The legacy carousel
+   entrance rules must not replay when the stable library phase is committed. */
+.welcome[data-phase="library"][data-login-transition="complete"]
+  .welcome__library-reveal
+  .library-home__cover-slot {
+  animation: none;
+}
+
+.scan-transition {
+  position: fixed;
+  z-index: 12;
+  width: var(--scan-size);
+  height: var(--scan-size);
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: qr-merge-master var(--login-transition-master) linear both;
+}
+
+.scan-transition .mock-qr {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.88;
+  box-shadow: 0 10px 38px rgba(0, 0, 0, 0.2);
+  animation: qr-detail-master var(--login-transition-master) linear both;
+}
+
+.scan-transition__core {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border: 1px solid rgba(213, 213, 213, 0.45);
+  border-radius: 3px;
+  background: linear-gradient(145deg, #c7c7c7, #8d8d8d);
+  box-shadow:
+    0 0 20px rgba(178, 178, 178, 0.35),
+    0 0 58px rgba(133, 133, 133, 0.2);
+  opacity: 0;
+  animation: scan-core-master var(--login-transition-master) linear both;
+}
+
+.welcome[data-phase="transitioning"] .welcome__header,
+.welcome[data-phase="transitioning"] .welcome__footer {
+  animation: welcome-frame-exit-master var(--login-transition-master)
+    linear both;
+}
+
+.welcome[data-phase="transitioning"] .welcome__introduction,
+.welcome[data-phase="transitioning"] .welcome__daily-listening,
+.welcome[data-phase="transitioning"] .welcome__actions,
+.welcome[data-phase="transitioning"] .login-reveal,
+.welcome[data-phase="transitioning"] .welcome__status {
+  pointer-events: none;
+  animation: welcome-content-exit-master var(--login-transition-master)
+    linear both;
+}
+
+.welcome[data-phase="transitioning"] .login-reveal .mock-qr {
+  opacity: 0;
+}
+
+.welcome[data-phase="transitioning"] .login-reveal .provider-qr {
+  opacity: 0;
+}
+
+@keyframes provider-sync-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.welcome[data-phase="transitioning"] .brand-mark__square {
+  animation: logo-square-master var(--login-transition-master) linear both;
+}
+
+.welcome[data-phase="transitioning"] .brand-mark__echo {
+  animation: logo-echo-master var(--login-transition-master) linear both;
+}
+
+.welcome[data-phase="transitioning"] .brand-mark__ring {
+  animation: ring-release-master var(--login-transition-master) linear both;
+}
+
+.welcome[data-phase="transitioning"] .welcome__logo-wrap {
+  animation: logo-wrap-master var(--login-transition-master) linear both;
+}
+
+.welcome[data-phase="transitioning"] .welcome__ambient-light {
+  opacity: 0;
+}
+
+.welcome[data-phase="library"] .welcome__content,
+.welcome[data-phase="library"] .welcome__header,
+.welcome[data-phase="library"] .welcome__footer,
+.welcome[data-phase="library"] .welcome__ambient-light {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.welcome__library-reveal > .theme-settings {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 8px, 0);
+  transition:
+    opacity var(--motion-button) var(--motion-quiet),
+    transform var(--motion-button) var(--motion-snap);
+}
+
+.welcome[data-phase="transitioning"]
+  .welcome__library-reveal
+  > .theme-settings {
+  animation: login-home-interface-master var(--login-transition-master)
+    linear both;
+}
+
+.welcome[data-phase="library"]
+  .welcome__library-reveal
+  > .theme-settings {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+.welcome[data-phase="library"][data-login-transition="complete"]
+  .welcome__library-reveal
+  > .theme-settings {
+  transition: none;
+}
+
+@keyframes logo-focus {
+  from {
+    opacity: 0;
+    filter: blur(18px);
+    transform: scale(0.93);
+  }
+
+  58% {
+    opacity: 0.74;
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes welcome-frame-exit-master {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  20%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@keyframes welcome-content-exit-master {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  20%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes logo-wrap-master {
+  0%,
+  14% {
+    opacity: 1;
+  }
+
+  25%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes logo-square-master {
+  0%,
+  12% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  25%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1.18);
+  }
+}
+
+@keyframes logo-echo-master {
+  0%,
+  12% {
+    opacity: 1;
+    transform: translate3d(8px, -8px, 0) scale(1);
+  }
+
+  25%,
+  100% {
+    opacity: 0;
+    transform: translate3d(8px, -8px, 0) scale(1.14);
+  }
+}
+
+@keyframes ring-release-master {
+  0%,
+  10% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  25%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1.72);
+  }
+}
+
+@keyframes qr-merge-master {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translate3d(var(--scan-x), var(--scan-y), 0)
+      scale(var(--scan-target-scale));
+  }
+
+  25%,
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--scan-x), var(--scan-y), 0)
+      scale(var(--scan-target-scale));
+  }
+}
+
+@keyframes qr-detail-master {
+  0%,
+  10% {
+    opacity: 0.88;
+  }
+
+  22%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes scan-core-master {
+  0%,
+  12% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  25%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1.08);
+  }
+}
+
+/* The final-coordinate Home is revealed by the exact Logo boundary. One
+   inset interpolation owns the spatial hand-off, so no second page-scale
+   animation can start after the Logo disappears. */
+@keyframes login-portal-master {
+  0%,
+  5% {
+    clip-path: inset(
+      var(--login-portal-top)
+      var(--login-portal-right)
+      var(--login-portal-bottom)
+      var(--login-portal-left)
+      round 3px
+    );
+    animation-timing-function: cubic-bezier(0.22, 0.72, 0.16, 1);
+  }
+
+  38%,
+  100% {
+    clip-path: inset(0 round 0);
+  }
+}
+
+@keyframes login-space-frame-master {
+  0%,
+  5% {
+    opacity: 0.34;
+    transform: translate3d(0, 0, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.22, 0.72, 0.16, 1);
+  }
+
+  14% {
+    opacity: 0.14;
+  }
+
+  30% {
+    opacity: 0;
+    transform:
+      translate3d(
+        var(--login-portal-frame-x),
+        var(--login-portal-frame-y),
+        0
+      )
+      scale(
+        var(--login-portal-frame-scale-x),
+        var(--login-portal-frame-scale-y)
+      );
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate3d(
+        var(--login-portal-frame-x),
+        var(--login-portal-frame-y),
+        0
+      )
+      scale(
+        var(--login-portal-frame-scale-x),
+        var(--login-portal-frame-scale-y)
+      );
+  }
+}
+
+@keyframes login-library-surface-master {
+  0%,
+  28% {
+    opacity: 0;
+  }
+
+  34% {
+    opacity: 0.16;
+  }
+
+  58% {
+    opacity: 0.88;
+  }
+
+  70%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes login-home-center-master {
+  0%,
+  28% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.98);
+  }
+
+  48%,
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes login-home-side-master {
+  0%,
+  35% {
+    opacity: 0;
+  }
+
+  55%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes login-home-interface-master {
+  0%,
+  40% {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+
+  62%,
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes quiet-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes canvas-reveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-height: 700px) {
+  .brand-mark {
+    width: 108px;
+  }
+
+  .welcome__introduction {
+    margin-top: 5px;
+  }
+
+  .welcome__eyebrow {
+    margin-bottom: 9px;
+  }
+
+  .welcome__description {
+    margin-top: 7px;
+  }
+
+  .welcome__actions {
+    margin-top: 17px;
+  }
+
+  .button {
+    min-height: 41px;
+  }
+
+  .mock-qr {
+    width: 86px;
+    height: 86px;
+  }
+}
+
+@media (max-width: 640px) {
+  .welcome__edition {
+    display: none;
+  }
+
+  .welcome__header {
+    justify-content: space-between;
+  }
+
+  .welcome__content {
+    width: min(100% - 32px, 480px);
+  }
+
+  .welcome__footer {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome {
+    transition-duration: var(--motion-reduced);
+  }
+
+  .ambient-canvas,
+  .welcome__header,
+  .welcome__footer,
+  .welcome__logo-wrap,
+  .welcome__introduction,
+  .welcome__actions {
+    animation-duration: var(--motion-reduced);
+    animation-delay: 0ms;
+  }
+
+  .login-reveal,
+  .button {
+    transition-duration: var(--motion-reduced);
+  }
+
+  .login-reveal__pulse {
+    animation: none;
+  }
+
+  .welcome__library-environment {
+    transition-duration: var(--motion-reduced);
+  }
+
+  .welcome[data-phase="transitioning"] .welcome__header,
+  .welcome[data-phase="transitioning"] .welcome__footer,
+  .welcome[data-phase="transitioning"] .welcome__introduction,
+  .welcome[data-phase="transitioning"] .welcome__daily-listening,
+  .welcome[data-phase="transitioning"] .welcome__actions,
+  .welcome[data-phase="transitioning"] .login-reveal,
+  .welcome[data-phase="transitioning"] .welcome__status,
+  .welcome[data-phase="transitioning"] .brand-mark__square,
+  .welcome[data-phase="transitioning"] .brand-mark__echo,
+  .welcome[data-phase="transitioning"] .brand-mark__ring {
+    animation: reduced-login-exit var(--login-transition-master)
+      linear both;
+  }
+
+  .scan-transition,
+  .scan-transition .mock-qr,
+  .scan-transition__core {
+    animation: reduced-login-exit var(--login-transition-master)
+      linear both;
+  }
+
+  .welcome[data-phase="transitioning"] .welcome__space-reveal {
+    animation: reduced-space-master var(--login-transition-master)
+      linear both;
+    transform: translate3d(0, 0, 0) scale(1);
+    clip-path: inset(0 round 0);
+  }
+
+  .welcome[data-phase="transitioning"] .welcome__library-reveal {
+    visibility: visible;
+    animation: reduced-library-master var(--login-transition-master)
+      linear both;
+  }
+
+  .welcome[data-phase="transitioning"]
+    .welcome__library-reveal
+    .library-home {
+    visibility: visible;
+    opacity: 1;
+    animation: none;
+  }
+
+  .welcome[data-phase="transitioning"]
+    .library-home__cover-slot[data-track-offset]
+    .magazine-cover,
+  .welcome[data-phase="transitioning"] .library-home__topbar,
+  .welcome[data-phase="transitioning"] .library-home__carousel-status,
+  .welcome[data-phase="transitioning"] .library-home__intro,
+  .welcome[data-phase="transitioning"] .library-home__caption,
+  .welcome[data-phase="transitioning"]
+    .welcome__library-reveal
+    > .theme-settings {
+    animation: reduced-home-master var(--login-transition-master)
+      linear both;
+  }
+
+  .welcome[data-phase="transitioning"] .welcome__space-reveal-frame {
+    animation: reduced-frame-master var(--login-transition-master)
+      linear both;
+  }
+
+  .welcome__library-reveal > .theme-settings {
+    transition-duration: var(--motion-reduced);
+  }
+}
