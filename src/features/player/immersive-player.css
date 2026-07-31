@@ -1197,3 +1197,1327 @@
   pointer-events: auto;
   transform: translateY(0) scale(1);
 }
+
+.immersive-player__settings-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-top: 3px solid var(--player-foreground);
+  padding-top: 10px;
+}
+
+.immersive-player__settings-header > div,
+.immersive-player__settings-header strong,
+.immersive-player__settings-header span {
+  display: block;
+}
+
+.immersive-player__settings-header strong {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.immersive-player__settings-header span {
+  margin-top: 5px;
+  color: var(--player-muted);
+  font-size: 8px;
+  font-weight: 500;
+}
+
+.immersive-player__settings-header button {
+  padding: 0;
+  border: 0;
+  color: var(--player-muted);
+  background: transparent;
+  font-size: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.immersive-player__setting-group,
+.immersive-player__setting-list,
+.immersive-player__account {
+  margin-top: 18px;
+}
+
+.immersive-player__setting-group > small {
+  display: block;
+  margin-top: 7px;
+  color: var(--player-subtle);
+  font-size: 8px;
+}
+
+.immersive-player__setting-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--player-muted);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.immersive-player__theme-options,
+.immersive-player__intensity-options,
+.immersive-player__space-options {
+  display: grid;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--player-foreground) 20%,
+    transparent
+  );
+}
+
+.immersive-player__theme-options {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.immersive-player__intensity-options {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.immersive-player__space-options {
+  grid-template-columns: 1fr;
+}
+
+.immersive-player__space-options button {
+  display: grid;
+  min-height: 54px;
+  align-items: center;
+  grid-template-columns: 28px 1fr;
+  padding: 8px 10px;
+  border: 0;
+  border-top: 1px solid color-mix(
+    in srgb,
+    var(--player-foreground) 18%,
+    transparent
+  );
+  color: var(--player-muted);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color var(--motion-player-controls) var(--motion-quiet),
+    background var(--motion-player-controls) var(--motion-quiet);
+}
+
+.immersive-player__space-options button:first-child {
+  border-top: 0;
+}
+
+.immersive-player__space-options button > span {
+  grid-row: 1 / span 2;
+  color: var(--player-subtle);
+  font-size: 8px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.immersive-player__space-options button > strong {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+.immersive-player__space-options button > small {
+  margin-top: 2px;
+  color: var(--player-subtle);
+  font-size: 8px;
+  font-weight: 450;
+}
+
+.immersive-player__space-options button[data-active="true"] {
+  color: var(--player-background);
+  background: var(--player-foreground);
+}
+
+.immersive-player__space-options button[data-active="true"] > span,
+.immersive-player__space-options button[data-active="true"] > small {
+  color: inherit;
+  opacity: 0.72;
+}
+
+.immersive-player__theme-options button,
+.immersive-player__intensity-options button {
+  min-height: 34px;
+  border: 0;
+  border-left: 1px solid color-mix(
+    in srgb,
+    var(--player-foreground) 20%,
+    transparent
+  );
+  color: var(--player-muted);
+  background: transparent;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.immersive-player__theme-options button:first-child,
+.immersive-player__intensity-options button:first-child {
+  border-left: 0;
+}
+
+.immersive-player__theme-options button[data-active="true"],
+.immersive-player__intensity-options button[data-active="true"] {
+  color: var(--player-background);
+  background: var(--player-foreground);
+}
+
+.immersive-player__setting-list {
+  border-top: 1px solid color-mix(
+    in srgb,
+    var(--player-foreground) 18%,
+    transparent
+  );
+}
+
+.immersive-player__switch-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(
+    in srgb,
+    var(--player-foreground) 18%,
+    transparent
+  );
+  color: var(--player-foreground);
+  background: transparent;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.immersive-player__switch {
+  position: relative;
+  width: 28px;
+  height: 15px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--player-foreground) 34%,
+    transparent
+  );
+  border-radius: 10px;
+}
+
+.immersive-player__switch::after {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 9px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--player-muted);
+  content: "";
+  transition:
+    left 180ms var(--motion-snap),
+    background 180ms var(--motion-quiet);
+}
+
+.immersive-player__switch-row[aria-checked="true"]
+  .immersive-player__switch {
+  border-color: var(--player-foreground);
+}
+
+.immersive-player__switch-row[aria-checked="true"]
+  .immersive-player__switch::after {
+  left: 15px;
+  background: var(--player-foreground);
+}
+
+.immersive-player__account {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border: 0;
+  border-top: 2px solid var(--player-foreground);
+  border-bottom: 1px solid color-mix(
+    in srgb,
+    var(--player-foreground) 18%,
+    transparent
+  );
+  color: var(--player-foreground);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.immersive-player__account strong,
+.immersive-player__account small {
+  display: block;
+}
+
+.immersive-player__account strong {
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.immersive-player__account small {
+  margin-top: 4px;
+  color: var(--player-muted);
+  font-size: 8px;
+  font-weight: 500;
+}
+
+.immersive-player__settings-status {
+  min-height: 12px;
+  margin: 9px 0 0;
+  color: var(--player-subtle);
+  font-size: 8px;
+}
+
+.immersive-player button:focus-visible,
+.immersive-player input:focus-visible {
+  outline: 2px solid var(--player-foreground);
+  outline-offset: 4px;
+}
+
+@keyframes player-blackout {
+  0% {
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 0.18;
+  }
+
+  68%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes player-interface-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes first-lyric-focus {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(0, 0, 0) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes player-secondary-lyric-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.38;
+  }
+}
+
+@keyframes lyric-change-focus {
+  from {
+    opacity: 0.38;
+    filter: blur(7px);
+    transform: scale(0.992);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes player-particles-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.86;
+  }
+}
+
+@keyframes atmosphere-fog-drift {
+  from {
+    opacity: 0.48;
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+
+  to {
+    opacity: 0.82;
+    transform: translate3d(4%, 3%, 0) scale(1.14);
+  }
+}
+
+@keyframes atmosphere-geometry-drift {
+  from {
+    transform:
+      translate3d(-6px, 4px, -30px)
+      rotate(var(--atmosphere-geometry-rotate));
+  }
+
+  to {
+    transform:
+      translate3d(10px, -8px, 18px)
+      rotate(calc(var(--atmosphere-geometry-rotate) + 2deg));
+  }
+}
+
+@keyframes reduced-player-blackout {
+  from {
+    opacity: 0.72;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 760px) {
+  .immersive-player__shortcut-hint {
+    display: none;
+  }
+
+  .immersive-player__lyrics {
+    align-self: center;
+    width: 100%;
+    margin-bottom: 72px;
+    padding: 0;
+  }
+
+  .immersive-player__lyrics .immersive-lyric[data-state="current"] {
+    font-size: clamp(38px, 10vw, 70px);
+  }
+
+  .immersive-player__lyrics
+    .immersive-lyric[data-state="previous"],
+  .immersive-player__lyrics .immersive-lyric[data-state="next"] {
+    font-size: clamp(14px, 4.5vw, 22px);
+  }
+
+  .immersive-player__controls {
+    width: calc(100vw - 112px);
+    justify-self: start;
+  }
+
+  .immersive-player__control-track {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .immersive-player__control-track strong {
+    max-width: 100%;
+  }
+
+  .immersive-player__transport {
+    justify-content: flex-start;
+  }
+
+  .immersive-player__user {
+    right: 24px;
+    bottom: 24px;
+  }
+
+  .immersive-player__settings {
+    position: fixed;
+    right: 12px;
+    bottom: 78px;
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 100px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .immersive-player[data-presence="open"][data-phase="entering"]
+    .immersive-player__blackout {
+    animation-name: reduced-player-blackout;
+    animation-duration: var(--motion-player-enter-reduced);
+  }
+
+  .immersive-player__sharp-cover-plane {
+    animation-name: reduced-cover-passage-sharp-in;
+    animation-duration: var(--motion-player-enter-reduced);
+  }
+
+  .immersive-player__cover-texture-plane {
+    animation-name: reduced-cover-passage-texture-in;
+    animation-duration: var(--motion-player-enter-reduced);
+  }
+
+  .immersive-player__neutral-medium {
+    animation-name: reduced-cover-passage-medium-in;
+    animation-duration: var(--motion-player-enter-reduced);
+  }
+
+  .atmosphere-engine {
+    opacity: 0.45;
+    animation: none;
+    transition: none;
+  }
+
+  .atmosphere-engine__fog span,
+  .atmosphere-engine__geometry span {
+    animation: none;
+  }
+
+  .lyric-reveal-engine__unit {
+    will-change: auto !important;
+  }
+
+  .immersive-player[data-phase="entering"] .immersive-player__header,
+  .immersive-player[data-phase="entering"]
+    .immersive-player__current-line,
+  .immersive-player[data-phase="entering"]
+    .immersive-lyric[data-state="previous"],
+  .immersive-player[data-phase="entering"]
+    .immersive-lyric[data-state="next"],
+  .immersive-player[data-phase="active"]
+    .immersive-player__current-line {
+    animation: none;
+  }
+
+  .immersive-player__controls,
+  .immersive-player__header,
+  .immersive-player__user,
+  .immersive-player__settings,
+  .immersive-player__switch::after {
+    transition-duration: var(--motion-reduced);
+  }
+}
+
+/* One continuous intact-cover passage shared by every Listening Space. */
+
+.atmosphere-engine {
+  opacity: 0;
+}
+
+.immersive-player[data-transition-stage="atmosphere"]
+  .atmosphere-engine,
+.immersive-player[data-transition-stage="sound"]
+  .atmosphere-engine,
+.immersive-player[data-transition-stage="active"]
+  .atmosphere-engine {
+  opacity: 0.94;
+}
+
+/* Every Listening Space is already mounted and prepared behind the passage,
+   but no space may become readable while the intact cover still owns the
+   frame. The shared sound stage releases the same surface for every registered
+   room, keeping the first lyric and Atmosphere on one continuous timeline. */
+.immersive-player[data-phase="entering"]
+  > .immersive-player__lyrics {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0, -8px) scale(0.97);
+  transition:
+    transform var(--motion-player-lyric-focus) var(--motion-snap),
+    opacity var(--motion-player-lyric-focus) var(--motion-quiet);
+}
+
+.immersive-player[data-phase="entering"][data-transition-stage="sound"]
+  > .immersive-player__lyrics,
+.immersive-player[data-phase="entering"][data-transition-stage="active"]
+  > .immersive-player__lyrics {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.immersive-player[data-phase="entering"] .scroll-lyric {
+  will-change: transform, opacity;
+}
+
+.immersive-player[data-phase="entering"] .flow-lyric {
+  transition-property: transform, opacity;
+  will-change: transform, opacity;
+}
+
+.immersive-player[data-phase="active"]
+  .immersive-player__sharp-cover-plane,
+.immersive-player[data-phase="active"]
+  .immersive-player__cover-texture-plane,
+.immersive-player[data-phase="active"]
+  .immersive-player__neutral-medium {
+  will-change: auto;
+}
+
+.immersive-player[data-phase="exiting"]
+  .immersive-player__sharp-cover-plane {
+  animation: cover-passage-sharp-out var(--motion-player-exit)
+    var(--motion-quiet) both;
+}
+
+.immersive-player[data-phase="exiting"]
+  .immersive-player__cover-texture-plane {
+  animation: cover-passage-texture-out var(--motion-player-exit)
+    var(--motion-quiet) both;
+}
+
+.immersive-player[data-phase="exiting"]
+  .immersive-player__neutral-medium {
+  animation: cover-passage-medium-out var(--motion-player-exit)
+    linear both;
+}
+
+.immersive-player[data-phase="exiting"][data-return-target="neutral"]
+  .immersive-player__sharp-cover-plane {
+  animation-name: cover-passage-sharp-out-neutral;
+}
+
+.immersive-player[data-phase="exiting"][data-return-target="neutral"]
+  .immersive-player__cover-texture-plane {
+  animation-name: cover-passage-texture-out-neutral;
+}
+
+.immersive-player[data-phase="exiting"] .atmosphere-engine {
+  animation: cover-passage-atmosphere-out var(--motion-player-exit)
+    linear both;
+}
+
+.immersive-player[data-phase="exiting"] .immersive-player__blackout {
+  animation: cover-passage-blackout-out var(--motion-player-exit)
+    linear both;
+}
+
+.immersive-player[data-phase="exiting"]
+  > .immersive-player__lyrics,
+.immersive-player[data-phase="exiting"]
+  > .immersive-player__header,
+.immersive-player[data-phase="exiting"]
+  > .immersive-player__controls,
+.immersive-player[data-phase="exiting"]
+  > .immersive-player__user,
+.immersive-player[data-phase="exiting"]
+  > .immersive-player__playback-status {
+  pointer-events: none;
+  animation: cover-passage-interface-out 240ms var(--motion-quiet) both;
+}
+
+.immersive-player[data-phase="entering"] .immersive-player__header {
+  animation-delay: 1.32s;
+}
+
+.immersive-player[data-phase="entering"]
+  .immersive-lyric[data-state="previous"],
+.immersive-player[data-phase="entering"]
+  .immersive-lyric[data-state="next"] {
+  animation-delay: 1.18s;
+}
+
+@keyframes player-blackout {
+  0%,
+  14% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 0.72;
+  }
+
+  64%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cover-passage-sharp-in {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translate3d(0, 0, 18px) scale(1.018);
+  }
+
+  35%,
+  52% {
+    opacity: 1;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        0
+      )
+      scale(var(--player-cover-scale));
+  }
+
+  66% {
+    opacity: 0;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -12px
+      )
+      scale(var(--player-cover-scale));
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -12px
+      )
+      scale(var(--player-cover-scale));
+  }
+}
+
+@keyframes cover-passage-texture-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  27% {
+    opacity: 0;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -4px
+      )
+      scale(var(--player-cover-scale));
+  }
+
+  31% {
+    opacity: 0.34;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -4px
+      )
+      scale(var(--player-cover-scale));
+  }
+
+  45% {
+    opacity: 0.72;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -8px
+      )
+      scale(var(--player-cover-scale));
+  }
+
+  60% {
+    opacity: 0.52;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -22px
+      )
+      scale(calc(var(--player-cover-scale) * 2.35));
+  }
+
+  82%,
+  100% {
+    opacity: 0;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -28px
+      )
+      scale(calc(var(--player-cover-scale) * 2.55));
+  }
+}
+
+@keyframes cover-passage-medium-in {
+  0%,
+  36% {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+
+  50% {
+    opacity: 0.88;
+    transform: scale(1);
+  }
+
+  68% {
+    opacity: 0.96;
+    transform: scale(1.015);
+  }
+
+  88%,
+  100% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes cover-passage-sharp-out {
+  0%,
+  22% {
+    opacity: 0;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -12px
+      )
+      scale(var(--player-cover-scale));
+  }
+
+  38% {
+    opacity: 1;
+  }
+
+  92% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes cover-passage-sharp-out-neutral {
+  from,
+  to {
+    opacity: 0;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -12px
+      )
+      scale(var(--player-cover-scale));
+  }
+}
+
+@keyframes cover-passage-texture-out {
+  0% {
+    opacity: 0;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -28px
+      )
+      scale(calc(var(--player-cover-scale) * 2.55));
+  }
+
+  22% {
+    opacity: 0.54;
+  }
+
+  54% {
+    opacity: 0.66;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -8px
+      )
+      scale(var(--player-cover-scale));
+  }
+
+  78% {
+    opacity: 0.18;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes cover-passage-texture-out-neutral {
+  0% {
+    opacity: 0;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -28px
+      )
+      scale(calc(var(--player-cover-scale) * 2.55));
+  }
+
+  28% {
+    opacity: 0.48;
+  }
+
+  72% {
+    opacity: 0.12;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -8px
+      )
+      scale(var(--player-cover-scale));
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        -8px
+      )
+      scale(var(--player-cover-scale));
+  }
+}
+
+@keyframes cover-passage-medium-out {
+  0% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+
+  18%,
+  66% {
+    opacity: 0.96;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+@keyframes cover-passage-atmosphere-out {
+  0%,
+  20% {
+    opacity: 0.94;
+  }
+
+  74%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cover-passage-blackout-out {
+  0%,
+  72% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cover-passage-interface-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, 0, -18px) scale(0.988);
+  }
+}
+
+@keyframes reduced-cover-passage-sharp-in {
+  0%,
+  48% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(
+        var(--player-cover-shift-x),
+        var(--player-cover-shift-y),
+        0
+      )
+      scale(var(--player-cover-scale));
+  }
+}
+
+@keyframes reduced-cover-passage-texture-in {
+  0%,
+  25% {
+    opacity: 0;
+  }
+
+  52% {
+    opacity: 0.48;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes reduced-cover-passage-medium-in {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes reduced-cover-passage-sharp-out {
+  0%,
+  24% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  46%,
+  92% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes reduced-cover-passage-texture-out {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  38% {
+    opacity: 0.44;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .immersive-player[data-phase="exiting"]
+    .immersive-player__sharp-cover-plane {
+    animation-name: reduced-cover-passage-sharp-out;
+    animation-duration: var(--motion-player-exit-reduced);
+  }
+
+  .immersive-player[data-phase="exiting"][data-return-target="neutral"]
+    .immersive-player__sharp-cover-plane {
+    animation-name: cover-passage-sharp-out-neutral;
+  }
+
+  .immersive-player[data-phase="exiting"]
+    .immersive-player__cover-texture-plane {
+    animation-name: reduced-cover-passage-texture-out;
+    animation-duration: var(--motion-player-exit-reduced);
+  }
+
+  .immersive-player[data-phase="exiting"]
+    .immersive-player__neutral-medium,
+  .immersive-player[data-phase="exiting"]
+    .immersive-player__blackout,
+  .immersive-player[data-phase="exiting"] .atmosphere-engine {
+    animation-duration: var(--motion-player-exit-reduced);
+  }
+
+  .immersive-player[data-phase="exiting"]
+    > .immersive-player__lyrics,
+  .immersive-player[data-phase="exiting"]
+    > .immersive-player__header,
+  .immersive-player[data-phase="exiting"]
+    > .immersive-player__controls,
+  .immersive-player[data-phase="exiting"]
+    > .immersive-player__user,
+  .immersive-player[data-phase="exiting"]
+    > .immersive-player__playback-status {
+    animation-duration: var(--motion-reduced);
+  }
+}
+
+/* Paper Light Edition: material, soft depth and gray air. */
+.immersive-player[data-player-theme="light"]
+  .immersive-player__blackout {
+  background:
+    linear-gradient(
+      142deg,
+      #f4f3ee 0%,
+      #efeee8 54%,
+      #f6f5f0 100%
+    );
+}
+
+.immersive-player[data-player-theme="light"]
+  .immersive-player__blackout::before {
+  inset: -12%;
+  background:
+    radial-gradient(
+      ellipse 48% 58% at 18% 31%,
+      rgba(103, 101, 95, 0.105),
+      rgba(137, 134, 126, 0.03) 48%,
+      transparent 76%
+    ),
+    radial-gradient(
+      ellipse 54% 46% at 83% 72%,
+      rgba(91, 89, 84, 0.085),
+      rgba(142, 139, 131, 0.022) 51%,
+      transparent 78%
+    );
+  filter: blur(62px);
+  opacity: 0.84;
+}
+
+.immersive-player[data-player-theme="light"]
+  .immersive-player__blackout::after {
+  background:
+    linear-gradient(
+      118deg,
+      transparent 0 18%,
+      rgba(78, 76, 71, 0.026) 18.2% 23%,
+      transparent 23.2% 70%,
+      rgba(99, 96, 90, 0.022) 70.2% 75%,
+      transparent 75.2%
+    ),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.58' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='.52'/%3E%3C/svg%3E");
+  background-size: auto, 180px 180px;
+  mix-blend-mode: multiply;
+  opacity: 0.052;
+}
+
+/* Night Edition: large atmosphere, geometric middle depth, fine air. */
+.immersive-player[data-player-theme="dark"]
+  .immersive-player__blackout {
+  background:
+    linear-gradient(
+      148deg,
+      #0d0d0f 0%,
+      #111214 52%,
+      #0d0d0f 100%
+    );
+}
+
+.immersive-player__blackout::before,
+.immersive-player__blackout::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+}
+
+.immersive-player[data-player-theme="dark"]
+  .immersive-player__blackout::before {
+  inset: -14%;
+  background:
+    radial-gradient(
+      ellipse 42% 58% at 19% 34%,
+      rgba(242, 242, 238, 0.105),
+      rgba(198, 198, 195, 0.032) 46%,
+      transparent 74%
+    ),
+    radial-gradient(
+      ellipse 52% 44% at 80% 70%,
+      rgba(225, 225, 222, 0.09),
+      rgba(180, 180, 178, 0.024) 48%,
+      transparent 76%
+    ),
+    radial-gradient(
+      ellipse 38% 42% at 50% 49%,
+      rgba(248, 248, 244, 0.055),
+      transparent 70%
+    );
+  filter: blur(44px);
+}
+
+.immersive-player[data-player-theme="dark"]
+  .immersive-player__blackout::after {
+  background:
+    linear-gradient(
+      118deg,
+      transparent 0 14%,
+      rgba(236, 236, 232, 0.038) 14.2% 19%,
+      transparent 19.2% 67%,
+      rgba(208, 208, 205, 0.026) 67.2% 72%,
+      transparent 72.2%
+    ),
+    linear-gradient(
+      26deg,
+      transparent 0 62%,
+      rgba(238, 238, 234, 0.022) 62.2% 67%,
+      transparent 67.2%
+    ),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+  background-size: auto, auto, 160px 160px;
+  mask-image: radial-gradient(
+    ellipse 92% 82% at center,
+    black 22%,
+    rgba(0, 0, 0, 0.72) 58%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.045;
+}
+
+.immersive-player[data-player-theme="dark"]
+  .atmosphere-engine
+  canvas[data-layer="atmosphere"] {
+  opacity: 1;
+}
+
+/* Listening Space 02 — Lyrics Flow */
+.immersive-player__lyrics.flow-listening-space {
+  position: absolute;
+  z-index: 5;
+  inset: clamp(52px, 7vh, 84px) clamp(18px, 4vw, 56px)
+    clamp(102px, 15vh, 150px);
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  perspective: 1320px;
+  perspective-origin: 50% 48%;
+  pointer-events: none;
+  text-align: center;
+  transform-style: preserve-3d;
+}
+
+.flow-listening-space__field {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.flow-lyric {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: min(76vw, 1080px);
+  color: var(--player-foreground);
+  opacity: var(--flow-node-opacity, 0.28);
+  filter: blur(var(--flow-node-blur, 8px));
+  transform-origin: center;
+  transform-style: preserve-3d;
+  transform:
+    translate3d(
+      -50%,
+      calc(-50% + var(--flow-node-y)),
+      0
+    )
+    scale(var(--flow-node-scale, 0.86));
+  transition:
+    transform var(--motion-flow-shift) cubic-bezier(0.2, 0.78, 0.18, 1),
+    opacity var(--motion-flow-shift) cubic-bezier(0.2, 0.78, 0.18, 1),
+    filter var(--motion-flow-shift) cubic-bezier(0.2, 0.78, 0.18, 1);
+}
+
+.flow-lyric[data-near="true"] {
+  will-change: transform, opacity;
+}
+
+.flow-lyric p {
+  margin: 0;
+  font-size: clamp(32px, 4.8vw, 76px);
+  font-weight: 750;
+  letter-spacing: -0.052em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.flow-lyric p[data-language="en"] {
+  font-size: clamp(28px, 3.75vw, 60px);
+  letter-spacing: -0.04em;
+  line-height: 1.12;
+}
+
+.flow-lyric[data-state="past"] {
+  --flow-node-opacity: 0.22;
+  --flow-node-blur: 5px;
+  --flow-node-scale: 0.88;
+}
+
+.flow-lyric[data-state="future"] {
+  --flow-node-opacity: 0.28;
+  --flow-node-blur: 8px;
+  --flow-node-scale: 0.86;
+}
+
+.flow-lyric[data-state="current"] {
+  --flow-node-opacity: 1;
+  --flow-node-blur: 0px;
+  --flow-node-scale: 1;
+  z-index: 4;
+}
+
+.flow-lyric[data-state="current"]::before {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: min(86vw, 1080px);
+  height: clamp(150px, 27vh, 280px);
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--player-foreground) 9%, transparent),
+    color-mix(in srgb, var(--player-foreground) 2.5%, transparent) 48%,
+    transparent 74%
+  );
+  content: "";
+  filter: blur(30px);
+  transform: translate(-50%, -50%);
+}
+
+.flow-lyric[data-state="current"] p {
+  text-shadow:
+    0 0 22px color-mix(
+      in srgb,
+      var(--player-foreground) 14%,
+      transparent
+    ),
+    0 0 54px color-mix(
+      in srgb,
+      var(--player-foreground) 5%,
+      transparent
+    );
+}
+
+.flow-lyric__reveal .lyric-reveal-engine__unit {
+  opacity: var(--lyric-reveal-opacity);
+  filter:
+    blur(var(--lyric-reveal-blur))
+    brightness(var(--lyric-reveal-brightness));
+  transform: translateZ(var(--lyric-reveal-depth))
+    scale(var(--lyric-reveal-scale));
+}
+
+.flow-lyric__translation {
+  position: absolute;
+  top: calc(100% + clamp(12px, 2vh, 20px));
+  left: 50%;
+  display: block;
+  width: min(72vw, 760px);
+  max-width: min(72vw, 760px);
+  margin: 0;
+  color: var(--player-muted);
+  font-size: clamp(11px, 1.15vw, 16px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  opacity: 0.72;
+  transform: translate3d(-50%, 0, 0);
+  animation: flow-translation-focus 300ms var(--motion-quiet) both;
+}
