@@ -1888,3 +1888,2232 @@
 .library-home[data-view="closing"] {
   pointer-events: none;
 }
+
+.library-home[data-view="prepared"]
+  .library-home__cover-slot[data-track-offset],
+.library-home[data-view="opening"]
+  .library-home__cover-slot[data-track-offset],
+.library-home[data-view="detail"]
+  .library-home__cover-slot[data-track-offset],
+.library-home[data-view="closing"]
+  .library-home__cover-slot[data-track-offset] {
+  animation: none !important;
+  pointer-events: none;
+}
+
+.library-home[data-view="prepared"] .magazine-cover,
+.library-home[data-view="opening"] .magazine-cover,
+.library-home[data-view="detail"] .magazine-cover,
+.library-home[data-view="closing"] .magazine-cover {
+  animation: none !important;
+  visibility: visible;
+}
+
+/* The portal artwork is the sole owner of the focused cover between prepare
+ * and commit. Keeping the identical Home bitmap underneath it produced the
+ * double title/face visible in both opening and closing frames. */
+.library-home:is(
+    [data-view="prepared"],
+    [data-view="opening"],
+    [data-view="detail"]
+  )
+  .library-home__shelf-plane[data-state="current"]
+  .library-home__cover-slot[data-focused="true"]
+  .magazine-cover {
+  opacity: 0 !important;
+}
+
+/* Return ownership is transferred on one exact frame: the shared artwork is
+ * the sole cover through 94%, then Home's already-restored center cover owns
+ * the identical final pose. This prevents the closing commit from revealing
+ * a default or duplicate cover. */
+.library-home[data-view="closing"]
+  .library-home__shelf-plane[data-state="current"]
+  .library-home__cover-slot[data-focused="true"]
+  .magazine-cover {
+  animation: cover-portal-home-cover-claim
+    var(--home-wall-close-duration) linear both !important;
+  opacity: 0;
+}
+
+.library-home[data-view="opening"] .library-home__topbar,
+.library-home[data-view="opening"] .library-home__intro,
+.library-home[data-view="opening"] .library-home__caption {
+  opacity: 0.32;
+  transition: opacity 360ms var(--home-wall-quiet-easing);
+}
+
+.library-home[data-view="detail"] .library-home__topbar,
+.library-home[data-view="detail"] .library-home__intro,
+.library-home[data-view="detail"] .library-home__caption {
+  opacity: 0;
+}
+
+/* Legacy detail entrance/return keyframes still target these descendants.
+ * During a portal transition the shell is the sole timeline owner: the Home
+ * snapshot underneath it must already be at its final pose before the first
+ * closing pixel exposes it. */
+.library-home[data-space-transition="cover-portal"][data-view="opening"]
+  :is(
+    .library-home__nav,
+    .library-home__search,
+    .library-home__identity,
+    .library-home__back,
+    .library-home__intro,
+    .library-home__caption
+  ),
+.library-home[data-space-transition="cover-portal"][data-view="closing"]
+  :is(
+    .library-home__nav,
+    .library-home__search,
+    .library-home__identity,
+    .library-home__back,
+    .library-home__intro,
+    .library-home__caption
+  ) {
+  animation: none !important;
+}
+
+.library-home[data-space-transition="cover-portal"][data-view="closing"]
+  :is(
+    .library-home__nav,
+    .library-home__search,
+    .library-home__identity,
+    .library-home__intro,
+    .library-home__caption
+  ) {
+  opacity: 1;
+  transform: none;
+}
+
+.library-home[data-space-transition="cover-portal"][data-view="closing"]
+  .library-home__back {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Home remains an opaque, stable snapshot underneath the aperture. During
+ * opening it is progressively covered; during closing it is progressively
+ * revealed. No full-scene opacity animation participates in the hand-off. */
+.library-home[data-space-transition="cover-portal"][data-view="opening"]
+  .library-home__shelf-plane[data-state="current"],
+.library-home[data-space-transition="cover-portal"][data-view="detail"]
+  .library-home__shelf-plane[data-state="current"],
+.library-home[data-space-transition="cover-portal"][data-view="closing"]
+  .library-home__shelf-plane[data-state="current"] {
+  animation: none;
+  opacity: 1;
+}
+
+.library-home[data-space-transition="cover-portal"][data-view="opening"]
+  :is(
+    .library-home__topbar,
+    .library-home__intro,
+    .library-home__caption
+  ) {
+  animation: none !important;
+  opacity: 1;
+  transform: none;
+}
+
+.library-home[data-space-transition="cover-portal"][data-view="closing"]
+  :is(
+    .library-home__topbar,
+    .library-home__intro,
+    .library-home__caption
+  ) {
+  animation: none !important;
+  opacity: 1;
+  transform: none;
+}
+
+/* Return hand-off ownership is atomic. The Wall surface is the only scene
+ * opacity gate through 46%; the shared material then exposes Home's already
+ * restored final composition. Once Home owns the frame, the Portal becomes
+ * non-paintable before the coarse React view is committed. */
+.library-home[data-return-visual-owner="home"]
+  .library-home__portal-layer {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.library-home[data-return-visual-owner="home"]
+  :is(
+    .library-home__portal-surface,
+    .library-home__portal-medium-field,
+    .library-home__portal-artwork
+  ) {
+  opacity: 0 !important;
+}
+
+.library-home[data-return-visual-owner="home"]
+  .library-home__portal-surface
+  > .music-wall::before,
+.library-home[data-return-visual-owner="home"]
+  .library-home__portal-surface
+  > .music-wall::after {
+  opacity: 0 !important;
+}
+
+.library-home[data-return-visual-owner="home"]
+  .library-home__shelf-plane[data-state="current"]
+  .library-home__cover-slot[data-focused="true"]
+  .magazine-cover {
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+/* Later editorial cover rules give every centered card a fixed 410px width.
+ * The shared Portal cover instead inherits the captured Home rect exactly. */
+.library-home__portal-artwork
+  .library-home__portal-shared-cover
+  > .magazine-cover {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+}
+
+.library-home[data-view="closing"]
+  .library-home__portal-artwork
+  .library-home__portal-shared-cover
+  > .magazine-cover {
+  box-shadow: 0 22px 62px rgba(0, 0, 0, 0.28) !important;
+}
+
+.library-home[data-view="closing"]
+  .library-home__shelf-plane[data-state="current"]
+  .library-home__cover-slot[data-track-offset]
+  .magazine-cover {
+  box-shadow: 0 22px 62px rgba(0, 0, 0, 0.28) !important;
+}
+
+/* Closing reveals the same computed shelf surfaces that browsing uses. The
+ * final semantic commit can therefore restore input/ARIA without changing a
+ * visible shadow, depth or cover material. */
+.library-home:is(
+    [data-view="browsing"],
+    [data-view="closing"]
+  )
+  .library-home__cover-slot[data-track-offset] {
+  width: var(--home-cover-width);
+  transform-style: preserve-3d;
+}
+
+.library-home:is(
+    [data-view="browsing"],
+    [data-view="closing"]
+  )
+  .library-home__cover-slot[data-focus-layer="0"] {
+  z-index: 0;
+}
+
+.library-home:is(
+    [data-view="browsing"],
+    [data-view="closing"]
+  )
+  .library-home__cover-slot[data-focus-layer="1"] {
+  z-index: 10;
+}
+
+.library-home:is(
+    [data-view="browsing"],
+    [data-view="closing"]
+  )
+  .library-home__cover-slot[data-focus-layer="2"] {
+  z-index: 15;
+}
+
+.library-home:is(
+    [data-view="browsing"],
+    [data-view="closing"]
+  )
+  .library-home__cover-slot[data-focus-layer="3"] {
+  z-index: 20;
+}
+
+.library-home:is(
+    [data-view="browsing"],
+    [data-view="closing"]
+  )
+  .library-home__cover-slot[data-focus-layer="1"]
+  .magazine-cover,
+.library-home:is(
+    [data-view="browsing"],
+    [data-view="closing"]
+  )
+  .library-home__cover-slot[data-focus-layer="2"]
+  .magazine-cover {
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.2);
+}
+
+.library-home:is(
+    [data-view="browsing"],
+    [data-view="closing"]
+  )
+  .library-home__cover-slot[data-focus-layer="3"]
+  .magazine-cover {
+  box-shadow: 0 30px 76px rgba(0, 0, 0, 0.32);
+}
+
+@keyframes cover-portal-home-out {
+  0% {
+    opacity: 1;
+  }
+
+  18% {
+    opacity: 0.72;
+  }
+
+  36% {
+    opacity: 0.32;
+  }
+
+  58%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cover-portal-home-in {
+  0% {
+    opacity: 0;
+  }
+
+  14% {
+    opacity: 0.12;
+  }
+
+  30% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.64;
+  }
+
+  72% {
+    opacity: 0.92;
+  }
+
+  86%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cover-portal-home-interface-out {
+  0%,
+  10% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  38%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+@keyframes cover-portal-home-interface-in {
+  0%,
+  14% {
+    opacity: 0;
+    transform: translate3d(0, -4px, 0);
+  }
+
+  42% {
+    opacity: 0.46;
+    transform: translate3d(0, -2px, 0);
+  }
+
+  74%,
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes cover-portal-expand {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
+@keyframes cover-portal-collapse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
+@keyframes cover-portal-medium-material-in {
+  0% {
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.45;
+  }
+
+  20% {
+    opacity: 0.88;
+  }
+
+  28%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cover-portal-medium-material-out {
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  62% {
+    opacity: 0.88;
+  }
+
+  72% {
+    opacity: 0.55;
+  }
+
+  82%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cover-portal-medium-expand {
+  0% {
+    opacity: 0;
+    transform: translateZ(0) scale3d(0.97, 0.97, 1);
+  }
+
+  10% {
+    opacity: 0.45;
+    transform: translateZ(0) scale3d(0.978, 0.978, 1);
+  }
+
+  20% {
+    opacity: 0.88;
+    transform: translateZ(0) scale3d(0.994, 0.994, 1);
+  }
+
+  28% {
+    opacity: 1;
+    transform: translateZ(0) scale3d(1.001, 1.001, 1);
+  }
+
+  36%,
+  100% {
+    opacity: 1;
+    transform: translateZ(0) scale3d(1, 1, 1);
+  }
+}
+
+@keyframes cover-portal-medium-collapse {
+  0%,
+  50% {
+    opacity: 1;
+    transform: translateZ(0) scale3d(1, 1, 1);
+  }
+
+  62% {
+    opacity: 0.88;
+    transform: translateZ(0) scale3d(0.992, 0.992, 1);
+  }
+
+  72% {
+    opacity: 0.55;
+    transform: translateZ(0) scale3d(0.982, 0.982, 1);
+  }
+
+  82%,
+  100% {
+    opacity: 0;
+    transform: translateZ(0) scale3d(0.97, 0.97, 1);
+  }
+}
+
+@keyframes cover-portal-wall-owner-in {
+  0%,
+  36% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 0.35;
+  }
+
+  52% {
+    opacity: 0.75;
+  }
+
+  72%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cover-portal-wall-owner-out {
+  0%,
+  12% {
+    opacity: 1;
+  }
+
+  24% {
+    opacity: 0.84;
+  }
+
+  34% {
+    opacity: 0.42;
+  }
+
+  44% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cover-portal-card-form {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, -46px) scale3d(0.92, 0.92, 1);
+  }
+
+  24% {
+    opacity: 0.42;
+  }
+
+  58% {
+    opacity: 0.84;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+}
+
+@keyframes cover-portal-card-recede {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+
+  54% {
+    opacity: 0.58;
+    transform: translate3d(0, 0, -18px) scale3d(0.97, 0.97, 1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, -56px) scale3d(0.9, 0.9, 1);
+  }
+}
+
+@keyframes cover-portal-field-in {
+  0%,
+  16% {
+    opacity: 0;
+  }
+
+  28% {
+    opacity: 0.7;
+  }
+
+  36%,
+  100% {
+    opacity: var(--portal-field-opacity, 0.54);
+  }
+}
+
+@keyframes cover-portal-field-out {
+  0%,
+  14% {
+    opacity: var(--portal-field-opacity, 0.54);
+  }
+
+  32% {
+    opacity: 0.38;
+  }
+
+  42% {
+    opacity: 0.08;
+  }
+
+  46%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cover-portal-shade-in {
+  0%,
+  14% {
+    opacity: 0;
+  }
+
+  26% {
+    opacity: 0.72;
+  }
+
+  36%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cover-portal-shade-out {
+  0%,
+  14% {
+    opacity: 1;
+  }
+
+  30% {
+    opacity: 0.46;
+  }
+
+  40% {
+    opacity: 0.1;
+  }
+
+  46%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cover-portal-artwork-out {
+  0%,
+  22% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0)
+      scale3d(
+        var(--home-wall-lock-scale),
+        var(--home-wall-lock-scale),
+        1
+      );
+  }
+
+  32% {
+    opacity: 0.85;
+    transform: translate3d(0, 0, 0) scale3d(1.03, 1.03, 1);
+  }
+
+  40% {
+    opacity: 0.5;
+    transform: translate3d(0, 0, 0) scale3d(1.055, 1.055, 1);
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale3d(1.075, 1.075, 1);
+  }
+}
+
+@keyframes cover-portal-artwork-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale3d(1.095, 1.095, 1);
+  }
+
+  12% {
+    opacity: 0.18;
+    transform: translate3d(0, 0, 0) scale3d(1.08, 1.08, 1);
+  }
+
+  26% {
+    opacity: 0.56;
+    transform: translate3d(0, 0, 0) scale3d(1.055, 1.055, 1);
+  }
+
+  40% {
+    opacity: 0.9;
+    transform: translate3d(0, 0, 0) scale3d(1.03, 1.03, 1);
+  }
+
+  50%,
+  94% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+
+  94.01%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+}
+
+@keyframes cover-portal-home-cover-claim {
+  0%,
+  94% {
+    opacity: 0;
+  }
+
+  94.01%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cover-portal-directory-in {
+  0%,
+  8% {
+    opacity: 0;
+    transform: translate3d(0, 5px, 0);
+  }
+
+  18% {
+    opacity: 0.52;
+    transform: translate3d(0, 0, 0);
+  }
+
+  32% {
+    opacity: 0.3;
+    transform: translate3d(0, -2px, 0);
+  }
+
+  48%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -3px, 0);
+  }
+}
+
+@keyframes cover-portal-directory-out {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -3px, 0);
+  }
+}
+
+@keyframes cover-portal-chrome-in {
+  0%,
+  48% {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+
+  62% {
+    opacity: 0.68;
+    transform: translate3d(0, -3px, 0);
+  }
+
+  76%,
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes cover-portal-chrome-out {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  26%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+/* The intact cover becomes temporary light, texture and depth fields. */
+.cover-atmosphere {
+  position: absolute;
+  z-index: 15;
+  inset: -10%;
+  overflow: hidden;
+  contain: strict;
+  isolation: isolate;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateZ(0) scale(0.96);
+}
+
+.cover-atmosphere__layer,
+.cover-atmosphere__layer img,
+.cover-atmosphere__geometry {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.cover-atmosphere__layer {
+  inset: 0;
+  overflow: hidden;
+}
+
+.cover-atmosphere__layer img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+.cover-atmosphere__layer[data-layer="blur"] img {
+  /* One cached cover surface supplies the dissolve. The former three
+   * full-viewport filtered copies forced an expensive raster pass exactly as
+   * MusicWall mounted. A restrained single surface preserves the intact
+   * cover/light-field impression while keeping the portal composited. */
+  filter: grayscale(1) contrast(0.78) blur(42px);
+  opacity: 0.42;
+  transform: scale(1.16);
+}
+
+.cover-atmosphere__geometry {
+  border: 1px solid color-mix(
+    in srgb,
+    var(--theme-foreground) 14%,
+    transparent
+  );
+  opacity: 0.55;
+}
+
+.cover-atmosphere__geometry[data-hint="frame"] {
+  top: 18%;
+  right: 11%;
+  width: min(32vw, 460px);
+  aspect-ratio: 1.4;
+  transform: rotate(4deg);
+}
+
+.cover-atmosphere__geometry[data-hint="axis"] {
+  bottom: 16%;
+  left: 8%;
+  width: min(42vw, 620px);
+  height: 1px;
+  border-width: 1px 0 0;
+  transform: rotate(-7deg);
+}
+
+.cover-atmosphere__geometry[data-hint="field"] {
+  top: 12%;
+  left: 23%;
+  width: min(19vw, 280px);
+  aspect-ratio: 0.7;
+  border-radius: 50%;
+  filter: blur(2px);
+  transform: rotate(-3deg);
+}
+
+.cover-atmosphere[data-state="opening"] {
+  animation: cover-portal-atmosphere-in var(--home-wall-duration)
+    var(--home-wall-quiet-easing) both;
+  will-change: transform, opacity;
+}
+
+.cover-atmosphere[data-state="detail"] {
+  opacity: 0;
+  transform: translateZ(0) scale(1.04);
+}
+
+.cover-atmosphere[data-state="closing"] {
+  animation: cover-portal-atmosphere-out var(--home-wall-close-duration)
+    var(--home-wall-quiet-easing) both;
+}
+
+@keyframes cover-portal-atmosphere-in {
+  0% {
+    opacity: 0.24;
+    transform: translateZ(0) scale(0.95);
+  }
+
+  12% {
+    opacity: 0.52;
+    transform: translateZ(0) scale(0.98);
+  }
+
+  28% {
+    opacity: 0.44;
+    transform: translateZ(0) scale(1.015);
+  }
+
+  44% {
+    opacity: 0.16;
+    transform: translateZ(0) scale(1.04);
+  }
+
+  62%,
+  100% {
+    opacity: 0;
+    transform: translateZ(0) scale(1.04);
+  }
+}
+
+@keyframes cover-portal-atmosphere-out {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateZ(0) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover-atmosphere[data-state="opening"],
+  .cover-atmosphere[data-state="closing"] {
+    animation: none;
+    opacity: 0;
+    transform: translateZ(0) scale(1);
+  }
+
+  .library-home__portal-layer[data-state="opening"] {
+    animation-name: cover-portal-expand;
+  }
+
+  .library-home__portal-layer[data-state="closing"] {
+    animation-name: cover-portal-collapse;
+  }
+
+  .library-home__portal-layer[data-state="opening"]
+    .library-home__portal-medium-field {
+    animation: cover-portal-medium-expand-reduced var(--home-wall-duration)
+      var(--home-wall-quiet-easing) both;
+  }
+
+  .library-home__portal-layer[data-state="closing"]
+    .library-home__portal-medium-field {
+    animation: cover-portal-medium-collapse var(--home-wall-close-duration)
+      var(--home-wall-quiet-easing) both;
+  }
+
+  .library-home__portal-artwork[data-state="opening"],
+  .library-home__portal-layer[data-state="opening"]
+    .library-home__portal-surface > .music-wall,
+  .library-home__portal-layer[data-state="closing"]
+    .music-wall__viewport,
+  .library-home__portal-layer[data-state="closing"]
+    .library-home__portal-surface > .music-wall,
+  .library-home__portal-layer[data-state="opening"] .music-wall__header,
+  .library-home__portal-layer[data-state="closing"] .music-wall__header {
+    animation-duration: var(--home-wall-duration);
+  }
+
+  .library-home__portal-artwork[data-state="opening"] {
+    animation: cover-portal-artwork-out-reduced var(--home-wall-duration)
+      var(--home-wall-quiet-easing) both;
+  }
+
+  .library-home__portal-artwork[data-state="closing"] {
+    animation: cover-portal-artwork-in-reduced
+      var(--home-wall-close-duration) var(--home-wall-quiet-easing) both;
+  }
+
+  .library-home[data-view="closing"]
+    .library-home__shelf-plane[data-state="current"]
+    .library-home__cover-slot[data-focused="true"]
+    .magazine-cover {
+    animation-name: cover-portal-home-cover-claim-reduced !important;
+  }
+
+  .library-home__portal-layer .music-wall[data-state="opening"]
+    .music-wall__card-slot[data-portal-participant="true"] {
+    animation-name: cover-portal-card-form-reduced;
+    animation-delay: 24ms;
+  }
+
+  .library-home__portal-layer .music-wall[data-state="closing"]
+    .music-wall__card-slot[data-portal-participant="true"] {
+    animation-name: cover-portal-card-recede-reduced;
+    animation-delay: 0ms;
+  }
+}
+
+@keyframes cover-portal-medium-expand-reduced {
+  0% {
+    opacity: 0;
+    transform: translateZ(0);
+  }
+
+  30%,
+  100% {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
+@keyframes cover-portal-artwork-out-reduced {
+  0%,
+  12% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+
+  42%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale3d(1.015, 1.015, 1);
+  }
+}
+
+@keyframes cover-portal-artwork-in-reduced {
+  0%,
+  30% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale3d(1.015, 1.015, 1);
+  }
+
+  46%,
+  88% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+
+  88.01%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+}
+
+@keyframes cover-portal-home-cover-claim-reduced {
+  0%,
+  88% {
+    opacity: 0;
+  }
+
+  88.01%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cover-portal-card-form-reduced {
+  from {
+    opacity: 0;
+    transform: none;
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cover-portal-card-recede-reduced {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+/*
+ * Login -> Home must start on the continuous track's final geometry. Legacy
+ * slot entrance keyframes animate `transform` and therefore temporarily win
+ * over the RAF-authored inline transform. The library shell owns the initial
+ * opacity reveal; track slots always keep their measured position.
+ */
+.welcome[data-phase="library"]
+  .library-home[data-view="browsing"]
+  .library-home__cover-slot[data-track-offset] {
+  animation: none;
+}
+
+/* Continuous inertial collection track. Slot transforms are updated by one
+   requestAnimationFrame loop; React only commits the index after snapping. */
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-track-offset] {
+  top: 50%;
+  left: 50%;
+  width: var(--home-cover-width);
+  transition: none;
+  will-change: auto;
+}
+
+.library-home__overlay-layer {
+  position: absolute;
+  z-index: 30;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: layout paint style;
+  isolation: isolate;
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-focus-layer="0"] {
+  z-index: 0;
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-focus-layer="1"] {
+  z-index: 10;
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-focus-layer="2"] {
+  z-index: 15;
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-focus-layer="3"] {
+  z-index: 20;
+}
+
+.library-home__covers[data-moving="true"]
+  .library-home__cover-slot[data-track-offset] {
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-track-offset]
+  .magazine-cover,
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-track-offset]
+  .magazine-cover[data-position="center"],
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-track-offset]
+  .magazine-cover[data-position="left"],
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-track-offset]
+  .magazine-cover[data-position="right"] {
+  width: 100%;
+  opacity: 1;
+  filter: none;
+  box-shadow: 0 22px 62px rgba(0, 0, 0, 0.28);
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-track-offset]
+  .magazine-cover__copy {
+  opacity: 1;
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-track-offset]
+  .magazine-cover__image {
+  filter:
+    brightness(var(--track-brightness, 1))
+    blur(var(--track-blur, 0px));
+  transition: none;
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-track-offset]
+  .magazine-cover__art::after {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+  background: #000;
+  content: "";
+  opacity: var(--track-dim, 0);
+  transition: none;
+}
+
+.library-home__covers[data-moving="true"]
+  .library-home__cover-slot[data-track-offset]
+  .magazine-cover__art::after {
+  will-change: opacity;
+}
+
+.library-home__covers[data-moving="false"]
+  .library-home__cover-slot[data-track-offset] {
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .library-home__covers[data-moving="true"]
+    .library-home__cover-slot[data-track-offset] {
+    will-change: auto;
+  }
+}
+
+.welcome[data-phase="library"]
+  .library-home__cover-slot[data-position="center"] {
+  transform:
+    translate3d(
+      calc(-50% + var(--carousel-drag-x)),
+      -50%,
+      0
+    )
+    scale(1);
+}
+
+.welcome[data-phase="library"]
+  .library-home__cover-slot[data-position="left"] {
+  transform:
+    translate3d(
+      calc(-50% - var(--cover-step) + var(--carousel-drag-x)),
+      -50%,
+      0
+    )
+    scale(0.58);
+}
+
+.welcome[data-phase="library"]
+  .library-home__cover-slot[data-position="right"] {
+  transform:
+    translate3d(
+      calc(-50% + var(--cover-step) + var(--carousel-drag-x)),
+      -50%,
+      0
+    )
+    scale(0.58);
+}
+
+.welcome[data-phase="library"]
+  .library-home__cover-slot[data-position="far-left"] {
+  transform:
+    translate3d(
+      calc(
+        -50% - var(--cover-step) - var(--cover-step)
+        + var(--carousel-drag-x)
+      ),
+      -50%,
+      0
+    )
+    scale(0.5);
+}
+
+.welcome[data-phase="library"]
+  .library-home__cover-slot[data-position="far-right"] {
+  transform:
+    translate3d(
+      calc(
+        -50% + var(--cover-step) + var(--cover-step)
+        + var(--carousel-drag-x)
+      ),
+      -50%,
+      0
+    )
+    scale(0.5);
+}
+
+.library-home__cover-slot[data-wrapping="true"] {
+  transition: none;
+  animation: carousel-wrap-reveal 500ms var(--motion-quiet) both;
+}
+
+@keyframes carousel-wrap-reveal {
+  0%,
+  44% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.68;
+  }
+}
+
+.library-home__edge-control {
+  position: absolute;
+  z-index: 5;
+  top: 22%;
+  bottom: 16%;
+  display: grid;
+  width: clamp(54px, 6vw, 86px);
+  place-items: center;
+}
+
+.library-home__edge-control[data-side="left"] {
+  left: 0;
+}
+
+.library-home__edge-control[data-side="right"] {
+  right: 0;
+}
+
+.library-home__edge-control button {
+  display: grid;
+  width: 42px;
+  height: 58px;
+  place-items: center;
+  border: 1px solid var(--theme-border);
+  color: var(--theme-foreground);
+  background: color-mix(in srgb, var(--theme-background) 82%, transparent);
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateX(
+    calc(var(--edge-direction, 1) * 8px)
+  );
+  transition:
+    opacity 180ms var(--motion-quiet),
+    transform 260ms var(--motion-snap),
+    color var(--motion-button) var(--motion-quiet),
+    background var(--motion-button) var(--motion-quiet);
+  backdrop-filter: blur(10px);
+}
+
+.library-home__edge-control[data-side="left"] button {
+  --edge-direction: -1;
+}
+
+.library-home__edge-control:hover button,
+.library-home__edge-control:focus-within button {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.library-home__edge-control button:hover {
+  color: var(--theme-background);
+  background: var(--theme-foreground);
+}
+
+.library-home__edge-control button:disabled {
+  cursor: default;
+  opacity: 0;
+}
+
+.library-home__edge-control button:focus-visible {
+  outline: 2px solid var(--theme-foreground);
+  outline-offset: 3px;
+  opacity: 1;
+}
+
+.library-home__growth-cover {
+  display: flex;
+  height: 100%;
+  aspect-ratio: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 7%;
+  border: 2px solid var(--theme-border);
+  color: var(--theme-muted);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--theme-foreground) 4%, transparent),
+      transparent 62%
+    ),
+    var(--theme-surface);
+}
+
+.library-home__growth-cover strong {
+  margin-bottom: auto;
+  color: var(--theme-foreground);
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 500;
+  line-height: 0.8;
+}
+
+.library-home__growth-cover span {
+  color: var(--theme-foreground);
+  font-size: clamp(17px, 2.4vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+
+.library-home__growth-cover small {
+  margin-top: 7px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.library-home__growth-note {
+  position: absolute;
+  z-index: 4;
+  right: clamp(24px, 5vw, 72px);
+  bottom: clamp(50px, 7vh, 72px);
+  display: flex;
+  max-width: min(540px, 48vw);
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 0;
+  color: var(--theme-muted);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.library-home__growth-note span {
+  color: var(--theme-foreground);
+}
+
+.library-home[data-view="opening"] .library-home__carousel-status,
+.library-home[data-view="detail"] .library-home__carousel-status,
+.library-home[data-view="opening"] .library-home__edge-control,
+.library-home[data-view="detail"] .library-home__edge-control,
+.library-home[data-view="opening"] .library-home__growth-note,
+.library-home[data-view="detail"] .library-home__growth-note {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .library-home__covers {
+    --cover-step: 48vw;
+    width: 118vw;
+    height: min(64vh, 500px);
+  }
+
+  .library-home__cover-slot,
+  .library-home__growth-slot {
+    width: var(--home-cover-width);
+  }
+
+  .library-home__carousel-status {
+    top: 88px;
+  }
+
+  .library-home__growth-note {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .library-home__cover-slot,
+  .library-home__growth-slot,
+  .library-home__edge-control button {
+    transition-duration: var(--motion-reduced);
+  }
+
+  .library-home__cover-slot[data-wrapping="true"] {
+    animation-duration: var(--motion-reduced);
+  }
+}
+
+@keyframes reduced-shared-open {
+  from {
+    opacity: 0.72;
+    transform: translate3d(
+        var(--detail-cover-x),
+        var(--detail-cover-y),
+        0
+      )
+      scale(var(--detail-cover-scale));
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(
+        var(--detail-cover-x),
+        var(--detail-cover-y),
+        0
+      )
+      scale(var(--detail-cover-scale));
+  }
+}
+
+@keyframes reduced-shared-close {
+  from {
+    opacity: 0.72;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes reduced-reveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Shared black-and-white projection for both color modes. */
+.library-home__identity {
+  color: color-mix(in srgb, var(--theme-foreground) 78%, transparent);
+}
+
+.library-home__identity small,
+.library-home__intro p,
+.playlist-detail__type,
+.playlist-detail__count,
+.playlist-track__index,
+.playlist-track time {
+  color: color-mix(in srgb, var(--theme-muted) 42%, transparent);
+}
+
+.library-home__nav-item {
+  color: color-mix(in srgb, var(--theme-muted) 62%, transparent);
+}
+
+.library-home__nav-item::after {
+  background: color-mix(in srgb, var(--theme-accent) 78%, transparent);
+  box-shadow: 0 0 13px color-mix(in srgb, var(--theme-glow) 22%, transparent);
+}
+
+.library-home__nav-item:hover,
+.library-home__nav-item[data-active="true"] {
+  color: color-mix(in srgb, var(--theme-foreground) 92%, transparent);
+}
+
+.library-home__search,
+.library-home__back {
+  color: color-mix(in srgb, var(--theme-foreground) 58%, transparent);
+}
+
+.library-home__search:hover {
+  color: color-mix(in srgb, var(--theme-foreground) 92%, transparent);
+}
+
+.library-home__intro span {
+  color: color-mix(in srgb, var(--theme-foreground) 78%, transparent);
+}
+
+.library-home__caption {
+  color: color-mix(in srgb, var(--theme-muted) 38%, transparent);
+}
+
+.library-home__caption-line {
+  background-color: var(--theme-border);
+}
+
+.playlist-detail__list {
+  border-color: var(--theme-border);
+}
+
+.magazine-cover {
+  border-color: var(--theme-border);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.28);
+}
+
+.magazine-cover[data-position="center"] {
+  box-shadow:
+    0 32px 95px rgba(0, 0, 0, 0.42),
+    0 0 0 1px color-mix(in srgb, var(--theme-foreground) 3%, transparent);
+}
+
+.magazine-cover[data-position="left"],
+.magazine-cover[data-position="right"] {
+  opacity: 0.52;
+  filter: saturate(0.58) blur(0.25px);
+}
+
+.playlist-detail h1 {
+  color: color-mix(in srgb, var(--theme-foreground) 96%, transparent);
+  transition:
+    color var(--theme-transition) var(--motion-quiet),
+    font-size var(--theme-transition) var(--motion-gentle),
+    letter-spacing var(--theme-transition) var(--motion-gentle);
+}
+
+.playlist-detail__creator span {
+  color: color-mix(in srgb, var(--theme-muted) 48%, transparent);
+}
+
+.playlist-detail__creator strong,
+.playlist-detail__description {
+  color: color-mix(in srgb, var(--theme-muted) 76%, transparent);
+}
+
+.playlist-detail__play {
+  border-color: var(--theme-border);
+  color: color-mix(in srgb, var(--theme-foreground) 82%, transparent);
+  background: color-mix(in srgb, var(--theme-surface) 48%, transparent);
+}
+
+.playlist-detail__play:hover {
+  border-color: color-mix(in srgb, var(--theme-accent) 38%, var(--theme-border));
+  color: var(--theme-foreground);
+  background: color-mix(in srgb, var(--theme-accent) 7%, transparent);
+}
+
+.playlist-track {
+  border-bottom-color: color-mix(
+    in srgb,
+    var(--theme-border) 74%,
+    transparent
+  );
+  color: color-mix(in srgb, var(--theme-foreground) 70%, transparent);
+}
+
+.playlist-track:hover {
+  color: color-mix(in srgb, var(--theme-foreground) 96%, transparent);
+  background: color-mix(in srgb, var(--theme-accent) 4%, transparent);
+}
+
+.playlist-track__artist {
+  color: color-mix(in srgb, var(--theme-muted) 58%, transparent);
+}
+
+.library-home__playback-notice {
+  border-color: var(--theme-border);
+  color: color-mix(in srgb, var(--theme-foreground) 72%, transparent);
+  background: color-mix(in srgb, var(--theme-background) 86%, transparent);
+}
+
+.library-home__nav-item:focus-visible,
+.library-home__search:focus-visible,
+.library-home__back:focus-visible,
+.magazine-cover[data-interactive="true"]:focus-visible,
+.playlist-detail__play:focus-visible,
+.playlist-track:focus-visible {
+  outline-color: var(--theme-foreground);
+}
+
+.welcome[data-color-theme="light"] .magazine-cover {
+  box-shadow: 0 22px 62px rgba(0, 0, 0, 0.14);
+}
+
+.welcome[data-color-theme="light"]
+  .magazine-cover[data-position="center"] {
+  box-shadow:
+    0 30px 78px rgba(0, 0, 0, 0.19),
+    0 0 0 1px color-mix(in srgb, var(--theme-foreground) 5%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playlist-detail h1 {
+    transition-duration: var(--motion-reduced);
+  }
+}
+
+/* Dark is the night edition of the same editorial system, not a blackout. */
+.welcome[data-color-theme="dark"]
+  .magazine-cover[data-position="left"],
+.welcome[data-color-theme="dark"]
+  .magazine-cover[data-position="right"] {
+  opacity: 0.58;
+  filter: saturate(0.72) brightness(0.9);
+}
+
+.welcome[data-color-theme="dark"]
+  .magazine-cover[data-position="center"] {
+  filter: saturate(1) contrast(1.035) brightness(1.025);
+  box-shadow:
+    0 34px 92px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(246, 246, 242, 0.08),
+    0 0 76px rgba(218, 218, 214, 0.055);
+}
+
+/* Modern music editorial projection. */
+.library-home__topbar {
+  top: clamp(24px, 4vh, 40px);
+  right: clamp(24px, 4vw, 56px);
+  left: clamp(24px, 4vw, 56px);
+  border-top: 3px solid var(--theme-foreground);
+  padding-top: 11px;
+}
+
+.library-home__identity {
+  gap: 10px;
+  color: var(--theme-foreground);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+}
+
+.library-home__identity small,
+.library-home__intro p,
+.playlist-detail__type,
+.playlist-detail__count,
+.playlist-track__index,
+.playlist-track time {
+  color: var(--theme-muted);
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 0.045em;
+}
+
+.library-home__nav {
+  gap: clamp(18px, 2.5vw, 36px);
+}
+
+.library-home__nav-item {
+  color: var(--theme-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.library-home__nav-item::after {
+  right: 50%;
+  left: 50%;
+  height: 3px;
+  background: var(--theme-foreground);
+  box-shadow: none;
+}
+
+.library-home__nav-item[data-active="true"]::after {
+  right: 0;
+  left: 0;
+}
+
+.library-home__nav-item:hover,
+.library-home__nav-item[data-active="true"] {
+  color: var(--theme-foreground);
+}
+
+.library-home__nav-item[data-pending="true"]:not([data-active="true"]) {
+  color: color-mix(in srgb, var(--theme-foreground) 72%, transparent);
+}
+
+.library-home[data-category-transition="prepare"]
+  .library-home__nav-item[data-pending="true"]:not([data-active="true"]) {
+  color: var(--theme-muted);
+}
+
+.library-home[data-category-transition="out"]
+  .library-home__nav-item[data-pending="true"]:not([data-active="true"]) {
+  color: var(--theme-foreground);
+}
+
+.library-home__search,
+.library-home__back {
+  color: var(--theme-foreground);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.library-home__back span {
+  font-weight: 600;
+}
+
+.library-home__intro {
+  top: clamp(98px, 13vh, 126px);
+  left: clamp(24px, 5vw, 72px);
+  text-align: left;
+  transform: none;
+}
+
+.library-home__intro p {
+  margin-bottom: 4px;
+  font-size: 9px;
+}
+
+.library-home__intro span {
+  color: var(--theme-foreground);
+  font-family: inherit;
+  font-size: clamp(22px, 2.4vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.library-home__carousel-controls {
+  position: absolute;
+  top: clamp(102px, 13.5vh, 132px);
+  right: clamp(24px, 5vw, 72px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--theme-muted);
+}
+
+.library-home__carousel-controls button {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--theme-border);
+  border-radius: 0;
+  color: var(--theme-foreground);
+  background: transparent;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    color var(--motion-button) var(--motion-quiet),
+    background var(--motion-button) var(--motion-quiet),
+    border-color var(--motion-button) var(--motion-quiet);
+}
+
+.library-home__carousel-controls button:hover {
+  color: var(--theme-background);
+  background: var(--theme-foreground);
+  border-color: var(--theme-foreground);
+}
+
+.library-home__carousel-controls button:disabled {
+  cursor: default;
+  opacity: 0.42;
+}
+
+.library-home__carousel-controls > span {
+  min-width: 47px;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+}
+
+.library-home__covers {
+  top: 53%;
+  width: min(96vw, 1320px);
+  grid-template-columns: 0.7fr 1.2fr 0.7fr;
+  gap: clamp(18px, 2.8vw, 42px);
+}
+
+.magazine-cover {
+  --cover-idle-opacity: 1;
+  width: min(20vw, 238px);
+  border: 0;
+  border-radius: 0;
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.22);
+}
+
+.magazine-cover[data-position="center"] {
+  width: min(34vw, 410px);
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.35);
+}
+
+.magazine-cover[data-interactive="true"] {
+  cursor: pointer;
+}
+
+.magazine-cover[data-position="center"][data-interactive="true"]:hover {
+  filter: brightness(1.045);
+}
+
+.magazine-cover[data-position="left"],
+.magazine-cover[data-position="right"] {
+  --cover-idle-opacity: 0.68;
+  opacity: 0.68;
+  filter: brightness(0.62) saturate(0.5);
+}
+
+.magazine-cover[data-position="left"][data-interactive="true"]:hover,
+.magazine-cover[data-position="right"][data-interactive="true"]:hover {
+  opacity: 0.82;
+  filter: brightness(0.72) saturate(0.56);
+}
+
+.magazine-cover__topline {
+  top: 7%;
+  right: 7%;
+  left: 7%;
+  color: color-mix(in srgb, var(--cover-text) 78%, transparent);
+  font-size: clamp(7px, 0.65vw, 9px);
+  font-weight: 600;
+  letter-spacing: 0.045em;
+}
+
+.magazine-cover__copy {
+  right: 7%;
+  bottom: 7%;
+  left: 7%;
+}
+
+.magazine-cover__album {
+  margin-bottom: 8px;
+  color: color-mix(in srgb, var(--cover-text) 76%, transparent);
+  font-size: clamp(7px, 0.72vw, 10px);
+  font-weight: 600;
+  letter-spacing: 0.045em;
+}
+
+.magazine-cover h2 {
+  font-family: inherit;
+  font-size: clamp(18px, 2.6vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.96;
+  overflow-wrap: anywhere;
+}
+
+.magazine-cover__translation {
+  display: block;
+  margin-top: 7px;
+  color: color-mix(in srgb, var(--cover-text) 82%, transparent);
+  font-size: clamp(8px, 0.82vw, 12px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.magazine-cover__artist {
+  margin-top: 9px;
+  color: color-mix(in srgb, var(--cover-text) 86%, transparent);
+  font-size: clamp(7px, 0.75vw, 10px);
+  font-weight: 600;
+  letter-spacing: 0.055em;
+}
+
+.library-home__caption {
+  right: clamp(24px, 5vw, 72px);
+  bottom: clamp(24px, 4vh, 40px);
+  left: clamp(24px, 5vw, 72px);
+  width: auto;
+  color: var(--theme-muted);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transform: none;
+}
+
+.library-home__caption-line {
+  height: 2px;
+  background: var(--theme-border);
+}
+
+.library-home[data-carousel-motion="next"] .magazine-cover {
+  animation: carousel-swap-next 500ms var(--motion-snap) both;
+  pointer-events: none;
+}
+
+.library-home[data-carousel-motion="previous"] .magazine-cover {
+  animation: carousel-swap-previous 500ms var(--motion-snap) both;
+  pointer-events: none;
+}
+
+@keyframes carousel-swap-next {
+  0% {
+    opacity: var(--cover-idle-opacity);
+    transform: translateX(0) scale(1);
+  }
+
+  45% {
+    opacity: 0;
+    transform: translateX(-42px) scale(0.97);
+  }
+
+  54% {
+    opacity: 0;
+    transform: translateX(22px) scale(0.98);
+  }
+
+  100% {
+    opacity: var(--cover-idle-opacity);
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes carousel-swap-previous {
+  0% {
+    opacity: var(--cover-idle-opacity);
+    transform: translateX(0) scale(1);
+  }
+
+  45% {
+    opacity: 0;
+    transform: translateX(42px) scale(0.97);
+  }
+
+  54% {
+    opacity: 0;
+    transform: translateX(-22px) scale(0.98);
+  }
+
+  100% {
+    opacity: var(--cover-idle-opacity);
+    transform: translateX(0) scale(1);
+  }
+}
+
+.playlist-detail {
+  top: clamp(104px, 14vh, 126px);
+  right: clamp(30px, 5vw, 72px);
+  bottom: clamp(24px, 4vh, 40px);
+  left: 40%;
+  padding-top: 4px;
+}
+
+.playlist-detail__header {
+  max-width: 720px;
+}
+
+.playlist-detail__type {
+  margin-bottom: 10px;
+  font-size: 9px;
+}
+
+.playlist-detail h1 {
+  max-width: 780px;
+  color: var(--theme-foreground);
+  font-family: inherit;
+  font-size: clamp(54px, 7vw, 104px);
+  font-weight: 800;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+}
+
+.playlist-detail__creator {
+  margin-top: 17px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.035em;
+}
+
+.playlist-detail__creator span {
+  color: var(--theme-muted);
+  font-weight: 600;
+}
+
+.playlist-detail__creator strong {
+  color: var(--theme-foreground);
+  font-weight: 600;
+}
+
+.playlist-detail__description {
+  margin-top: 12px;
+  color: var(--theme-muted);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+}
+
+.playlist-detail__count {
+  margin-top: 8px;
+  font-size: 9px;
+}
+
+.playlist-detail__play {
+  min-width: 148px;
+  margin-top: 20px;
+  padding: 12px 19px;
+  border: 1px solid var(--theme-foreground);
+  border-radius: 0;
+  color: var(--theme-background);
+  background: var(--theme-foreground);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.playlist-detail__play:hover {
+  border-color: var(--theme-foreground);
+  color: var(--theme-foreground);
+  background: transparent;
+}
+
+.playlist-detail__list {
+  max-width: 760px;
+  margin-top: 20px;
+  border-top: 2px solid var(--theme-foreground);
+}
+
+.playlist-track {
+  min-height: 52px;
+  padding: 0 6px;
+  border-bottom: 1px solid var(--theme-border);
+  color: var(--theme-foreground);
+  grid-template-columns:
+    38px minmax(160px, 1.5fr) minmax(100px, 0.7fr) 44px;
+  transition:
+    color var(--motion-button) var(--motion-quiet),
+    background var(--motion-button) var(--motion-quiet),
+    padding var(--motion-button) var(--motion-snap);
+}
+
+.playlist-track:hover {
+  padding-right: 10px;
+  padding-left: 10px;
+  color: var(--theme-background);
+  background: var(--theme-foreground);
+}
+
+.playlist-track:hover .playlist-track__index,
+.playlist-track:hover .playlist-track__translation,
+.playlist-track:hover .playlist-track__artist,
+.playlist-track:hover time {
+  color: color-mix(in srgb, var(--theme-background) 72%, transparent);
+}
+
+.playlist-track__index,
+.playlist-track time {
+  font-size: 8px;
+}
+
+.playlist-track__title-group {
+  min-width: 0;
+}
+
+.playlist-track__title,
+.playlist-track__translation {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.playlist-track__title {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.playlist-track__translation {
+  margin-top: 2px;
+  color: var(--theme-muted);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.playlist-track__artist {
+  color: var(--theme-muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.035em;
+}
+
+.library-home__playback-notice {
+  border: 1px solid var(--theme-foreground);
+  border-radius: 0;
+  color: var(--theme-background);
+  background: var(--theme-foreground);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+@keyframes browse-information-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes browse-information-return {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes browse-left-cover-exit {
+  from {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+
+  to {
+    opacity: 0;
+    translate: -90px 0;
+    scale: 0.94;
+  }
+}
+
+@keyframes browse-right-cover-exit {
+  from {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+
+  to {
+    opacity: 0;
+    translate: 90px 0;
+    scale: 0.94;
+  }
+}
+
+@keyframes browse-left-cover-return {
+  from {
+    opacity: 0;
+    translate: -90px 0;
+    scale: 0.94;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@keyframes browse-right-cover-return {
+  from {
+    opacity: 0;
+    translate: 90px 0;
+    scale: 0.94;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@media (max-height: 700px) {
+  .library-home__intro,
+  .library-home__carousel-controls {
+    top: 84px;
+  }
+
+  .library-home__covers {
+    top: 54%;
+  }
+}
+
+@media (max-width: 760px) {
+  .library-home__nav {
+    grid-column: 2;
+    justify-self: center;
+  }
+
+  .library-home__search {
+    grid-column: 3;
+  }
+
+  .library-home[data-view="opening"] .library-home__nav,
+  .library-home[data-view="detail"] .library-home__nav {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .library-home__carousel-controls {
+    top: 82px;
+  }
+
+  .library-home__intro {
+    top: 86px;
+  }
+
+  .library-home__intro span {
+    font-size: 22px;
+  }
+
+  .library-home__covers {
+    width: 112vw;
+    gap: 14px;
+  }
+
+  .magazine-cover[data-position="center"] {
+    width: min(58vw, 360px);
+  }
+
+  .magazine-cover {
+    width: min(30vw, 190px);
+  }
+
+  .playlist-detail {
+    left: clamp(24px, 5vw, 42px);
+    padding-right: 0;
+  }
+
+  .library-home[data-view="detail"]
+    .library-home__cover-slot[data-position="center"] {
+    opacity: 0.13;
+    pointer-events: none;
+  }
+}
