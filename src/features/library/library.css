@@ -1,0 +1,1890 @@
+.library-home {
+  --home-cover-width: min(32vw, 400px);
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  overflow: hidden;
+  perspective: 1600px;
+  perspective-origin: 50% 50%;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.welcome[data-phase="library"] .library-home {
+  visibility: visible;
+  opacity: 1;
+}
+
+.welcome[data-phase="transitioning"] .library-home {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.welcome[data-phase="library"] .library-home {
+  animation: none;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+.library-home__topbar {
+  position: absolute;
+  top: clamp(28px, 5vh, 46px);
+  right: clamp(30px, 5vw, 66px);
+  left: clamp(30px, 5vw, 66px);
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr auto 1fr;
+}
+
+.library-home__identity {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  justify-self: start;
+  color: rgba(233, 233, 233, 0.74);
+  font-family: inherit;
+  font-size: 17px;
+  letter-spacing: 0.22em;
+}
+
+.library-home__identity small {
+  color: rgba(221, 221, 221, 0.3);
+  font-family: Inter, "SF Pro Text", sans-serif;
+  font-size: 7px;
+  letter-spacing: 0.2em;
+}
+
+.library-home__nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, 3.3vw, 44px);
+  transition: opacity 520ms var(--motion-quiet);
+}
+
+.library-home__nav-item {
+  position: relative;
+  padding: 8px 2px;
+  border: 0;
+  outline: none;
+  color: rgba(230, 230, 230, 0.4);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  cursor: pointer;
+  transition: color var(--motion-button) var(--motion-quiet);
+}
+
+.library-home__nav-item::after {
+  position: absolute;
+  right: 44%;
+  bottom: 0;
+  left: 44%;
+  height: 1px;
+  content: "";
+  background: rgba(222, 222, 222, 0.7);
+  opacity: 0;
+  transition:
+    right var(--motion-button) var(--motion-gentle),
+    left var(--motion-button) var(--motion-gentle),
+    opacity var(--motion-button) var(--motion-quiet);
+}
+
+.library-home__nav-item:hover,
+.library-home__nav-item[data-active="true"] {
+  color: rgba(237, 237, 237, 0.88);
+}
+
+.library-home__nav-item[data-active="true"]::after {
+  right: 20%;
+  left: 20%;
+  opacity: 1;
+}
+
+.library-home__nav-item:focus-visible,
+.library-home__search:focus-visible,
+.library-home__back:focus-visible,
+.magazine-cover[data-interactive="true"]:focus-visible,
+.playlist-detail__play:focus-visible,
+.playlist-track:focus-visible {
+  outline: 1px solid rgba(214, 214, 214, 0.74);
+  outline-offset: 5px;
+}
+
+.library-home__nav-item:disabled,
+.library-home__search:disabled {
+  cursor: default;
+}
+
+.library-home__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  justify-self: end;
+  padding: 7px;
+  border: 0;
+  outline: none;
+  color: rgba(227, 227, 227, 0.48);
+  background: transparent;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  transition: color var(--motion-button) var(--motion-quiet);
+}
+
+.library-home__identity,
+.library-home__search {
+  transition: opacity 480ms var(--motion-quiet);
+}
+
+.library-home__back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 2px;
+  border: 0;
+  outline: none;
+  color: rgba(231, 231, 231, 0.62);
+  background: transparent;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.library-home__back span {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.library-home__search:hover {
+  color: rgba(237, 237, 237, 0.86);
+}
+
+.library-home__search svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.35;
+}
+
+.library-home__intro {
+  position: absolute;
+  top: clamp(102px, 14.5vh, 132px);
+  left: 50%;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.library-home__intro p {
+  margin: 0 0 7px;
+  color: rgba(216, 216, 216, 0.3);
+  font-size: 7px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  white-space: nowrap;
+}
+
+.library-home__intro span {
+  color: rgba(233, 233, 233, 0.74);
+  font-family: inherit;
+  font-size: 15px;
+  letter-spacing: 0.2em;
+}
+
+.library-home__covers {
+  position: absolute;
+  top: 51.5%;
+  left: 50%;
+  display: grid;
+  align-items: center;
+  width: min(82vw, 940px);
+  grid-template-columns: 0.78fr 1fr 0.78fr;
+  gap: clamp(22px, 3.8vw, 52px);
+  transform: translate(-50%, -50%);
+}
+
+.library-home__cover-slot {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+
+.library-home__cover-slot[data-position="left"] {
+  justify-content: flex-end;
+  transform: translateX(62px) scale(0.9);
+}
+
+.library-home__cover-slot[data-position="center"] {
+  z-index: 2;
+  transform: scale(0.72);
+}
+
+.library-home__cover-slot[data-position="right"] {
+  justify-content: flex-start;
+  transform: translateX(-62px) scale(0.9);
+}
+
+.welcome[data-phase="library"]
+  .library-home__cover-slot[data-position="center"] {
+  animation: center-cover-enter 620ms var(--motion-gentle) both;
+}
+
+.welcome[data-phase="library"]
+  .library-home__cover-slot[data-position="left"],
+.welcome[data-phase="library"]
+  .library-home__cover-slot[data-position="right"] {
+  animation: side-cover-enter 660ms var(--motion-gentle) 90ms both;
+}
+
+.welcome[data-phase="library"] .library-home__cover-slot {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.magazine-cover {
+  position: relative;
+  appearance: none;
+  width: min(19.5vw, 216px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid rgba(230, 230, 230, 0.09);
+  border-radius: 2px;
+  color: var(--cover-text);
+  font: inherit;
+  text-align: left;
+  background:
+    radial-gradient(
+      circle at 66% 29%,
+      color-mix(in srgb, var(--cover-accent) 42%, transparent),
+      transparent 33%
+    ),
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--cover-ambient) 62%, var(--cover-background)),
+      var(--cover-background) 74%
+    );
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.28);
+  isolation: isolate;
+}
+
+.magazine-cover[data-position="center"] {
+  width: min(28vw, 318px);
+  box-shadow:
+    0 32px 95px rgba(0, 0, 0, 0.44),
+    0 0 80px color-mix(in srgb, var(--cover-ambient) 13%, transparent);
+}
+
+.magazine-cover[data-interactive="true"] {
+  cursor: pointer;
+  user-select: none;
+  will-change: transform, filter;
+}
+
+.magazine-cover[data-interactive="true"]:hover {
+  filter: brightness(1.045);
+}
+
+.magazine-cover[data-position="left"],
+.magazine-cover[data-position="right"] {
+  opacity: 0.56;
+  filter: saturate(0.72) blur(0.25px);
+}
+
+.magazine-cover::after {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+  opacity: 0.055;
+  mix-blend-mode: soft-light;
+}
+
+/* The button is the physical card shell. Artwork, typography and collection
+ * identity live on one bounded inner surface so category direction never
+ * replaces the shell's position, shadow or focus geometry. */
+.magazine-cover__handoff-surface {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+
+.magazine-cover__handoff-surface .magazine-cover__art {
+  z-index: 0;
+}
+
+.magazine-cover__handoff-surface .magazine-cover__topline,
+.magazine-cover__handoff-surface .magazine-cover__copy {
+  z-index: 2;
+}
+
+.magazine-cover__handoff-veil {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--theme-foreground) 14%, var(--theme-surface)),
+      color-mix(in srgb, var(--theme-foreground) 8%, var(--theme-surface))
+    );
+  box-shadow:
+    inset 0 0 0 1px
+      color-mix(in srgb, var(--theme-foreground) 8%, transparent);
+  opacity: 0;
+  backface-visibility: hidden;
+}
+
+.magazine-cover__art {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+}
+
+.magazine-cover__image {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 180ms var(--motion-quiet);
+}
+
+.magazine-cover__image[data-shelf-image="fallback"] {
+  opacity: 0;
+}
+
+.magazine-cover__image ~ .magazine-cover__shape,
+.magazine-cover__image ~ .magazine-cover__line {
+  opacity: 0.16;
+  mix-blend-mode: luminosity;
+}
+
+.magazine-cover__shape {
+  position: absolute;
+  display: block;
+}
+
+.magazine-cover[data-art="0"] .magazine-cover__shape--one {
+  top: 20%;
+  left: 47%;
+  width: 34%;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--cover-accent) 42%, transparent);
+  border-radius: 50%;
+}
+
+.magazine-cover[data-art="0"] .magazine-cover__shape--two {
+  right: -6%;
+  bottom: 17%;
+  width: 72%;
+  height: 1px;
+  background: color-mix(in srgb, var(--cover-text) 24%, transparent);
+  transform: rotate(-17deg);
+}
+
+.magazine-cover[data-art="1"] .magazine-cover__shape--one {
+  top: 16%;
+  right: 13%;
+  width: 29%;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--cover-text) 28%, transparent);
+  border-radius: 2px;
+  box-shadow:
+    -18px 22px 0 color-mix(in srgb, var(--cover-ambient) 42%, transparent),
+    -34px 44px 0 color-mix(in srgb, var(--cover-accent) 16%, transparent);
+  transform: rotate(4deg);
+}
+
+.magazine-cover[data-art="1"] .magazine-cover__shape--two {
+  bottom: 27%;
+  left: -8%;
+  width: 82%;
+  height: 32%;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--cover-ambient) 22%, transparent);
+  filter: blur(18px);
+  transform: rotate(-9deg);
+}
+
+.magazine-cover[data-art="2"] .magazine-cover__shape--one {
+  top: 18%;
+  left: 17%;
+  width: 44%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--cover-accent) 28%, transparent);
+  filter: blur(1px);
+}
+
+.magazine-cover[data-art="2"] .magazine-cover__shape--two {
+  top: 31%;
+  right: 13%;
+  width: 36%;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--cover-text) 22%, transparent);
+  transform: rotate(13deg);
+}
+
+.magazine-cover__line {
+  position: absolute;
+  right: 10%;
+  bottom: 14%;
+  left: 10%;
+  height: 1px;
+  background: color-mix(in srgb, var(--cover-text) 18%, transparent);
+}
+
+.magazine-cover__topline {
+  position: absolute;
+  top: 9%;
+  right: 9%;
+  left: 9%;
+  display: flex;
+  justify-content: space-between;
+  color: color-mix(in srgb, var(--cover-text) 56%, transparent);
+  font-size: clamp(5px, 0.55vw, 7px);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+}
+
+.magazine-cover__copy {
+  position: absolute;
+  right: 9%;
+  bottom: 9%;
+  left: 9%;
+}
+
+.magazine-cover__album {
+  display: block;
+  margin-bottom: 6px;
+  color: color-mix(in srgb, var(--cover-text) 48%, transparent);
+  font-size: clamp(6px, 0.62vw, 8px);
+  letter-spacing: 0.12em;
+}
+
+.magazine-cover h2 {
+  margin: 0;
+  font-family: inherit;
+  font-size: clamp(14px, 2vw, 26px);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  line-height: 1.24;
+}
+
+.magazine-cover p {
+  margin: 6px 0 0;
+  color: color-mix(in srgb, var(--cover-text) 58%, transparent);
+  font-size: clamp(6px, 0.72vw, 9px);
+  letter-spacing: 0.14em;
+}
+
+.library-home__caption {
+  position: absolute;
+  bottom: clamp(28px, 4vh, 42px);
+  left: 50%;
+  display: grid;
+  align-items: center;
+  width: min(82vw, 940px);
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  color: rgba(218, 218, 218, 0.27);
+  font-size: 7px;
+  letter-spacing: 0.2em;
+  transform: translateX(-50%);
+}
+
+.library-home__caption-line {
+  height: 1px;
+  background: rgba(221, 221, 221, 0.1);
+}
+
+.playlist-detail {
+  position: absolute;
+  z-index: 3;
+  top: clamp(112px, 16vh, 140px);
+  right: clamp(38px, 6vw, 88px);
+  bottom: clamp(28px, 4vh, 44px);
+  left: 43%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 2px 15px 42px 2px;
+  opacity: 0;
+  pointer-events: none;
+  scrollbar-color: rgba(212, 212, 212, 0.16) transparent;
+  scrollbar-width: thin;
+}
+
+.playlist-detail::-webkit-scrollbar {
+  width: 3px;
+}
+
+.playlist-detail::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: rgba(212, 212, 212, 0.16);
+}
+
+.playlist-detail__header {
+  max-width: 580px;
+}
+
+.playlist-detail__type {
+  margin: 0 0 12px;
+  color: rgba(208, 208, 208, 0.34);
+  font-size: 7px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+}
+
+.playlist-detail h1 {
+  margin: 0;
+  color: rgba(236, 236, 236, 0.92);
+  font-family: inherit;
+  font-size: clamp(32px, 4.2vw, 58px);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  line-height: 1.16;
+}
+
+.playlist-detail__creator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 9px;
+  letter-spacing: 0.11em;
+}
+
+.playlist-detail__creator span {
+  color: rgba(215, 215, 215, 0.3);
+}
+
+.playlist-detail__creator strong {
+  color: rgba(224, 224, 224, 0.62);
+  font-weight: 400;
+}
+
+.playlist-detail__description {
+  max-width: 530px;
+  margin: 17px 0 0;
+  color: rgba(221, 221, 221, 0.47);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.85;
+}
+
+.playlist-detail__count {
+  margin: 13px 0 0;
+  color: rgba(212, 212, 212, 0.27);
+  font-size: 7px;
+  letter-spacing: 0.22em;
+}
+
+.playlist-detail__play {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 128px;
+  margin-top: 24px;
+  padding: 11px 18px;
+  border: 1px solid rgba(223, 223, 223, 0.17);
+  border-radius: 2px;
+  outline: none;
+  color: rgba(233, 233, 233, 0.78);
+  background: rgba(221, 221, 221, 0.035);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition:
+    color var(--motion-button) var(--motion-quiet),
+    border-color var(--motion-button) var(--motion-quiet),
+    background var(--motion-button) var(--motion-quiet);
+}
+
+.playlist-detail__play:hover {
+  border-color: rgba(226, 226, 226, 0.32);
+  color: rgba(241, 241, 241, 0.94);
+  background: rgba(221, 221, 221, 0.065);
+}
+
+.playlist-detail__play:disabled {
+  cursor: default;
+}
+
+.playlist-detail__play-icon {
+  font-size: 8px;
+}
+
+.playlist-detail__list {
+  max-width: 650px;
+  margin-top: 26px;
+  border-top: 1px solid rgba(221, 221, 221, 0.1);
+}
+
+.playlist-track-row {
+  opacity: 0;
+}
+
+.playlist-track {
+  display: grid;
+  align-items: center;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 4px;
+  border: 0;
+  border-bottom: 1px solid rgba(221, 221, 221, 0.075);
+  outline: none;
+  color: rgba(226, 226, 226, 0.66);
+  background: transparent;
+  grid-template-columns: 34px minmax(120px, 1.3fr) minmax(80px, 0.8fr) 42px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color var(--motion-button) var(--motion-quiet),
+    background var(--motion-button) var(--motion-quiet),
+    padding var(--motion-button) var(--motion-gentle);
+}
+
+.playlist-track:hover {
+  padding-right: 7px;
+  padding-left: 7px;
+  color: rgba(237, 237, 237, 0.92);
+  background: rgba(220, 220, 220, 0.025);
+}
+
+.playlist-track:disabled {
+  cursor: default;
+}
+
+.playlist-track__index,
+.playlist-track time {
+  color: rgba(215, 215, 215, 0.25);
+  font-size: 7px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+}
+
+.playlist-track__title {
+  overflow: hidden;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.07em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.playlist-track__artist {
+  overflow: hidden;
+  color: rgba(217, 217, 217, 0.36);
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.playlist-track time {
+  justify-self: end;
+}
+
+.library-home__playback-notice {
+  position: absolute;
+  z-index: 8;
+  right: 50%;
+  bottom: 22px;
+  margin: 0;
+  padding: 8px 13px;
+  border: 1px solid rgba(218, 218, 218, 0.11);
+  border-radius: 2px;
+  color: rgba(230, 230, 230, 0.65);
+  background: rgba(16, 16, 16, 0.78);
+  font-size: 8px;
+  letter-spacing: 0.11em;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(50%, 5px);
+  transition:
+    opacity 260ms var(--motion-quiet),
+    transform 360ms var(--motion-gentle);
+}
+
+.library-home__playback-notice[data-visible="true"] {
+  opacity: 1;
+  transform: translate(50%, 0);
+}
+
+.library-home[data-view="opening"] .library-home__nav,
+.library-home[data-view="detail"] .library-home__nav {
+  opacity: 0.3;
+}
+
+.library-home[data-view="opening"] .library-home__search,
+.library-home[data-view="detail"] .library-home__search {
+  opacity: 0.18;
+}
+
+.library-home[data-view="opening"] .library-home__identity,
+.library-home[data-view="detail"] .library-home__identity {
+  opacity: 0;
+}
+
+.library-home[data-view="opening"] .library-home__back {
+  animation: detail-copy-in 300ms var(--motion-quiet)
+    var(--motion-detail-copy-delay) both;
+}
+
+.library-home[data-view="detail"] .library-home__back {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.library-home[data-view="opening"] .library-home__intro,
+.library-home[data-view="opening"] .library-home__caption {
+  animation: browse-information-exit 360ms var(--motion-quiet) both;
+}
+
+.library-home[data-view="detail"] .library-home__intro,
+.library-home[data-view="detail"] .library-home__caption {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.library-home[data-view="closing"] .library-home__intro,
+.library-home[data-view="closing"] .library-home__caption {
+  animation: browse-information-return 320ms var(--motion-quiet) 160ms both;
+}
+
+.library-home[data-view="opening"]
+  .library-home__cover-slot[data-position="left"] {
+  animation: browse-left-cover-exit var(--motion-detail)
+    var(--motion-gentle) both;
+}
+
+.library-home[data-view="opening"]
+  .library-home__cover-slot[data-position="right"] {
+  animation: browse-right-cover-exit var(--motion-detail)
+    var(--motion-gentle) both;
+}
+
+.library-home[data-view="detail"]
+  .library-home__cover-slot[data-position="left"],
+.library-home[data-view="detail"]
+  .library-home__cover-slot[data-position="right"] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.library-home[data-view="closing"]
+  .library-home__cover-slot[data-position="left"] {
+  animation: browse-left-cover-return var(--motion-detail)
+    var(--motion-gentle) both;
+}
+
+.library-home[data-view="closing"]
+  .library-home__cover-slot[data-position="right"] {
+  animation: browse-right-cover-return var(--motion-detail)
+    var(--motion-gentle) both;
+}
+
+.library-home[data-view="opening"]
+  .library-home__cover-slot[data-position="center"],
+.library-home[data-view="detail"]
+  .library-home__cover-slot[data-position="center"],
+.library-home[data-view="closing"]
+  .library-home__cover-slot[data-position="center"] {
+  z-index: 5;
+}
+
+.library-home[data-view="opening"]
+  .magazine-cover[data-position="center"] {
+  animation: shared-cover-open var(--motion-detail) var(--motion-gentle) both;
+  transform-origin: top left;
+}
+
+.library-home[data-view="detail"]
+  .magazine-cover[data-position="center"] {
+  transform: translate3d(
+      var(--detail-cover-x),
+      var(--detail-cover-y),
+      0
+    )
+    scale(var(--detail-cover-scale));
+  transform-origin: top left;
+  transition: transform 280ms var(--motion-gentle);
+}
+
+.library-home[data-view="closing"]
+  .magazine-cover[data-position="center"] {
+  animation: shared-cover-close var(--motion-detail) var(--motion-gentle) both;
+  transform-origin: top left;
+}
+
+.library-home[data-view="opening"] .playlist-detail {
+  animation: detail-copy-in 320ms var(--motion-quiet)
+    var(--motion-detail-copy-delay) both;
+}
+
+.library-home[data-view="detail"] .playlist-detail {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.library-home[data-view="closing"] .playlist-detail {
+  animation: detail-copy-out 260ms var(--motion-quiet) both;
+}
+
+.library-home[data-view="opening"] .playlist-track-row {
+  animation: track-row-in 150ms var(--motion-quiet)
+    calc(
+      var(--motion-detail-copy-delay) + 20ms +
+        var(--track-index) * var(--motion-track-stagger)
+    )
+    both;
+}
+
+.library-home[data-view="detail"] .playlist-track-row {
+  opacity: 1;
+}
+
+.library-home[data-view="closing"] .library-home__back {
+  animation: detail-copy-out 220ms var(--motion-quiet) both;
+}
+
+.library-home[data-view="closing"] .library-home__nav {
+  animation: navigation-return 360ms var(--motion-quiet) 120ms both;
+}
+
+.library-home[data-view="closing"] .library-home__identity,
+.library-home[data-view="closing"] .library-home__search {
+  animation: navigation-return 340ms var(--motion-quiet) 150ms both;
+}
+
+@keyframes shared-cover-open {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  24% {
+    transform: translate3d(0, -8px, 0) scale(1.045);
+  }
+
+  100% {
+    transform: translate3d(
+        var(--detail-cover-x),
+        var(--detail-cover-y),
+        0
+      )
+      scale(var(--detail-cover-scale));
+  }
+}
+
+@keyframes shared-cover-close {
+  0% {
+    transform: translate3d(
+        var(--detail-cover-x),
+        var(--detail-cover-y),
+        0
+      )
+      scale(var(--detail-cover-scale));
+  }
+
+  72% {
+    transform: translate3d(0, -7px, 0) scale(1.035);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes browse-left-cover-exit {
+  from {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+
+  to {
+    opacity: 0;
+    translate: -110px 0;
+    scale: 0.94;
+  }
+}
+
+@keyframes browse-right-cover-exit {
+  from {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+
+  to {
+    opacity: 0;
+    translate: 110px 0;
+    scale: 0.94;
+  }
+}
+
+@keyframes browse-left-cover-return {
+  from {
+    opacity: 0;
+    translate: -110px 0;
+    scale: 0.94;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@keyframes browse-right-cover-return {
+  from {
+    opacity: 0;
+    translate: 110px 0;
+    scale: 0.94;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@keyframes detail-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes detail-copy-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@keyframes track-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes browse-information-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-50%, -5px);
+  }
+}
+
+@keyframes browse-information-return {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes navigation-return {
+  from {
+    opacity: 0.24;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes library-shell-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes center-cover-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes side-cover-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@media (max-height: 700px) {
+  .library-home__intro {
+    top: 88px;
+  }
+
+  .library-home__covers {
+    top: 52%;
+    width: min(78vw, 780px);
+  }
+
+  .magazine-cover {
+    width: min(18.5vw, 176px);
+  }
+
+  .magazine-cover[data-position="center"] {
+    width: min(25vw, 242px);
+  }
+}
+
+@media (max-width: 720px) {
+  .library-home__identity,
+  .library-home__search span {
+    display: none;
+  }
+
+  .library-home__topbar {
+    grid-template-columns: 32px 1fr 32px;
+  }
+
+  .library-home__nav {
+    justify-self: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome[data-phase="library"] .library-home,
+  .welcome[data-phase="library"] .library-home__cover-slot {
+    animation-delay: 0ms;
+    animation-duration: var(--motion-reduced);
+  }
+
+  .library-home__cover-slot[data-position="left"],
+  .library-home__cover-slot[data-position="center"],
+  .library-home__cover-slot[data-position="right"] {
+    transform: none;
+  }
+
+  .library-home[data-view="opening"]
+    .magazine-cover[data-position="center"] {
+    animation-name: reduced-shared-open;
+    animation-duration: var(--motion-detail-reduced);
+    animation-delay: 0ms;
+  }
+
+  .library-home[data-view="closing"]
+    .magazine-cover[data-position="center"] {
+    animation-name: reduced-shared-close;
+    animation-duration: var(--motion-detail-reduced);
+    animation-delay: 0ms;
+  }
+
+  .library-home[data-view="opening"]
+    .library-home__cover-slot[data-position="left"],
+  .library-home[data-view="opening"]
+    .library-home__cover-slot[data-position="right"],
+  .library-home[data-view="opening"] .library-home__intro,
+  .library-home[data-view="opening"] .library-home__caption,
+  .library-home[data-view="closing"] .playlist-detail,
+  .library-home[data-view="closing"] .library-home__back {
+    animation-name: reduced-fade;
+    animation-duration: var(--motion-detail-reduced);
+    animation-delay: 0ms;
+  }
+
+  .library-home[data-view="closing"]
+    .library-home__cover-slot[data-position="left"],
+  .library-home[data-view="closing"]
+    .library-home__cover-slot[data-position="right"],
+  .library-home[data-view="closing"] .library-home__intro,
+  .library-home[data-view="closing"] .library-home__caption,
+  .library-home[data-view="opening"] .playlist-detail,
+  .library-home[data-view="opening"] .library-home__back,
+  .library-home[data-view="opening"] .playlist-track-row {
+    animation-name: reduced-reveal;
+    animation-duration: var(--motion-detail-reduced);
+    animation-delay: 0ms;
+  }
+}
+
+/* Three-cover browsing: shared cards, gesture input, edge-only arrows. */
+.library-home__carousel-status {
+  position: absolute;
+  top: clamp(106px, 13.8vh, 136px);
+  right: clamp(24px, 5vw, 72px);
+  color: var(--theme-muted);
+  font-size: 9px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+}
+
+.library-home__carousel-controls {
+  display: none;
+}
+
+.library-home__covers {
+  --carousel-drag-x: 0px;
+  --cover-step: clamp(270px, 31vw, 430px);
+  position: absolute;
+  top: 53%;
+  left: 50%;
+  display: block;
+  width: min(96vw, 1320px);
+  height: min(68vh, 560px);
+  touch-action: pan-y;
+  transform: translate(-50%, -50%);
+}
+
+.library-home__cover-slot,
+.library-home__growth-slot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: var(--home-cover-width);
+  min-width: 0;
+  opacity: 1;
+  transform:
+    translate3d(
+      calc(-50% + var(--carousel-drag-x)),
+      -50%,
+      0
+    )
+    scale(1);
+  transition:
+    transform 500ms cubic-bezier(0.22, 0.82, 0.18, 1),
+    opacity 320ms var(--motion-quiet);
+  will-change: transform, opacity;
+}
+
+.library-home__cover-slot[data-position="left"],
+.library-home__growth-slot[data-position="left"] {
+  z-index: 1;
+  opacity: 0.48;
+  transform:
+    translate3d(
+      calc(-50% - var(--cover-step) + var(--carousel-drag-x)),
+      -50%,
+      0
+    )
+    scale(0.84);
+}
+
+.library-home__cover-slot[data-position="center"],
+.library-home__growth-slot[data-position="center"] {
+  z-index: 3;
+}
+
+.library-home__cover-slot[data-position="right"],
+.library-home__growth-slot[data-position="right"] {
+  z-index: 1;
+  opacity: 0.48;
+  transform:
+    translate3d(
+      calc(-50% + var(--cover-step) + var(--carousel-drag-x)),
+      -50%,
+      0
+    )
+    scale(0.84);
+}
+
+.library-home__cover-slot[data-position="far-left"] {
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform:
+    translate3d(
+      calc(
+        -50% - var(--cover-step) - var(--cover-step)
+        + var(--carousel-drag-x)
+      ),
+      -50%,
+      0
+    )
+    scale(0.5);
+}
+
+.library-home__cover-slot[data-position="far-right"] {
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform:
+    translate3d(
+      calc(
+        -50% + var(--cover-step) + var(--cover-step)
+        + var(--carousel-drag-x)
+      ),
+      -50%,
+      0
+    )
+    scale(0.5);
+}
+
+.library-home__covers[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+.library-home__covers[data-dragging="true"] .library-home__cover-slot,
+.library-home__covers[data-dragging="true"] .library-home__growth-slot {
+  transition: none;
+}
+
+.library-home__cover-slot .magazine-cover {
+  width: 100%;
+}
+
+.library-home__cover-slot .magazine-cover[data-position="center"] {
+  width: 100%;
+}
+
+.library-home__cover-slot[data-position="left"] .magazine-cover,
+.library-home__cover-slot[data-position="right"] .magazine-cover {
+  opacity: 1;
+  filter: brightness(0.68) saturate(0.58);
+}
+
+.library-home__cover-slot[data-position="left"]:hover .magazine-cover,
+.library-home__cover-slot[data-position="right"]:hover .magazine-cover {
+  opacity: 1;
+  filter: brightness(0.78) saturate(0.64);
+}
+
+.library-home__cover-slot[data-position="left"] .magazine-cover__copy,
+.library-home__cover-slot[data-position="right"] .magazine-cover__copy {
+  opacity: 0.72;
+}
+
+.library-home[data-carousel-motion="next"] .magazine-cover,
+.library-home[data-carousel-motion="previous"] .magazine-cover {
+  animation: none;
+}
+
+/* Spatial continuity pass --------------------------------------------------
+ * The home collection is one continuous, level record shelf. Inline
+ * transforms from the shared RAF remain authoritative; scale, opacity and Z
+ * depth establish focus without introducing a decorative vertical stagger.
+ */
+.library-home__covers {
+  --cover-step: clamp(330px, 36vw, 520px);
+  top: 52%;
+  width: 100vw;
+  height: min(76vh, 650px);
+  perspective: 1500px;
+  perspective-origin: 50% 48%;
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-track-offset] {
+  width: var(--home-cover-width);
+  transform-style: preserve-3d;
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-focus-layer="1"]
+  .magazine-cover,
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-focus-layer="2"]
+  .magazine-cover {
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.2);
+}
+
+.library-home[data-view="browsing"]
+  .library-home__cover-slot[data-focus-layer="3"]
+  .magazine-cover {
+  box-shadow: 0 30px 76px rgba(0, 0, 0, 0.32);
+}
+
+/* The panel portal owns a compositor-isolated overlay. It never changes the
+ * wall's width, flex geometry or page transform. */
+.library-home__overlay-layer {
+  position: absolute;
+  z-index: 40;
+  inset: 0;
+  width: auto;
+  height: auto;
+  contain: strict;
+  transform: none;
+}
+
+.library-home__overlay-layer > .music-wall__detail-overlay {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  transform: none;
+}
+
+@media (max-width: 760px) {
+  .library-home {
+    --home-cover-width: min(58vw, 360px);
+  }
+
+  .library-home__covers {
+    --cover-step: clamp(260px, 62vw, 390px);
+    width: 118vw;
+  }
+
+  .library-home[data-view="browsing"]
+    .library-home__cover-slot[data-track-offset] {
+    width: var(--home-cover-width);
+  }
+}
+
+/* Home cover -> Music Wall
+ *
+ * The wall is laid out and its first cover batch is decoded while this frame
+ * is still `prepared`. The following phase only composites existing layers:
+ * the carousel remains fixed, its side surfaces dim, the focused cover grows
+ * in place, and the prepared wall opens underneath it. No slot geometry or
+ * page layout participates in the animation.
+ */
+.library-home[data-view="prepared"],
+.library-home[data-view="opening"],
+.library-home[data-view="closing"] {
+  pointer-events: none;
+}
+
+.library-home[data-view="prepared"] .library-home__covers,
+.library-home[data-view="opening"] .library-home__covers,
+.library-home[data-view="closing"] .library-home__covers {
+  z-index: 16;
+}
+
+.library-home[data-view="browsing"][data-wall-locking="true"]
+  .library-home__cover-slot[data-track-offset] {
+  pointer-events: none;
+}
+
+.library-home[data-view="browsing"][data-wall-locking="true"]
+  .library-home__cover-slot[data-track-offset]:not([data-focused="true"])
+  .magazine-cover {
+  opacity: var(--home-wall-lock-side-opacity);
+  filter: none;
+  transform: translateZ(-30px) scale(0.97);
+  transition:
+    opacity var(--home-wall-lock-duration) var(--home-wall-quiet-easing),
+    transform var(--home-wall-lock-duration) var(--home-wall-easing);
+}
+
+.library-home[data-view="browsing"][data-wall-locking="true"]
+  .library-home__cover-slot[data-focused="true"]
+  .magazine-cover {
+  filter: none;
+  transform: translateZ(24px) scale(var(--home-wall-lock-scale));
+  transition: transform var(--home-wall-lock-duration)
+    var(--home-wall-easing);
+  will-change: transform;
+}
+
+.library-home__covers[data-click-pending="true"]
+  .library-home__cover-slot[data-focused="true"]
+  .magazine-cover {
+  filter: none;
+  transform: translateZ(0) scale(var(--home-wall-lock-scale));
+  transition: transform var(--home-wall-lock-duration)
+    var(--home-wall-easing);
+  will-change: transform;
+}
+
+.library-home__covers[data-click-pending="true"]
+  .library-home__cover-slot[data-track-offset]:not([data-focused="true"])
+  .magazine-cover {
+  opacity: var(--home-wall-lock-side-opacity);
+  filter: none;
+  transform: translateZ(-10px) scale(0.995);
+  transition:
+    opacity var(--home-wall-lock-duration) var(--home-wall-quiet-easing),
+    transform var(--home-wall-lock-duration) var(--home-wall-easing);
+}
+
+.library-home__cover-slot[data-focused="true"]
+  .magazine-cover__art::before {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.06);
+  content: "";
+  opacity: 0;
+  transition: opacity var(--home-wall-lock-duration)
+    var(--home-wall-quiet-easing);
+}
+
+.library-home[data-view="browsing"][data-wall-locking="true"]
+  .library-home__cover-slot[data-focused="true"]
+  .magazine-cover__art::before,
+.library-home__covers[data-click-pending="true"]
+  .library-home__cover-slot[data-focused="true"]
+  .magazine-cover__art::before,
+.library-home[data-view="prepared"]
+  .library-home__cover-slot[data-focused="true"]
+  .magazine-cover__art::before {
+  opacity: 1;
+}
+
+/* The portal root is only the master timeline owner. It never clips the Wall:
+ * clipping a complete grid here made the transition read as a rectangular web
+ * page on top of Home. The intact-cover medium and the cards now form on two
+ * separate compositor planes. */
+.library-home__portal-layer {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  overflow: hidden;
+  contain: paint style;
+  isolation: isolate;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* A click may stage the Portal DOM during the reversible single/double-click
+ * confirmation window. Keep that isolated shell non-paintable until it takes
+ * visual ownership; opacity alone allowed WebKit to expose a newly mounted
+ * full-viewport surface for one frame on some machines. */
+.library-home__portal-layer[data-active="false"] {
+  visibility: hidden;
+}
+
+.library-home__portal-layer[data-active="true"][data-state="prepared"] {
+  opacity: 1;
+}
+
+.library-home__portal-layer[data-state="opening"] {
+  animation: cover-portal-expand var(--home-wall-duration)
+    var(--home-wall-easing) both;
+  will-change: opacity;
+}
+
+.library-home__portal-layer[data-state="detail"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateZ(0);
+}
+
+.library-home__portal-layer[data-state="closing"] {
+  animation: cover-portal-collapse var(--home-wall-close-duration)
+    var(--home-wall-quiet-easing) both;
+  will-change: opacity;
+}
+
+/* Only the intact-cover atmosphere is revealed from the cover origin. The
+ * Music Wall is deliberately not a descendant of this clip, so no full grid
+ * can ever be seen as a shrinking or expanding rectangle. */
+.library-home__portal-medium {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  contain: paint style;
+  isolation: isolate;
+  opacity: 1;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.library-home__portal-medium::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: var(
+    --library-environment-material,
+    var(--theme-background)
+  );
+  background-size: var(
+    --library-environment-material-size,
+    100% 100%
+  );
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+}
+
+.library-home__portal-medium[data-state="opening"]::before {
+  animation: cover-portal-medium-material-in var(--home-wall-duration)
+    var(--home-wall-easing) both;
+}
+
+.library-home__portal-medium[data-state="detail"]::before {
+  opacity: 1;
+}
+
+.library-home__portal-medium[data-state="closing"]::before {
+  animation: cover-portal-medium-material-out
+    var(--home-wall-close-duration) var(--home-wall-quiet-easing) both;
+}
+
+.library-home__portal-medium-field {
+  position: absolute;
+  inset: -8%;
+  overflow: hidden;
+  isolation: isolate;
+  background: transparent;
+  opacity: 0;
+  transform: translateZ(0) scale3d(0.96, 0.96, 1);
+  transform-origin: var(--portal-center-x) var(--portal-center-y);
+}
+
+/* This is the one opaque scene surface shared by Home and Wall during the
+ * hand-off. Keeping the paper on its own layer avoids composing a translucent
+ * near-white field over two still-readable scenes. */
+.library-home__portal-medium-field::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: transparent;
+  content: "";
+}
+
+.library-home__portal-layer[data-state="opening"]
+  .library-home__portal-medium-field {
+  animation: cover-portal-medium-expand var(--home-wall-duration)
+    var(--home-wall-easing) both;
+  will-change: transform, opacity;
+}
+
+.library-home__portal-layer[data-state="detail"]
+  .library-home__portal-medium-field {
+  opacity: 1;
+  transform: translateZ(0) scale3d(1, 1, 1);
+}
+
+.library-home__portal-layer[data-state="closing"]
+  .library-home__portal-medium-field {
+  animation: cover-portal-medium-collapse var(--home-wall-close-duration)
+    var(--home-wall-quiet-easing) both;
+  will-change: transform;
+}
+
+.library-home__portal-directory {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  overflow: hidden;
+  color: var(--theme-foreground);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.library-home__portal-directory-label,
+.library-home__portal-directory strong {
+  position: absolute;
+  display: block;
+  font-size: clamp(10px, 0.9vw, 13px);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.library-home__portal-directory-label {
+  top: 22%;
+  left: clamp(28px, 8vw, 120px);
+}
+
+.library-home__portal-directory strong {
+  right: clamp(28px, 8vw, 120px);
+  bottom: 21%;
+}
+
+.library-home__portal-directory i {
+  position: absolute;
+  display: block;
+  height: 1px;
+  background: color-mix(
+    in srgb,
+    var(--theme-foreground) 24%,
+    transparent
+  );
+  transform-origin: 0 50%;
+}
+
+.library-home__portal-directory i[data-axis="primary"] {
+  top: 27%;
+  left: clamp(28px, 8vw, 120px);
+  width: min(48vw, 680px);
+}
+
+.library-home__portal-directory i[data-axis="secondary"] {
+  right: clamp(28px, 8vw, 120px);
+  bottom: 27%;
+  width: min(32vw, 460px);
+}
+
+.library-home__portal-directory[data-state="opening"] {
+  animation: cover-portal-directory-in var(--home-wall-duration)
+    var(--home-wall-quiet-easing) both;
+}
+
+.library-home__portal-directory[data-state="detail"] {
+  opacity: 0;
+}
+
+.library-home__portal-directory[data-state="closing"] {
+  animation: cover-portal-directory-out var(--home-wall-close-duration)
+    var(--home-wall-quiet-easing) both;
+}
+
+.library-home__portal-surface {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: transparent;
+  opacity: 0;
+  transform: translateZ(0);
+}
+
+/* Shared artwork lives inside the same Portal stacking context as its medium
+ * and Wall. There is no independent page-level cover plane: ownership can only
+ * move cover -> medium -> Wall (and exactly reverse on return). */
+.library-home__portal-artwork {
+  position: absolute;
+  z-index: 3;
+  top: var(--portal-cover-top);
+  left: var(--portal-cover-left);
+  width: var(--portal-cover-width);
+  height: var(--portal-cover-height);
+  overflow: visible;
+  contain: layout style;
+  isolation: isolate;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateZ(0) scale(1);
+  transform-origin: 50% 50%;
+}
+
+.library-home__portal-shared-cover {
+  position: absolute;
+  inset: 0;
+}
+
+.library-home__portal-artwork[data-active="true"][data-state="prepared"] {
+  opacity: 1;
+  transform: translateZ(0) scale(var(--home-wall-lock-scale));
+}
+
+.library-home__portal-artwork .magazine-cover {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  opacity: 1;
+  pointer-events: none;
+  transform: none;
+}
+
+.library-home__portal-artwork[data-state="opening"] {
+  animation: cover-portal-artwork-out var(--home-wall-duration)
+    var(--home-wall-easing) both;
+  will-change: transform, opacity;
+}
+
+.library-home__portal-artwork[data-state="detail"] {
+  opacity: 0;
+}
+
+.library-home__portal-artwork[data-state="closing"] {
+  animation: cover-portal-artwork-in var(--home-wall-close-duration)
+    var(--home-wall-easing) both;
+  will-change: transform, opacity;
+}
+
+.library-home__portal-surface > .music-wall {
+  z-index: 1;
+  background: transparent !important;
+}
+
+/* The surface is the monotonic Wall ownership gate. Child card, field or
+ * chrome animations can never expose a complete Wall before the cover medium
+ * owns the viewport, nor make the Wall readable again after closing begins. */
+.library-home__portal-layer[data-state="prepared"]
+  .library-home__portal-surface {
+  opacity: 0;
+}
+
+.library-home__portal-layer[data-state="opening"]
+  .library-home__portal-surface {
+  animation: cover-portal-wall-owner-in var(--home-wall-duration)
+    var(--home-wall-easing) both;
+  will-change: opacity;
+}
+
+.library-home__portal-layer[data-state="detail"]
+  .library-home__portal-surface {
+  opacity: 1;
+}
+
+.library-home__portal-layer[data-state="closing"]
+  .library-home__portal-surface {
+  animation: cover-portal-wall-owner-out var(--home-wall-close-duration)
+    var(--home-wall-quiet-easing) both;
+  will-change: opacity;
+}
+
+.library-home__portal-medium-field > .cover-atmosphere {
+  z-index: 1;
+  inset: 0;
+}
+
+/* The final viewport plus one buffer column is decoded during prepare and is
+ * the only card band that needs a dedicated portal surface. Keeping the rest
+ * of the stable pool on content-visibility:auto avoids promoting dozens of
+ * off-screen clones during the same frame. */
+.library-home__portal-layer
+  .music-wall__card-slot[data-portal-participant="true"] {
+  content-visibility: visible;
+}
+
+/* The Wall is prepared at its final layout, but cards are introduced from the
+ * cover medium instead of exposing the complete grid on frame one. */
+.library-home__portal-layer[data-state="opening"]
+  .library-home__portal-surface > .music-wall {
+  animation: none;
+  opacity: 1;
+}
+
+.library-home__portal-layer[data-state="closing"]
+  .music-wall__viewport {
+  animation: none;
+  opacity: 1;
+}
+
+.library-home__portal-layer[data-state="closing"]
+  .library-home__portal-surface > .music-wall {
+  animation: none;
+  opacity: 1;
+}
+
+.library-home__portal-layer[data-state="prepared"]
+  .music-wall__header {
+  opacity: 0;
+  transform: translate3d(0, -8px, 0);
+}
+
+.library-home__portal-layer
+  .music-wall:is([data-state="prepared"], [data-state="opening"], [data-state="detail"], [data-state="closing"]) {
+  background: transparent !important;
+}
+
+.library-home__portal-layer .music-wall[data-state="prepared"]::before,
+.library-home__portal-layer .music-wall[data-state="prepared"]::after {
+  opacity: 0 !important;
+}
+
+.library-home__portal-layer .music-wall[data-state="opening"]::before {
+  animation: cover-portal-field-in var(--home-wall-duration)
+    var(--home-wall-quiet-easing) both;
+}
+
+.library-home__portal-layer .music-wall[data-state="opening"]::after {
+  animation: cover-portal-shade-in var(--home-wall-duration)
+    var(--home-wall-quiet-easing) both;
+}
+
+.library-home__portal-layer .music-wall[data-state="closing"]::before {
+  animation: none;
+  opacity: var(--portal-field-opacity, 0.54);
+}
+
+.library-home__portal-layer .music-wall[data-state="closing"]::after {
+  animation: none;
+  opacity: 1;
+}
+
+.library-home__portal-layer .music-wall[data-state="prepared"]
+  .music-wall__card-slot {
+  opacity: 0;
+  transform: none;
+}
+
+.library-home__portal-layer .music-wall[data-state="opening"]
+  .music-wall__card-slot[data-portal-participant="true"] {
+  animation: cover-portal-card-form
+    var(--home-wall-card-form-duration) var(--home-wall-easing) both;
+  animation-delay: calc(
+    var(--home-wall-card-form-start) + var(--portal-card-delay, 0ms)
+  );
+}
+
+.library-home__portal-layer .music-wall[data-state="closing"]
+  .music-wall__card-slot[data-portal-participant="true"] {
+  animation: cover-portal-card-recede
+    var(--home-wall-card-exit-duration) var(--home-wall-quiet-easing) both;
+  animation-delay: var(--home-wall-card-exit-start);
+}
+
+.library-home__portal-layer[data-state="opening"] .music-wall__header {
+  animation: cover-portal-chrome-in var(--home-wall-duration)
+    var(--home-wall-quiet-easing) both;
+}
+
+.library-home__portal-layer[data-state="closing"] .music-wall__header {
+  animation: cover-portal-chrome-out var(--home-wall-close-duration)
+    var(--home-wall-quiet-easing) both;
+}
+
+.library-home[data-view="prepared"],
+.library-home[data-view="opening"],
+.library-home[data-view="closing"] {
+  pointer-events: none;
+}
