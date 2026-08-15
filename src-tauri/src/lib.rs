@@ -1,4 +1,6 @@
 mod netease;
+mod qqmusic;
+mod qqmusic_mobile_login;
 
 use tauri::Manager;
 
@@ -6,10 +8,13 @@ use tauri::Manager;
 pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
+            let app_data_dir = app.path().app_data_dir()?;
             let netease_state =
-                netease::NeteaseState::new(app.path().app_data_dir()?)
-                    .map_err(std::io::Error::other)?;
+                netease::NeteaseState::new(app_data_dir).map_err(std::io::Error::other)?;
+            let qq_state = qqmusic::QqMusicState::new(app.path().app_data_dir()?)
+                .map_err(std::io::Error::other)?;
             app.manage(netease_state);
+            app.manage(qq_state);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -21,6 +26,14 @@ pub fn run() {
             netease::netease_get_lyrics,
             netease::netease_get_audio_source,
             netease::netease_logout,
+            qqmusic::qq_restore_session,
+            qqmusic::qq_create_qr,
+            qqmusic::qq_check_qr,
+            qqmusic::qq_sync_library,
+            qqmusic::qq_get_collection_tracks,
+            qqmusic::qq_get_lyrics,
+            qqmusic::qq_get_audio_source,
+            qqmusic::qq_logout,
         ])
         .run(tauri::generate_context!())
         .expect("error while running the Tauri application");
