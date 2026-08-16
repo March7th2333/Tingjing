@@ -1,0 +1,1527 @@
+.music-wall {
+  --wall-surface: color-mix(
+    in srgb,
+    var(--theme-background) 95%,
+    var(--theme-foreground)
+  );
+  --wall-panel: color-mix(
+    in srgb,
+    var(--theme-background) 78%,
+    transparent
+  );
+  --wall-line: color-mix(
+    in srgb,
+    var(--theme-foreground) 26%,
+    transparent
+  );
+  position: absolute;
+  z-index: 14;
+  inset: 0;
+  overflow: hidden;
+  color: var(--theme-foreground);
+  background: var(--wall-surface);
+  isolation: isolate;
+}
+
+.music-wall[data-state="prepared"] {
+  pointer-events: none;
+}
+
+.music-wall[data-state="opening"] {
+  pointer-events: none;
+}
+
+.music-wall[data-state="closing"] {
+  pointer-events: none;
+}
+
+.music-wall::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse at 50% 48%,
+      color-mix(in srgb, var(--theme-foreground) 5%, transparent),
+      transparent 64%
+    ),
+    linear-gradient(var(--theme-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--theme-grid-line) 1px, transparent 1px);
+  background-size: auto, 84px 84px, 84px 84px;
+  content: "";
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 9%,
+    black 91%,
+    transparent
+  );
+  opacity: 0.54;
+}
+
+.music-wall::after {
+  position: absolute;
+  z-index: 7;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: min(26vh, 220px);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--wall-surface) 0%,
+    color-mix(in srgb, var(--wall-surface) 88%, transparent) 42%,
+    transparent 100%
+  );
+  content: "";
+}
+
+.music-wall__header {
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: grid;
+  min-height: 104px;
+  align-items: start;
+  border-top: 3px solid var(--theme-foreground);
+  margin: 26px clamp(26px, 4vw, 58px) 0;
+  padding-top: 11px;
+  grid-template-columns: minmax(100px, 0.7fr) minmax(280px, 1.3fr) 1fr;
+  gap: 24px;
+  transition:
+    opacity var(--wall-panel-duration) var(--wall-quiet-easing),
+    transform var(--wall-panel-duration) var(--wall-easing);
+}
+
+.music-wall__back,
+.music-wall__panel button {
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.music-wall__back {
+  display: inline-flex;
+  width: max-content;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.035em;
+}
+
+.music-wall__back span {
+  font-size: 15px;
+}
+
+.music-wall__back:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+.music-wall__collection {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.music-wall__collection > span,
+.music-wall__collection > small,
+.music-wall__meta {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.035em;
+}
+
+.music-wall__collection > strong {
+  max-width: 100%;
+  margin-top: 4px;
+  font-size: clamp(25px, 3.1vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
+  overflow-wrap: anywhere;
+}
+
+.music-wall__collection > small {
+  margin-top: 7px;
+  color: var(--theme-muted);
+  font-weight: 500;
+}
+
+.music-wall__meta {
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(14px, 2vw, 28px);
+  padding-top: 7px;
+  color: var(--theme-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.music-wall__viewport {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  perspective: 1500px;
+  perspective-origin: 50% 49%;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  backface-visibility: hidden;
+  contain: layout paint style;
+  transition:
+    opacity var(--motion-player-enter) var(--wall-quiet-easing),
+    transform var(--motion-player-enter) var(--wall-easing);
+}
+
+.music-wall[data-dragging="true"] .music-wall__viewport {
+  cursor: grabbing;
+}
+
+.music-wall[data-interaction-locked="true"] .music-wall__viewport {
+  pointer-events: none;
+}
+
+.music-wall__track-grid {
+  display: flex;
+  width: max-content;
+  flex-direction: column;
+  gap: var(--wall-gap);
+  pointer-events: none;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.music-wall__track-row,
+.music-wall__sequence {
+  display: flex;
+  width: max-content;
+  gap: var(--wall-gap);
+  transform-style: preserve-3d;
+}
+
+.music-wall__track-row {
+  position: relative;
+}
+
+.music-wall__track-row:nth-child(even) {
+  transform: translate3d(
+    calc((var(--card-size) + var(--wall-gap)) * 0.5),
+    0,
+    0
+  );
+}
+
+.music-wall__track-row:nth-child(odd) {
+  transform: translate3d(
+    calc((var(--card-size) + var(--wall-gap)) * -0.08),
+    0,
+    0
+  );
+}
+
+.music-wall__card-slot {
+  position: relative;
+  width: var(--card-size);
+  height: var(--card-size);
+  pointer-events: none;
+  content-visibility: auto;
+  contain-intrinsic-size: var(--card-size) var(--card-size);
+  transform-style: preserve-3d;
+}
+
+/* The prepared viewport is the transition destination, so its visible cards
+   must be painted before the wall is revealed. Off-screen pool slots keep the
+   normal content-visibility optimization and are recycled outside the frame. */
+.music-wall__card-slot[data-portal-participant="true"],
+.music-wall__card-slot[data-formation-origin="true"] {
+  content-visibility: visible;
+}
+
+.music-wall__card {
+  --card-rotate-x: 0deg;
+  --card-rotate-y: 0deg;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  pointer-events: auto;
+  color: #fff;
+  background:
+    linear-gradient(
+      145deg,
+      var(--card-ambient),
+      var(--card-background) 62%,
+      color-mix(in srgb, var(--card-background) 74%, #000)
+    );
+  box-shadow:
+    0 16px 30px rgba(0, 0, 0, 0.16),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.13);
+  cursor: pointer;
+  opacity: var(--card-distance-opacity);
+  transform:
+    translate3d(0, 0, var(--card-depth))
+    rotateX(var(--card-rotate-x))
+    rotateY(var(--card-rotate-y))
+    scale(1);
+  transform-style: preserve-3d;
+  transition:
+    transform var(--wall-return-duration) var(--wall-easing),
+    opacity var(--wall-selection-duration) var(--wall-quiet-easing);
+}
+
+.music-wall__card:disabled {
+  cursor: default;
+}
+
+.music-wall__cover {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 72% 25%,
+      color-mix(in srgb, var(--card-accent) 56%, transparent),
+      transparent 34%
+    ),
+    linear-gradient(
+      145deg,
+      var(--card-ambient),
+      var(--card-background) 64%
+    );
+}
+
+.music-wall__cover img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transform: scale(1.015);
+  transition: transform var(--wall-return-duration) var(--wall-easing);
+}
+
+.music-wall__card-overlay {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(13px, 1.5vw, 20px);
+  background: linear-gradient(
+    to bottom,
+    transparent 32%,
+    rgba(0, 0, 0, 0.18) 58%,
+    rgba(0, 0, 0, 0.84) 100%
+  );
+  opacity: 0;
+  transform: translateY(5px);
+  transition:
+    opacity var(--wall-hover-duration) var(--wall-quiet-easing),
+    transform var(--wall-hover-duration) var(--wall-easing);
+}
+
+.music-wall__card-index {
+  align-self: flex-start;
+  padding: 5px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(0, 0, 0, 0.44);
+  font-size: 8px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.music-wall__card-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.music-wall__card-copy strong,
+.music-wall__card-copy small {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.music-wall__card-copy strong {
+  font-size: clamp(14px, 1.5vw, 22px);
+  font-weight: 750;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-align: left;
+  text-wrap: balance;
+}
+
+.music-wall__card-copy small {
+  margin-top: 7px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.035em;
+  white-space: nowrap;
+}
+
+.music-wall__current-mark {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 12px;
+  width: 8px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 4px rgba(0, 0, 0, 0.28),
+    0 0 14px rgba(255, 255, 255, 0.3);
+}
+
+.music-wall__card:hover,
+.music-wall__card:focus-visible,
+.music-wall__card[data-hovered="true"] {
+  z-index: 5;
+  opacity: 1;
+  box-shadow:
+    0 30px 58px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.36);
+  transform:
+    translate3d(0, 0, var(--wall-hover-depth))
+    rotateX(var(--card-rotate-x))
+    rotateY(var(--card-rotate-y))
+    scale(var(--wall-hover-scale));
+  transition-duration: var(--wall-hover-duration);
+  will-change: transform;
+}
+
+.music-wall__card:hover .music-wall__cover img,
+.music-wall__card:focus-visible .music-wall__cover img,
+.music-wall__card[data-hovered="true"] .music-wall__cover img {
+  filter: saturate(1.02) contrast(1.05);
+  transform: scale(1.035);
+}
+
+.music-wall__card:hover .music-wall__card-overlay,
+.music-wall__card:focus-visible .music-wall__card-overlay,
+.music-wall__card[data-hovered="true"] .music-wall__card-overlay,
+.music-wall__card[data-selected="true"] .music-wall__card-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.music-wall__track-grid[data-has-hover="true"]
+  .music-wall__card[data-hovered="false"] {
+  opacity: 0.88;
+}
+
+.music-wall__card[data-selected="true"] {
+  z-index: 8;
+  opacity: 1;
+  box-shadow:
+    0 40px 82px rgba(0, 0, 0, 0.38),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.72);
+  transform:
+    translate3d(0, 0, 64px)
+    rotateX(0)
+    rotateY(0)
+    scale(1.14);
+  transition-duration: var(--wall-selection-duration);
+  will-change: transform, opacity;
+}
+
+/* Spotify artwork is licensed for unmodified presentation. Keep its original
+   square composition, never crop/blur it, and keep all metadata outside the
+   artwork surface. Selection is expressed by the shell border instead of
+   tilting or enlarging the image. */
+.music-wall[data-provider-id="spotify"] .music-wall__cover,
+.music-wall[data-provider-id="spotify"] .music-wall__panel-cover {
+  border-radius: 8px;
+  background: transparent;
+}
+
+.music-wall[data-provider-id="spotify"] .music-wall__cover img,
+.music-wall[data-provider-id="spotify"] .music-wall__panel-cover img,
+.music-wall[data-provider-id="spotify"] .music-wall__card:hover .music-wall__cover img,
+.music-wall[data-provider-id="spotify"] .music-wall__card:focus-visible .music-wall__cover img,
+.music-wall[data-provider-id="spotify"] .music-wall__card[data-hovered="true"] .music-wall__cover img {
+  object-fit: contain;
+  border-radius: 8px;
+  filter: none;
+  transform: none;
+}
+
+.music-wall[data-provider-id="spotify"] .music-wall__card,
+.music-wall[data-provider-id="spotify"] .music-wall__card:hover,
+.music-wall[data-provider-id="spotify"] .music-wall__card:focus-visible,
+.music-wall[data-provider-id="spotify"] .music-wall__card[data-hovered="true"],
+.music-wall[data-provider-id="spotify"] .music-wall__card[data-selected="true"] {
+  transform:
+    translate3d(0, 0, var(--card-depth))
+    rotateX(0)
+    rotateY(0)
+    scale(1);
+}
+
+.music-wall[data-provider-id="spotify"] .music-wall__card-overlay,
+.music-wall[data-provider-id="spotify"] .music-wall__current-mark,
+.music-wall[data-provider-id="spotify"] .music-wall__panel-cover > span {
+  display: none;
+}
+
+.music-wall__selection-dimmer {
+  display: none;
+}
+
+.music-wall__track-grid[data-has-selection="true"]
+  .music-wall__card:not([data-selected="true"]),
+.music-wall__static-layout[data-has-selection="true"]
+  .music-wall__card:not([data-selected="true"]) {
+  opacity: 0.34;
+}
+
+.music-wall__card:focus-visible,
+.music-wall__back:focus-visible,
+.music-wall__panel button:focus-visible {
+  outline: 2px solid var(--theme-foreground);
+  outline-offset: 4px;
+}
+
+.music-wall__detail-overlay {
+  --wall-panel: color-mix(
+    in srgb,
+    var(--theme-background) 78%,
+    transparent
+  );
+  --wall-line: color-mix(
+    in srgb,
+    var(--theme-foreground) 26%,
+    transparent
+  );
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  overflow: hidden;
+  overflow: clip;
+  pointer-events: none;
+  contain: layout paint style;
+  isolation: isolate;
+}
+
+.music-wall__detail-overlay[data-open="true"] {
+  pointer-events: auto;
+}
+
+.music-wall__panel-scrim {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.music-wall__detail-overlay[data-open="true"] .music-wall__panel-scrim {
+  pointer-events: auto;
+}
+
+.music-wall__panel {
+  position: absolute;
+  z-index: 1;
+  top: 18px;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  width: min(40vw, 490px);
+  min-width: 380px;
+  overflow: hidden;
+  flex-direction: column;
+  padding: clamp(24px, 3vw, 40px);
+  padding-bottom: max(
+    clamp(24px, 3vw, 40px),
+    var(--account-safe-height)
+  );
+  border: 1px solid var(--wall-line);
+  color: var(--theme-foreground);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--theme-foreground) 8%, transparent),
+      transparent 34%
+    ),
+    var(--wall-panel);
+  box-shadow:
+    -24px 0 64px rgba(0, 0, 0, 0.17),
+    inset 1px 0 0 color-mix(
+      in srgb,
+      var(--theme-foreground) 13%,
+      transparent
+    );
+  opacity: 0;
+  pointer-events: none;
+  backface-visibility: hidden;
+  contain: layout style;
+  transform: translate3d(120%, 0, 0);
+  transform-origin: right center;
+  transition:
+    transform var(--wall-panel-duration) var(--wall-easing),
+    opacity var(--wall-panel-duration) var(--wall-quiet-easing);
+  will-change: transform, opacity;
+}
+
+.music-wall__detail-overlay[data-open="true"] .music-wall__panel {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+.music-wall__panel-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 3px solid var(--theme-foreground);
+  padding-top: 10px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.music-wall__panel-topline button {
+  padding: 4px 0;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.035em;
+}
+
+.music-wall__panel-cover {
+  --panel-cover-background: #181818;
+  --panel-cover-ambient: #444;
+  position: relative;
+  width: clamp(104px, 10vw, 142px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  flex: 0 0 auto;
+  margin-top: clamp(24px, 4.5vh, 42px);
+  background:
+    radial-gradient(
+      circle at 68% 28%,
+      color-mix(
+        in srgb,
+        var(--panel-cover-ambient) 62%,
+        transparent
+      ),
+      transparent 42%
+    ),
+    var(--panel-cover-background);
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.22),
+    inset 0 0 0 1px color-mix(
+      in srgb,
+      var(--theme-foreground) 16%,
+      transparent
+    );
+}
+
+.music-wall__panel-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.music-wall__panel-cover > span {
+  position: absolute;
+  right: 8px;
+  bottom: 7px;
+  padding: 4px 5px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.56);
+  font-size: 8px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.music-wall__panel-title {
+  margin-top: clamp(19px, 3.4vh, 32px);
+}
+
+.music-wall__panel-title h2,
+.music-wall__panel-title p {
+  margin: 0;
+}
+
+.music-wall__panel-title h2 {
+  max-width: 96%;
+  font-size: clamp(32px, 3.8vw, 58px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.93;
+  overflow-wrap: anywhere;
+}
+
+.music-wall__panel-title p {
+  margin-top: 10px;
+  color: var(--theme-muted);
+  font-size: clamp(13px, 1.3vw, 18px);
+  font-weight: 500;
+  line-height: 1.12;
+}
+
+.music-wall__panel-title p[data-visible="false"] {
+  visibility: hidden;
+}
+
+.music-wall__details {
+  display: grid;
+  margin: clamp(22px, 3.7vh, 36px) 0 0;
+  border-top: 1px solid var(--wall-line);
+  grid-template-columns: 1fr 1fr;
+}
+
+.music-wall__details > div {
+  min-width: 0;
+  border-bottom: 1px solid var(--wall-line);
+  padding: 11px 10px 11px 0;
+}
+
+.music-wall__details > div:last-child {
+  grid-column: 1 / -1;
+}
+
+.music-wall__details dt,
+.music-wall__details dd {
+  margin: 0;
+}
+
+.music-wall__details dt {
+  color: var(--theme-muted);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.music-wall__details dd {
+  margin-top: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.music-wall__panel-play {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding: 15px 16px;
+  color: var(--theme-background) !important;
+  background: var(--theme-foreground) !important;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition:
+    opacity 180ms var(--wall-quiet-easing),
+    transform 180ms var(--wall-easing);
+}
+
+.music-wall__panel-play:active,
+.music-wall__panel-play[data-transitioning="true"] {
+  opacity: 0.76;
+  transform: translate3d(0, 1px, 0) scale(0.985);
+}
+
+.music-wall__panel-play[data-transitioning="true"] {
+  cursor: progress;
+}
+
+.music-wall__panel-play-label {
+  transition: opacity 120ms var(--wall-quiet-easing);
+}
+
+.music-wall__panel-play::after {
+  position: absolute;
+  right: 16px;
+  content: "ENTERING";
+  opacity: 0;
+  transform: translate3d(0, 3px, 0);
+  transition:
+    opacity 120ms var(--wall-quiet-easing),
+    transform 180ms var(--wall-easing);
+}
+
+.music-wall__panel-play[data-transitioning="true"]
+  .music-wall__panel-play-label {
+  opacity: 0;
+}
+
+.music-wall__panel-play[data-transitioning="true"]::after {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.music-wall__panel-actions {
+  display: grid;
+  border-right: 1px solid var(--wall-line);
+  border-bottom: 1px solid var(--wall-line);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.music-wall__panel-actions button {
+  padding: 12px 6px;
+  border-left: 1px solid var(--wall-line);
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.music-wall__panel-status {
+  min-height: 18px;
+  margin: 11px 0 0;
+  color: var(--theme-muted);
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.music-wall[data-selection-phase="braking"] .music-wall__header,
+.music-wall[data-selection-phase="closing"] .music-wall__header,
+.music-wall[data-panel-open="true"] .music-wall__header {
+  opacity: 0.72;
+}
+
+.music-wall[data-playing="true"] {
+  pointer-events: none;
+}
+
+.music-wall__detail-overlay[data-playing="true"] {
+  pointer-events: none;
+}
+
+.music-wall[data-playing="true"] .music-wall__header {
+  opacity: 0;
+  transform: translateY(-18px);
+}
+
+.music-wall[data-playing="true"] .music-wall__viewport {
+  opacity: 0.2;
+  transform: scale(0.92);
+}
+
+/* During the reverse Cover Passage the already-prepared wall is the final
+   destination. Keep its compositor pose stable behind the player medium; the
+   selected card itself stays hidden until the sharp cover releases ownership. */
+.music-wall[data-playing="true"][data-returning="true"]
+  .music-wall__viewport {
+  opacity: 1;
+  transform: scale(1);
+  transition: none;
+}
+
+.music-wall__detail-overlay[data-playing="true"] .music-wall__panel {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(120%, 0, 0);
+}
+
+.music-wall[data-playing="true"] .music-wall__card[data-selected="true"] {
+  opacity: 0;
+  transform:
+    translate3d(0, 0, 64px)
+    rotateX(0)
+    rotateY(0)
+    scale(1.14);
+  transition: none;
+}
+
+/* During player exit the corrected panel and target geometry are prepared
+   behind the still-present player. The target artwork remains hidden until the
+   SharpCoverPlane reaches that exact rect and the player commits, so two clear
+   copies can never compete during the reverse passage. */
+.music-wall__detail-overlay[data-playing="true"][data-returning="true"]
+  .music-wall__panel {
+  opacity: 1;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transition: none;
+}
+
+.music-wall[data-playing="true"][data-returning="true"]
+  .music-wall__card[data-selected="true"] {
+  animation: cover-passage-wall-card-claim var(--motion-player-exit)
+    linear both;
+  transform:
+    translate3d(0, 0, 64px)
+    rotateX(0)
+    rotateY(0)
+    scale(1.14);
+  transition: none;
+}
+
+@keyframes cover-passage-wall-card-claim {
+  0%,
+  99.9% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.music-wall[data-playing="false"][data-returning="true"]
+  .music-wall__viewport,
+.music-wall[data-playing="false"][data-returning="true"]
+  .music-wall__card[data-selected="true"] {
+  transition: none;
+}
+
+.music-wall[data-playing="false"][data-returning="true"]
+  .music-wall__card[data-selected="true"] {
+  opacity: 1;
+  animation: none;
+}
+
+.music-wall[data-low-performance="true"] .music-wall__viewport {
+  perspective: none;
+}
+
+.music-wall[data-low-performance="true"] .music-wall__card {
+  transform: scale(1);
+}
+
+.music-wall[data-low-performance="true"] .music-wall__card:hover,
+.music-wall[data-low-performance="true"] .music-wall__card:focus-visible,
+.music-wall[data-low-performance="true"]
+  .music-wall__card[data-hovered="true"] {
+  transform: scale(1.045);
+}
+
+.music-wall[data-low-performance="true"]
+  .music-wall__card[data-selected="true"] {
+  transform: scale(1.1);
+}
+
+@media (max-width: 820px) {
+  .music-wall__header {
+    min-height: 92px;
+    margin: 18px 20px 0;
+    grid-template-columns: auto 1fr;
+  }
+
+  .music-wall__meta {
+    display: none;
+  }
+
+  .music-wall__collection > strong {
+    font-size: clamp(24px, 7vw, 38px);
+  }
+
+  .music-wall__panel {
+    top: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: calc(100% - 24px);
+    min-width: 0;
+  }
+
+  .music-wall__panel-cover {
+    margin-top: 22px;
+  }
+}
+
+/* Glass detail is a permanently mounted overlay surface. Visibility is
+   expressed only by compositor properties, so it cannot push the wall. */
+.music-wall__detail-overlay {
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.music-wall__detail-overlay .music-wall__panel {
+  right: 18px;
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+
+.music-wall__detail-overlay[data-open="true"] .music-wall__panel {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.music-wall__detail-overlay[data-open="false"] .music-wall__panel {
+  pointer-events: none;
+}
+
+@media (max-width: 820px) {
+  .music-wall__detail-overlay .music-wall__panel {
+    right: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-wall__card,
+  .music-wall__cover img,
+  .music-wall__card-overlay,
+  .music-wall__panel,
+  .music-wall__viewport,
+  .music-wall__selection-dimmer,
+  .music-wall__header {
+    transition-duration: 100ms;
+  }
+
+  .music-wall__panel {
+    transition-duration: 100ms;
+  }
+
+  .music-wall__card,
+  .music-wall__card:hover,
+  .music-wall__card:focus-visible,
+  .music-wall__card[data-hovered="true"],
+  .music-wall__card[data-selected="true"] {
+    transform: none;
+  }
+
+  .music-wall__track-grid[data-has-hover="true"]
+    .music-wall__card[data-hovered="false"] {
+    opacity: 0.9;
+  }
+}
+
+.music-wall__growth-note {
+  position: absolute;
+  z-index: 8;
+  right: clamp(26px, 4vw, 58px);
+  bottom: clamp(24px, 4vh, 44px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 0;
+  color: var(--theme-muted);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: right;
+  pointer-events: none;
+}
+
+.music-wall__growth-note span {
+  color: var(--theme-foreground);
+}
+
+.music-wall[data-growing="true"] .music-wall__track-grid {
+  min-width: 100vw;
+}
+
+/* Final sizing guard: every adaptive Track Tile remains square. */
+.music-wall__static-layout .music-wall__card-slot {
+  display: grid;
+  width: min(100%, 62vh);
+  height: auto;
+  aspect-ratio: 1;
+  place-items: center;
+}
+
+.music-wall__static-layout .music-wall__card {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.music-wall__static-layout[data-layout="editorial"][data-count="1"]
+  .music-wall__card-slot:first-child {
+  width: min(68vh, 68vw);
+  justify-self: center;
+  grid-column: 1 / 13;
+}
+
+@media (max-width: 820px) {
+  .music-wall__static-layout[data-layout="editorial"][data-count="1"]
+    .music-wall__card-slot:first-child {
+    width: min(68vh, 82vw);
+    grid-column: 1 / 3 !important;
+  }
+}
+
+.music-wall__spotify-playback {
+  display: grid;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.music-wall__spotify-playback .spotify-attribution {
+  width: 100%;
+}
+
+.music-wall__spotify-playback p {
+  margin: 0;
+  color: var(--theme-muted);
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.music-wall[data-provider-id="spotify"] .music-wall__meta {
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
+.music-wall__spotify-limit {
+  flex-basis: 100%;
+  text-align: right;
+}
+
+/* Final Spotify artwork guard. It intentionally sits after theme, adaptive
+ * layout and hover rules so none of those later layers can crop, blur, tint,
+ * tilt or print metadata over provider artwork. */
+.music-wall[data-provider-id="spotify"] .music-wall__cover,
+.music-wall[data-provider-id="spotify"] .music-wall__panel-cover {
+  border-radius: 8px;
+  background: transparent;
+}
+
+.music-wall[data-provider-id="spotify"] .music-wall__cover img,
+.music-wall[data-provider-id="spotify"] .music-wall__panel-cover img,
+.welcome[data-color-theme="dark"]
+  .music-wall[data-provider-id="spotify"]
+  .music-wall__card:hover
+  .music-wall__cover
+  img,
+.welcome[data-color-theme="dark"]
+  .music-wall[data-provider-id="spotify"]
+  .music-wall__card:focus-visible
+  .music-wall__cover
+  img,
+.welcome[data-color-theme="dark"]
+  .music-wall[data-provider-id="spotify"]
+  .music-wall__card[data-hovered="true"]
+  .music-wall__cover
+  img {
+  object-fit: contain;
+  border-radius: 8px;
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+.music-wall[data-provider-id="spotify"] .music-wall__card,
+.music-wall[data-provider-id="spotify"] .music-wall__card:hover,
+.music-wall[data-provider-id="spotify"] .music-wall__card:focus-visible,
+.music-wall[data-provider-id="spotify"]
+  .music-wall__card[data-hovered="true"],
+.music-wall[data-provider-id="spotify"]
+  .music-wall__card[data-selected="true"] {
+  transform:
+    translate3d(0, 0, var(--card-depth))
+    rotateX(0)
+    rotateY(0)
+    scale(1);
+}
+
+.music-wall[data-provider-id="spotify"] .music-wall__card-overlay,
+.music-wall[data-provider-id="spotify"] .music-wall__current-mark,
+.music-wall[data-provider-id="spotify"] .music-wall__panel-cover > span {
+  display: none;
+}
+
+/* Adaptive collection layouts */
+.music-wall__static-layout {
+  position: absolute;
+  top: clamp(112px, 14vh, 138px);
+  right: clamp(24px, 4vw, 58px);
+  bottom: clamp(24px, 4vh, 44px);
+  left: clamp(24px, 4vw, 58px);
+  display: grid;
+  gap: clamp(14px, 1.6vw, 22px);
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.music-wall__static-layout .music-wall__card-slot {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  align-self: center;
+  justify-self: center;
+}
+
+.music-wall__static-layout .music-wall__card {
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+}
+
+.music-wall__static-layout[data-layout="editorial"] {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.music-wall__static-layout[data-layout="editorial"]
+  .music-wall__card-slot:first-child {
+  grid-column: 1 / 7;
+  grid-row: 1 / 3;
+}
+
+.music-wall__static-layout[data-layout="editorial"]
+  .music-wall__card-slot:nth-child(2) {
+  grid-column: 7 / 10;
+  grid-row: 1;
+}
+
+.music-wall__static-layout[data-layout="editorial"]
+  .music-wall__card-slot:nth-child(3) {
+  grid-column: 10 / 13;
+  grid-row: 1;
+}
+
+.music-wall__static-layout[data-layout="editorial"]
+  .music-wall__card-slot:nth-child(4) {
+  grid-column: 7 / 10;
+  grid-row: 2;
+}
+
+.music-wall__static-layout[data-layout="editorial"]
+  .music-wall__card-slot:nth-child(5) {
+  grid-column: 10 / 13;
+  grid-row: 2;
+}
+
+.music-wall__static-layout[data-layout="editorial"][data-count="2"]
+  .music-wall__card-slot:nth-child(2) {
+  grid-column: 8 / 13;
+  grid-row: 1 / 3;
+}
+
+.music-wall__static-layout[data-layout="editorial"][data-count="3"]
+  .music-wall__card-slot:nth-child(2) {
+  grid-column: 7 / 10;
+  grid-row: 1 / 3;
+}
+
+.music-wall__static-layout[data-layout="editorial"][data-count="3"]
+  .music-wall__card-slot:nth-child(3) {
+  grid-column: 10 / 13;
+  grid-row: 1 / 3;
+}
+
+.music-wall__static-layout[data-layout="editorial"][data-count="4"]
+  .music-wall__card-slot:nth-child(2) {
+  grid-column: 7 / 10;
+  grid-row: 1 / 3;
+}
+
+.music-wall__static-layout[data-layout="editorial"][data-count="4"]
+  .music-wall__card-slot:nth-child(3) {
+  grid-column: 10 / 13;
+  grid-row: 1;
+}
+
+.music-wall__static-layout[data-layout="editorial"][data-count="4"]
+  .music-wall__card-slot:nth-child(4) {
+  grid-column: 10 / 13;
+  grid-row: 2;
+}
+
+.music-wall__static-layout[data-layout="gallery"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+
+.music-wall__static-layout[data-layout="gallery"][data-count="10"],
+.music-wall__static-layout[data-layout="gallery"][data-count="11"],
+.music-wall__static-layout[data-layout="gallery"][data-count="12"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.music-wall__static-layout[data-layout="gallery"]
+  .music-wall__card-slot {
+  aspect-ratio: 1;
+}
+
+.music-wall__card-overlay time {
+  align-self: flex-end;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 8px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.music-wall__card-translation {
+  opacity: 0.78;
+}
+
+.music-wall__card[data-presentation="typography"] {
+  color: var(--theme-foreground);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--theme-foreground) 6%, transparent),
+      transparent 54%
+    ),
+    var(--theme-background);
+  box-shadow:
+    inset 0 0 0 1px var(--theme-border),
+    0 16px 30px rgba(0, 0, 0, 0.12);
+}
+
+.music-wall__card[data-presentation="typography"]
+  .music-wall__cover {
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--theme-foreground) 10%, transparent),
+      var(--theme-background)
+    );
+}
+
+.music-wall__card[data-presentation="typography"]
+  .music-wall__cover img {
+  opacity: 0.14;
+  filter: grayscale(1) contrast(1.08);
+  transform: scale(1.18);
+}
+
+.music-wall__card[data-presentation="typography"]
+  .music-wall__card-overlay {
+  align-items: flex-start;
+  padding: clamp(14px, 1.8vw, 24px);
+  color: var(--theme-foreground);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--theme-background) 28%, transparent),
+    color-mix(in srgb, var(--theme-background) 88%, transparent)
+  );
+  opacity: 1;
+  transform: none;
+}
+
+.music-wall__card[data-presentation="typography"]
+  .music-wall__card-index {
+  border-color: var(--theme-border);
+  color: var(--theme-foreground);
+  background: var(--theme-background);
+}
+
+.music-wall__card[data-presentation="typography"]
+  .music-wall__card-copy {
+  align-self: flex-end;
+}
+
+.music-wall__card[data-presentation="typography"]
+  .music-wall__card-copy strong {
+  font-size: clamp(18px, 2vw, 31px);
+  line-height: 0.95;
+}
+
+.music-wall__card[data-presentation="typography"]
+  .music-wall__card-copy small,
+.music-wall__card[data-presentation="typography"]
+  .music-wall__card-overlay time {
+  color: var(--theme-muted);
+}
+
+.music-wall__static-layout[data-has-hover="true"]
+  .music-wall__card[data-hovered="false"] {
+  opacity: 0.72;
+}
+
+.welcome[data-color-theme="dark"] .music-wall {
+  --theme-grid-line: rgba(238, 238, 234, 0.028);
+  --wall-surface: #111214;
+  --wall-panel: rgba(22, 23, 25, 0.82);
+  background:
+    radial-gradient(
+      ellipse 52% 64% at 18% 64%,
+      rgba(229, 229, 225, 0.065),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 48% 48% at 86% 28%,
+      rgba(214, 214, 210, 0.052),
+      transparent 74%
+    ),
+    var(--wall-surface);
+}
+
+.welcome[data-color-theme="dark"] .music-wall::before {
+  opacity: 0.78;
+}
+
+/* During Home <-> Wall the ambient medium owns the scene surface. The wall
+ * itself stays transparent in every portal phase, including stable detail,
+ * so changing coarse React state cannot flash a second full-screen surface. */
+.welcome[data-color-theme="dark"]
+  .library-home__portal-medium-field {
+  background: transparent;
+}
+
+.welcome[data-color-theme="dark"]
+  .library-home__portal-medium-field::before {
+  background:
+    radial-gradient(
+      ellipse 52% 64% at 18% 64%,
+      rgba(229, 229, 225, 0.065),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 48% 48% at 86% 28%,
+      rgba(214, 214, 210, 0.052),
+      transparent 74%
+    ),
+    #111214;
+}
+
+.welcome[data-color-theme="dark"]
+  .library-home__portal-layer
+  .music-wall {
+  --portal-field-opacity: 0.78;
+  background: transparent !important;
+}
+
+.welcome[data-color-theme="dark"] .music-wall__selection-dimmer {
+  background: rgba(13, 14, 16, 0.46);
+}
+
+.welcome[data-color-theme="dark"]
+  .music-wall__card:hover
+  .music-wall__cover
+  img,
+.welcome[data-color-theme="dark"]
+  .music-wall__card:focus-visible
+  .music-wall__cover
+  img,
+.welcome[data-color-theme="dark"]
+  .music-wall__card[data-hovered="true"]
+  .music-wall__cover
+  img {
+  filter: saturate(1) contrast(1.085) brightness(1.06);
+}
+
+.music-wall[data-layout="editorial"] .music-wall__viewport,
+.music-wall[data-layout="gallery"] .music-wall__viewport {
+  cursor: default;
+  perspective-origin: 44% 52%;
+}
+
+@media (max-width: 560px) {
+  .music-wall__static-layout {
+    top: 104px;
+    right: 18px;
+    left: 18px;
+    overflow-y: auto;
+  }
+
+  .music-wall__static-layout[data-layout="gallery"],
+  .music-wall__static-layout[data-layout="gallery"][data-count="10"],
+  .music-wall__static-layout[data-layout="gallery"][data-count="11"],
+  .music-wall__static-layout[data-layout="gallery"][data-count="12"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+  }
+
+}
+
+/* Keep these guards last so legacy and responsive wall rules cannot stretch
+   adaptive tiles into banners. */
+.music-wall__static-layout .music-wall__card-slot {
+  display: grid;
+  width: min(100%, 62vh);
+  height: auto;
+  aspect-ratio: 1;
+  place-items: center;
+}
+
+.music-wall__static-layout .music-wall__card {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.music-wall__static-layout[data-layout="editorial"][data-count="1"]
+  .music-wall__card-slot:first-child {
+  width: min(68vh, 68vw);
+  justify-self: center;
+  grid-column: 1 / 13;
+}
+
+@media (max-width: 820px) {
+  .music-wall__static-layout[data-layout="editorial"][data-count="1"]
+    .music-wall__card-slot:first-child {
+    width: min(68vh, 82vw);
+    grid-column: 1 / 13 !important;
+  }
+}
+
+/* Keep provider artwork invariants last: dark-theme hover and adaptive
+ * typography declarations above must never alter Spotify cover pixels. */
+.music-wall[data-provider-id="spotify"] .music-wall__cover img,
+.music-wall[data-provider-id="spotify"] .music-wall__panel-cover img,
+.welcome[data-color-theme="dark"]
+  .music-wall[data-provider-id="spotify"]
+  .music-wall__card:hover
+  .music-wall__cover
+  img,
+.welcome[data-color-theme="dark"]
+  .music-wall[data-provider-id="spotify"]
+  .music-wall__card:focus-visible
+  .music-wall__cover
+  img,
+.welcome[data-color-theme="dark"]
+  .music-wall[data-provider-id="spotify"]
+  .music-wall__card[data-hovered="true"]
+  .music-wall__cover
+  img {
+  object-fit: contain;
+  border-radius: 8px;
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+.music-wall[data-provider-id="spotify"] .music-wall__card,
+.music-wall[data-provider-id="spotify"] .music-wall__card:hover,
+.music-wall[data-provider-id="spotify"] .music-wall__card:focus-visible,
+.music-wall[data-provider-id="spotify"]
+  .music-wall__card[data-hovered="true"],
+.music-wall[data-provider-id="spotify"]
+  .music-wall__card[data-selected="true"] {
+  transform:
+    translate3d(0, 0, var(--card-depth))
+    rotateX(0)
+    rotateY(0)
+    scale(1);
+}
+
+.music-wall[data-provider-id="spotify"] .music-wall__card-overlay,
+.music-wall[data-provider-id="spotify"] .music-wall__current-mark,
+.music-wall[data-provider-id="spotify"] .music-wall__panel-cover > span {
+  display: none;
+}

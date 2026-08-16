@@ -1,0 +1,32 @@
+[package]
+name = "inside-the-song"
+version = "0.1.1"
+description = "Tingjing, an immersive spatial desktop music player"
+authors = ["March 7th"]
+edition = "2021"
+license = "AGPL-3.0-only"
+homepage = "https://github.com/March7th2333/Tingjing"
+repository = "https://github.com/March7th2333/Tingjing"
+
+[lib]
+name = "inside_the_song_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+base64 = "0.22"
+futures-util = "0.3"
+md5 = "0.7"
+netease-music = "0.1.1"
+qrcode = "0.14"
+rand = "0.8"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tauri = { version = "2", features = [] }
+tokio = { version = "1", features = ["io-util", "macros", "net", "sync", "time"] }
+tokio-tungstenite = { version = "0.28", features = ["rustls-tls-native-roots"] }
+url = "2"
