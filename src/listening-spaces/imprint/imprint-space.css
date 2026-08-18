@@ -1,0 +1,512 @@
+.immersive-player__lyrics.imprint-listening-space {
+  --imprint-paper: #f4f3ee;
+  --imprint-paper-deep: #e9e7df;
+  --imprint-ink: #101012;
+  --imprint-ink-secondary: rgb(16 16 18 / 64%);
+  --imprint-ink-muted: rgb(16 16 18 / 42%);
+  --imprint-ink-proof: rgb(16 16 18 / 54%);
+  --imprint-ink-outline: rgb(16 16 18 / 18%);
+  --imprint-rule: rgb(16 16 18 / 13%);
+  --imprint-rule-strong: rgb(16 16 18 / 42%);
+  --imprint-registration: rgb(16 16 18 / 34%);
+  --imprint-fiber: rgb(16 16 18 / 3.5%);
+  --imprint-fiber-soft: rgb(16 16 18 / 2%);
+  --imprint-focus-halo: rgb(255 255 255 / 72%);
+  --imprint-press-shadow: rgb(16 16 18 / 15%);
+  --imprint-grid-gap: clamp(10px, 1.25vw, 22px);
+  --imprint-current-measure: min(78vw, 1040px);
+  --imprint-controls-safe: max(
+    clamp(160px, 20vh, 214px),
+    calc(clamp(24px, 4vw, 56px) + 118px)
+  );
+  --imprint-progress: 0;
+  --imprint-intro-strength: 1;
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  padding: clamp(24px, 4vw, 56px) clamp(24px, 4vw, 56px)
+    var(--imprint-controls-safe);
+  color: var(--imprint-ink);
+  background: var(--imprint-paper);
+  font-family:
+    Inter, "SF Pro Display", "SF Pro Text", "Noto Sans CJK JP",
+    "Noto Sans JP", "PingFang SC", "Hiragino Sans", system-ui,
+    sans-serif;
+  text-align: left;
+  contain: layout paint style;
+  transform-style: preserve-3d;
+}
+
+.immersive-player[data-player-theme="dark"]
+  .imprint-listening-space {
+  --imprint-paper: #0d0d0f;
+  --imprint-paper-deep: #151518;
+  --imprint-ink: #f4f3ee;
+  --imprint-ink-secondary: rgb(244 243 238 / 66%);
+  --imprint-ink-muted: rgb(244 243 238 / 40%);
+  --imprint-ink-proof: rgb(244 243 238 / 43%);
+  --imprint-ink-outline: rgb(244 243 238 / 19%);
+  --imprint-rule: rgb(244 243 238 / 12%);
+  --imprint-rule-strong: rgb(244 243 238 / 35%);
+  --imprint-registration: rgb(244 243 238 / 31%);
+  --imprint-fiber: rgb(244 243 238 / 3.5%);
+  --imprint-fiber-soft: rgb(244 243 238 / 2%);
+  --imprint-focus-halo: rgb(244 243 238 / 4.5%);
+  --imprint-press-shadow: rgb(255 255 255 / 10%);
+}
+
+.imprint-listening-space::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.82;
+  background-image:
+    repeating-linear-gradient(
+      7deg,
+      transparent 0 3px,
+      var(--imprint-fiber-soft) 3px 4px,
+      transparent 4px 8px
+    ),
+    repeating-linear-gradient(
+      91deg,
+      transparent 0 11px,
+      var(--imprint-fiber) 11px 12px,
+      transparent 12px 23px
+    ),
+    radial-gradient(
+      circle at 16% 22%,
+      var(--imprint-fiber) 0 0.6px,
+      transparent 0.9px
+    ),
+    radial-gradient(
+      circle at 61% 73%,
+      var(--imprint-fiber) 0 0.5px,
+      transparent 0.9px
+    );
+  background-size: auto, auto, 9px 11px, 13px 15px;
+  mix-blend-mode: multiply;
+}
+
+.immersive-player[data-player-theme="dark"]
+  .imprint-listening-space::before {
+  mix-blend-mode: screen;
+}
+
+.imprint-listening-space::after {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  bottom: 0;
+  left: clamp(24px, 4vw, 56px);
+  width: calc(100% - (2 * clamp(24px, 4vw, 56px)));
+  pointer-events: none;
+  content: "";
+  opacity: 0.52;
+  background-image: linear-gradient(
+    90deg,
+    var(--imprint-rule) 0 1px,
+    transparent 1px
+  );
+  background-size: calc((100% - (11 * var(--imprint-grid-gap))) / 12 + var(--imprint-grid-gap)) 100%;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 8%,
+    #000 84%,
+    transparent 96%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 8%,
+    #000 84%,
+    transparent 96%
+  );
+}
+
+.imprint-listening-space > * {
+  min-width: 0;
+}
+
+.imprint-listening-space__texture {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      112deg,
+      transparent 0 47%,
+      var(--imprint-fiber-soft) 47.2% 47.4%,
+      transparent 47.6%
+    ),
+    radial-gradient(
+      ellipse 58% 34% at calc(42% + (var(--imprint-progress) * 4%)) 48%,
+      var(--imprint-focus-halo) 0,
+      transparent 72%
+    );
+}
+
+.imprint-listening-space__masthead {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--imprint-grid-gap);
+  align-items: start;
+  min-height: clamp(54px, 7.5vh, 78px);
+  padding-bottom: clamp(10px, 1.5vh, 18px);
+  border-bottom: 1px solid var(--imprint-rule-strong);
+}
+
+.imprint-listening-space__masthead::before,
+.imprint-listening-space__masthead::after {
+  position: absolute;
+  bottom: -3px;
+  width: 7px;
+  height: 5px;
+  border-block: 1px solid var(--imprint-registration);
+  content: "";
+}
+
+.imprint-listening-space__masthead::before {
+  left: 0;
+}
+
+.imprint-listening-space__masthead::after {
+  right: 0;
+}
+
+.imprint-listening-space__identity {
+  grid-column: 1 / span 3;
+  margin: 0;
+  color: var(--imprint-ink);
+  font-size: clamp(9px, 0.72vw, 11px);
+  font-weight: 760;
+  letter-spacing: 0.045em;
+  line-height: 1.15;
+}
+
+.imprint-listening-space__identity small {
+  display: block;
+  margin-top: 5px;
+  color: var(--imprint-ink-muted);
+  font-size: clamp(8px, 0.62vw, 10px);
+  font-weight: 520;
+  letter-spacing: 0.025em;
+}
+
+.imprint-listening-space__track {
+  grid-column: 4 / span 5;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
+}
+
+.imprint-listening-space__cover {
+  display: block;
+  width: clamp(38px, 4.2vw, 58px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--imprint-rule-strong);
+  background: var(--imprint-paper-deep);
+  object-fit: cover;
+}
+
+.imprint-listening-space__track-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.imprint-listening-space__track-copy strong,
+.imprint-listening-space__track-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.imprint-listening-space__track-copy strong {
+  color: var(--imprint-ink);
+  font-size: clamp(12px, 1.05vw, 16px);
+  font-weight: 760;
+  letter-spacing: -0.025em;
+}
+
+.imprint-listening-space__track-copy small {
+  color: var(--imprint-ink-muted);
+  font-size: clamp(8px, 0.68vw, 10px);
+  font-weight: 500;
+}
+
+.imprint-listening-space__mode {
+  grid-column: 9 / span 3;
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin: 2px 54px 0 0;
+  color: var(--imprint-ink-muted);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: clamp(8px, 0.62vw, 10px);
+  font-weight: 650;
+  letter-spacing: 0.05em;
+}
+
+.imprint-listening-space__stage {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--imprint-grid-gap);
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  perspective: 920px;
+  perspective-origin: 49% 48%;
+}
+
+.imprint-listening-space__atmosphere {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  -webkit-mask-image: radial-gradient(
+    ellipse 46% 31% at 46% 50%,
+    transparent 0 42%,
+    rgb(0 0 0 / 32%) 64%,
+    #000 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 46% 31% at 46% 50%,
+    transparent 0 42%,
+    rgb(0 0 0 / 32%) 64%,
+    #000 100%
+  );
+}
+
+.imprint-listening-space__atmosphere::after {
+  position: absolute;
+  top: 8%;
+  right: -3%;
+  width: min(31vw, 520px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  content: "";
+  opacity: calc(0.018 + (var(--imprint-intro-strength) * 0.026));
+  background-image: radial-gradient(
+    circle,
+    var(--imprint-ink) 0 0.7px,
+    transparent 0.9px
+  );
+  background-size: 4px 4px;
+  transform: rotate(-3deg);
+}
+
+.imprint-listening-space__plate {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  opacity: calc(0.025 + (var(--imprint-intro-strength) * 0.032));
+  background:
+    linear-gradient(118deg, transparent 18%, var(--imprint-ink-outline) 52%, transparent 82%),
+    linear-gradient(26deg, var(--imprint-rule) 0 1px, transparent 1px 100%);
+  box-shadow:
+    inset 0 0 0 1px var(--imprint-rule),
+    0 18px 70px var(--imprint-press-shadow);
+  filter: blur(72px);
+  will-change: transform, opacity;
+}
+
+.imprint-listening-space__plate[data-plate="01"] {
+  top: -24%;
+  left: -12%;
+  width: min(48vw, 780px);
+  height: min(46vw, 720px);
+  transform: rotate(-8deg) translate3d(0, 0, -56px);
+  animation: imprint-plate-one 24s ease-in-out infinite alternate;
+}
+
+.imprint-listening-space__plate[data-plate="02"] {
+  right: -18%;
+  bottom: -30%;
+  width: min(44vw, 700px);
+  height: min(38vw, 610px);
+  opacity: calc(0.022 + (var(--imprint-intro-strength) * 0.026));
+  transform: rotate(12deg) translate3d(0, 0, -72px);
+  animation: imprint-plate-two 29s ease-in-out infinite alternate;
+}
+
+.imprint-listening-space__plate[data-plate="03"] {
+  top: 7%;
+  right: 17%;
+  width: min(28vw, 460px);
+  height: min(30vw, 490px);
+  opacity: calc(0.016 + (var(--imprint-intro-strength) * 0.018));
+  filter: blur(110px);
+  transform: rotate(-3deg) translate3d(0, 0, -92px);
+  animation: imprint-plate-three 21s ease-in-out infinite alternate;
+}
+
+.imprint-listening-space__cover-master {
+  position: absolute;
+  top: 5%;
+  right: -4%;
+  display: block;
+  width: min(31vw, 520px);
+  aspect-ratio: 1;
+  object-fit: cover;
+  object-position: center;
+  opacity: calc(0.025 + (var(--imprint-intro-strength) * 0.03));
+  filter: grayscale(1) contrast(1.18) brightness(0.92);
+  mix-blend-mode: multiply;
+  transform: rotate(-3deg) translate3d(2px, 0, -42px);
+  -webkit-mask-image: linear-gradient(138deg, transparent 3%, #000 24%, #000 65%, transparent 94%);
+  mask-image: linear-gradient(138deg, transparent 3%, #000 24%, #000 65%, transparent 94%);
+}
+
+.immersive-player[data-player-theme="dark"]
+  .imprint-listening-space__cover-master {
+  filter: grayscale(1) contrast(1.05) brightness(1.12);
+  mix-blend-mode: screen;
+}
+
+.imprint-listening-space__proof-fragments {
+  position: absolute;
+  inset: 0;
+  color: var(--imprint-ink);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: clamp(7px, 0.56vw, 9px);
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  opacity: calc(0.045 + (var(--imprint-intro-strength) * 0.055));
+}
+
+.imprint-listening-space__proof-fragments span {
+  position: absolute;
+  white-space: nowrap;
+}
+
+.imprint-listening-space__proof-fragments span:nth-child(1) {
+  top: 10%;
+  right: 7%;
+}
+
+.imprint-listening-space__proof-fragments span:nth-child(2) {
+  top: 23%;
+  left: 3%;
+  writing-mode: vertical-rl;
+}
+
+.imprint-listening-space__proof-fragments span:nth-child(3) {
+  right: 3%;
+  bottom: 24%;
+}
+
+.imprint-listening-space__proof-fragments span:nth-child(4) {
+  bottom: 10%;
+  left: 13%;
+  font-size: 1.6em;
+  letter-spacing: -0.04em;
+  opacity: 0.58;
+}
+
+@keyframes imprint-plate-one {
+  from { transform: rotate(-8deg) translate3d(0, 0, -56px); }
+  to { transform: rotate(-7.7deg) translate3d(5px, -3px, -56px); }
+}
+
+@keyframes imprint-plate-two {
+  from { transform: rotate(12deg) translate3d(0, 0, -72px); }
+  to { transform: rotate(11.7deg) translate3d(-5px, 4px, -72px); }
+}
+
+@keyframes imprint-plate-three {
+  from { transform: rotate(-3deg) translate3d(0, 0, -92px); }
+  to { transform: rotate(-2.8deg) translate3d(3px, 5px, -92px); }
+}
+
+.imprint-listening-space__grid {
+  position: absolute;
+  z-index: 0;
+  inset: clamp(10px, 3vh, 32px) 0;
+  pointer-events: none;
+  border-block: 1px solid var(--imprint-rule);
+}
+
+.imprint-listening-space__grid::before,
+.imprint-listening-space__grid::after {
+  position: absolute;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--imprint-registration);
+  border-radius: 50%;
+  content: "";
+  transform: translateX(-50%);
+}
+
+.imprint-listening-space__grid::before {
+  top: -6px;
+}
+
+.imprint-listening-space__grid::after {
+  bottom: -6px;
+}
+
+.imprint-listening-space__proofs {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  -webkit-mask-image: radial-gradient(
+    ellipse 44% 29% at 46% 50%,
+    transparent 0 52%,
+    #000 84%
+  );
+  mask-image: radial-gradient(
+    ellipse 44% 29% at 46% 50%,
+    transparent 0 52%,
+    #000 84%
+  );
+}
+
+.imprint-listening-space__proof-layer {
+  position: absolute;
+  inset: calc(9% + (var(--imprint-proof-index) * 2%))
+    calc(6% + (var(--imprint-proof-index) * 1.2%));
+  border-block: 1px solid var(--imprint-rule);
+  color: var(--imprint-ink-muted);
+  opacity: calc(0.3 - (var(--imprint-proof-index) * 0.075));
+  transform: translate3d(
+      calc((var(--imprint-proof-index) - 1) * 0.7vw),
+      calc((var(--imprint-proof-index) - 1) * 0.55vh),
+      calc(var(--imprint-proof-index) * -12px)
+    );
+}
+
+.imprint-listening-space__proof-layer small {
+  position: absolute;
+  top: 8px;
+  right: 0;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 8px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+}
