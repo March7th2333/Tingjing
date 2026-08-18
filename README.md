@@ -80,3 +80,16 @@ Spotify 开发需要在 [Spotify Developer Dashboard](https://developer.spotify.
 
 请阅读 [隐私说明](./PRIVACY.md)、[安全策略](./SECURITY.md) 与 [贡献指南](./CONTRIBUTING.md)。如果你喜欢这个方向，欢迎点一个 Star，也欢迎提交可复现的问题和克制的改进。
 
+---
+
+## English
+
+Tingjing is an open-source spatial desktop music player built with Tauri, React, TypeScript, native CSS, and Canvas. It treats cover art, lyrics, time, and sound as one continuous music space instead of a collection of ordinary player pages.
+
+- Download the latest macOS Apple Silicon DMG or Windows x64 installer from [Releases](https://github.com/March7th2333/Tingjing/releases/latest).
+- Current binaries are unsigned and may trigger Gatekeeper or SmartScreen warnings.
+- NetEase Cloud Music and QQ Music integrations are unofficial community implementations. Spotify uses OAuth PKCE and delegates playback to the official Spotify client.
+- No music, lyrics, cover art, provider credentials, or user-library data fetched from third-party platforms are bundled with this repository. A small amount of original demo metadata and lyrics is included only for local previews and tests.
+- Source code is licensed under AGPL-3.0-only; third-party assets and trademarks are excluded from that grant.
+
+For development and contribution details, see [CONTRIBUTING.md](./CONTRIBUTING.md).
