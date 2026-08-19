@@ -1,0 +1,345 @@
+.full-lyrics-overlay {
+  --full-lyrics-duration: 280ms;
+  --full-lyrics-easing: cubic-bezier(0.22, 0.78, 0.2, 1);
+  position: fixed;
+  z-index: 120;
+  inset: 0;
+  overflow: clip;
+  color: var(--theme-foreground);
+  opacity: 0;
+  pointer-events: none;
+  isolation: isolate;
+  contain: layout paint style;
+  transition: opacity var(--full-lyrics-duration) linear;
+}
+
+.full-lyrics-overlay[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.full-lyrics-overlay__scrim {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border: 0;
+  background: color-mix(in srgb, var(--theme-background) 56%, transparent);
+  opacity: 0;
+  transition: opacity var(--full-lyrics-duration) linear;
+}
+
+.full-lyrics-overlay[data-open="true"] .full-lyrics-overlay__scrim {
+  opacity: 1;
+}
+
+.full-lyrics-overlay__surface {
+  position: absolute;
+  z-index: 1;
+  inset: clamp(10px, 1.5vw, 22px);
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  padding: clamp(22px, 3.2vw, 48px);
+  border: 1px solid color-mix(in srgb, var(--theme-foreground) 22%, transparent);
+  background:
+    linear-gradient(
+      118deg,
+      color-mix(in srgb, var(--theme-foreground) 3%, transparent),
+      transparent 36%
+    ),
+    color-mix(in srgb, var(--theme-background) 96%, var(--theme-surface));
+  box-shadow:
+    0 28px 84px color-mix(in srgb, #000 23%, transparent),
+    inset 0 1px color-mix(in srgb, var(--theme-foreground) 8%, transparent);
+  opacity: 0;
+  transform: translate3d(0, 14px, 0) scale(0.995);
+  transform-origin: center center;
+  transition:
+    transform var(--full-lyrics-duration) var(--full-lyrics-easing),
+    opacity var(--full-lyrics-duration) linear;
+  will-change: transform, opacity;
+}
+
+.full-lyrics-overlay[data-open="true"] .full-lyrics-overlay__surface {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.full-lyrics-overlay__header,
+.full-lyrics-overlay__toolbar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.full-lyrics-overlay__header {
+  border-top: 3px solid var(--theme-foreground);
+  padding-top: 11px;
+}
+
+.full-lyrics-overlay__header h2 {
+  margin: 2px 0 0;
+  font-size: clamp(24px, 3vw, 44px);
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+}
+
+.full-lyrics-overlay__eyebrow,
+.full-lyrics-overlay__close,
+.full-lyrics-overlay__truth,
+.full-lyrics-overlay__offset {
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: 0.045em;
+}
+
+.full-lyrics-overlay__eyebrow {
+  color: var(--theme-muted);
+}
+
+.full-lyrics-overlay__close {
+  align-self: flex-start;
+  padding: 5px 0;
+  color: var(--theme-foreground);
+}
+
+.full-lyrics-overlay__toolbar {
+  margin-top: clamp(18px, 2.5vh, 30px);
+  padding: 9px 0 10px;
+  border-top: 1px solid var(--theme-border);
+  border-bottom: 1px solid var(--theme-border);
+}
+
+.full-lyrics-overlay__truth,
+.full-lyrics-overlay__offset {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--theme-muted);
+}
+
+.full-lyrics-overlay__truth span + span::before {
+  margin-right: 10px;
+  content: "/";
+  color: color-mix(in srgb, var(--theme-muted) 50%, transparent);
+}
+
+.full-lyrics-overlay__truth [data-quality="word-exact"],
+.full-lyrics-overlay__truth [data-quality="aligned"] {
+  color: var(--theme-foreground);
+}
+
+.full-lyrics-overlay__offset button {
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0 7px;
+  border: 1px solid var(--theme-border);
+  color: var(--theme-foreground);
+  background: transparent;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.full-lyrics-overlay__offset button:disabled {
+  color: color-mix(in srgb, var(--theme-muted) 38%, transparent);
+}
+
+.full-lyrics-overlay__body {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  padding-top: clamp(18px, 2.5vh, 30px);
+}
+
+.full-lyrics-overlay__viewport {
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: clamp(18px, 3vw, 44px) clamp(4px, 2vw, 30px) 32vh;
+  outline: none;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--theme-border) transparent;
+  scrollbar-width: thin;
+}
+
+.full-lyrics-overlay__viewport:focus-visible {
+  outline: 1px solid var(--theme-foreground);
+  outline-offset: -4px;
+}
+
+.full-lyrics-overlay__virtual-space {
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+}
+
+.full-lyrics-overlay__line {
+  position: absolute;
+  inset: 0 0 auto;
+  display: grid;
+  width: 100%;
+  min-height: 72px;
+  grid-template-columns: clamp(46px, 6vw, 78px) minmax(0, 1fr);
+  gap: clamp(14px, 2vw, 28px);
+  align-items: start;
+  padding: 13px 0 16px;
+  border-top: 1px solid var(--theme-border);
+  color: color-mix(in srgb, var(--theme-foreground) 55%, transparent);
+  text-align: left;
+  opacity: 0.76;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.full-lyrics-overlay__line:disabled {
+  cursor: default;
+}
+
+.full-lyrics-overlay__line[data-active="true"] {
+  color: var(--theme-foreground);
+  opacity: 1;
+}
+
+.full-lyrics-overlay__line time {
+  padding-top: 7px;
+  color: var(--theme-muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.full-lyrics-overlay__line-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.full-lyrics-overlay__line-copy strong {
+  overflow-wrap: anywhere;
+  font-size: clamp(19px, 2vw, 31px);
+  font-weight: 560;
+  line-height: 1.16;
+  letter-spacing: -0.035em;
+}
+
+.full-lyrics-overlay__line[data-active="true"] .full-lyrics-overlay__line-copy strong {
+  font-size: clamp(25px, 3vw, 46px);
+  font-weight: 780;
+  line-height: 1.06;
+}
+
+.full-lyrics-overlay__line-copy small {
+  color: var(--theme-muted);
+  font-size: clamp(12px, 1.15vw, 16px);
+  font-weight: 450;
+  line-height: 1.35;
+}
+
+.full-lyrics-overlay__status {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  color: var(--theme-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.full-lyrics-overlay__return {
+  position: absolute;
+  z-index: 2;
+  right: clamp(8px, 2vw, 30px);
+  bottom: clamp(8px, 2vh, 22px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--theme-border);
+  color: var(--theme-background);
+  background: var(--theme-foreground);
+  box-shadow: 0 12px 32px color-mix(in srgb, #000 15%, transparent);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.035em;
+}
+
+.full-lyrics-overlay__return span {
+  opacity: 0.62;
+  font-variant-numeric: tabular-nums;
+}
+
+.full-lyrics-overlay__live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.full-lyrics-overlay button:focus-visible,
+.full-lyrics-overlay__viewport:focus-visible {
+  outline: 2px solid var(--theme-foreground);
+  outline-offset: 3px;
+}
+
+:root[data-color-theme="dark"] .full-lyrics-overlay__surface {
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.025), transparent 36%),
+    color-mix(in srgb, #111214 96%, var(--theme-surface));
+  box-shadow:
+    0 32px 92px rgba(0, 0, 0, 0.48),
+    inset 0 1px rgba(255, 255, 255, 0.055);
+}
+
+:root[data-color-theme="light"] .full-lyrics-overlay__surface {
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.34), transparent 38%),
+    color-mix(in srgb, #f4f3ee 96%, var(--theme-surface));
+  box-shadow:
+    0 28px 84px rgba(24, 24, 24, 0.14),
+    inset 0 1px rgba(255, 255, 255, 0.68);
+}
+
+@media (max-width: 720px) {
+  .full-lyrics-overlay__surface {
+    inset: 0;
+    padding: 20px 18px;
+    border: 0;
+  }
+
+  .full-lyrics-overlay__toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .full-lyrics-overlay__truth {
+    flex-wrap: wrap;
+  }
+
+  .full-lyrics-overlay__line {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .full-lyrics-overlay,
+  .full-lyrics-overlay__scrim,
+  .full-lyrics-overlay__surface {
+    --full-lyrics-duration: 1ms;
+  }
+
+  .full-lyrics-overlay__surface {
+    transform: none;
+  }
+}

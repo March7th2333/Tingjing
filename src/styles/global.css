@@ -1,0 +1,91 @@
+:root {
+  color: #ededed;
+  background: #0d0d0f;
+  color-scheme: dark light;
+  font-family:
+    Inter, "SF Pro Display", "SF Pro Text", "Helvetica Neue",
+    "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", "Noto Sans CJK JP",
+    "Noto Sans JP", "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei",
+    Arial, sans-serif;
+  font-synthesis: weight;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-width: 320px;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: #111111;
+  background: rgba(215, 215, 215, 0.9);
+}
+
+.immersive-lyric {
+  color: color-mix(in srgb, var(--theme-muted) 86%, transparent);
+  font-weight: 500;
+  transition:
+    color 180ms var(--motion-quiet),
+    opacity 180ms var(--motion-quiet),
+    filter 180ms var(--motion-quiet),
+    transform 220ms var(--motion-snap);
+}
+
+.immersive-lyric[data-state="current"] {
+  color: var(--theme-foreground);
+  font-weight: 800;
+  filter: brightness(1.12);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--theme-glow) 14%, transparent);
+  transform: scale(1.035);
+}
+
+:root[data-color-theme="light"]
+  .immersive-lyric[data-state="current"] {
+  filter: brightness(0.84);
+  text-shadow:
+    0 0 14px color-mix(in srgb, var(--theme-glow) 10%, transparent),
+    0 0 26px color-mix(in srgb, var(--theme-glow) 5%, transparent);
+}
+
+.immersive-lyric[data-state="previous"] {
+  opacity: 0.62;
+}
+
+.immersive-lyric[data-state="next"] {
+  opacity: 0.72;
+  filter: blur(0.35px);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #191919;
+    background: #f2f2f0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .immersive-lyric {
+    transition-duration: var(--motion-reduced);
+  }
+}
