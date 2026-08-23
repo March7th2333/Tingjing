@@ -1,6 +1,7 @@
 mod netease;
 mod qqmusic;
 mod qqmusic_mobile_login;
+mod spotify;
 
 use tauri::Manager;
 
@@ -13,8 +14,11 @@ pub fn run() {
                 netease::NeteaseState::new(app_data_dir).map_err(std::io::Error::other)?;
             let qq_state = qqmusic::QqMusicState::new(app.path().app_data_dir()?)
                 .map_err(std::io::Error::other)?;
+            let spotify_state = spotify::SpotifyState::new(app.path().app_data_dir()?)
+                .map_err(std::io::Error::other)?;
             app.manage(netease_state);
             app.manage(qq_state);
+            app.manage(spotify_state);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -34,6 +38,13 @@ pub fn run() {
             qqmusic::qq_get_lyrics,
             qqmusic::qq_get_audio_source,
             qqmusic::qq_logout,
+            spotify::spotify_begin_oauth,
+            spotify::spotify_check_oauth,
+            spotify::spotify_restore_session,
+            spotify::spotify_sync_library,
+            spotify::spotify_get_collection_tracks,
+            spotify::spotify_open_external,
+            spotify::spotify_logout,
         ])
         .run(tauri::generate_context!())
         .expect("error while running the Tauri application");
