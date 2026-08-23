@@ -1,0 +1,78 @@
+.spotify-client-setup {
+  display: grid;
+  gap: 8px;
+  width: min(100%, 292px);
+  padding: 11px 12px 12px;
+  border: 1px solid color-mix(in srgb, var(--theme-foreground) 15%, transparent);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--theme-surface) 72%, transparent);
+}
+
+.spotify-client-setup__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--theme-muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.spotify-client-setup__topline a {
+  color: var(--theme-foreground);
+  text-decoration: none;
+}
+
+.spotify-client-setup p,
+.spotify-client-setup small {
+  margin: 0;
+  color: var(--theme-muted);
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.spotify-client-setup label {
+  display: grid;
+  gap: 5px;
+}
+
+.spotify-client-setup label > span {
+  color: var(--theme-muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.spotify-client-setup input {
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid color-mix(in srgb, var(--theme-foreground) 18%, transparent);
+  border-radius: 2px;
+  padding: 0 9px;
+  outline: none;
+  color: var(--theme-foreground);
+  background: var(--theme-background);
+  font: inherit;
+  font-size: 10px;
+}
+
+.spotify-client-setup input:focus-visible {
+  border-color: color-mix(in srgb, var(--theme-foreground) 62%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--theme-foreground) 35%, transparent);
+}
+
+.spotify-client-setup small {
+  display: grid;
+  gap: 3px;
+}
+
+.spotify-client-setup code {
+  overflow: hidden;
+  color: var(--theme-foreground);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
