@@ -1,0 +1,80 @@
+.spotify-attribution {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, var(--theme-foreground) 20%, transparent);
+  border-radius: 4px;
+  color: var(--theme-foreground);
+  background: var(--theme-background);
+  font: inherit;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    opacity var(--motion-button) var(--motion-quiet),
+    transform var(--motion-button) var(--motion-gentle);
+}
+
+.spotify-attribution:hover,
+.spotify-attribution:focus-visible {
+  opacity: 0.78;
+}
+
+.spotify-attribution:focus-visible {
+  outline: 2px solid var(--theme-foreground);
+  outline-offset: 3px;
+}
+
+.spotify-attribution:active {
+  transform: translate3d(0, 1px, 0);
+}
+
+.spotify-attribution:disabled {
+  cursor: default;
+  opacity: 0.42;
+}
+
+.spotify-attribution__mark {
+  position: relative;
+  display: block;
+  width: 92px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+
+.spotify-attribution__logo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 92px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.spotify-attribution__logo--dark {
+  display: none;
+}
+
+[data-color-theme="dark"] .spotify-attribution__logo--light {
+  display: none;
+}
+
+[data-color-theme="dark"] .spotify-attribution__logo--dark {
+  display: block;
+}
+
+.spotify-attribution[data-compact="true"] {
+  min-width: 110px;
+  min-height: 34px;
+  padding: 5px 9px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotify-attribution {
+    transition-duration: 100ms;
+  }
+}
