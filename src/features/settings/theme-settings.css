@@ -1,0 +1,382 @@
+:root {
+  --account-safe-width: clamp(84px, 8vw, 112px);
+  --account-safe-height: clamp(78px, 10vh, 100px);
+}
+
+.theme-settings {
+  position: fixed;
+  z-index: 30;
+  right: max(clamp(20px, 3vw, 42px), env(safe-area-inset-right));
+  bottom: max(clamp(18px, 3vh, 30px), env(safe-area-inset-bottom));
+  color: var(--theme-foreground);
+}
+
+.theme-settings__trigger {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  padding: 2px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--theme-foreground) 28%,
+    transparent
+  );
+  border-radius: 50%;
+  outline: none;
+  color: var(--theme-foreground);
+  background: color-mix(in srgb, var(--theme-background) 84%, transparent);
+  cursor: pointer;
+  place-items: center;
+  backdrop-filter: blur(12px);
+  transition:
+    border-color var(--motion-button) var(--motion-quiet),
+    filter var(--motion-button) var(--motion-quiet),
+    opacity var(--motion-button) var(--motion-quiet),
+    transform var(--motion-button) var(--motion-snap);
+}
+
+.theme-settings__trigger:hover,
+.theme-settings[data-open="true"] .theme-settings__trigger {
+  border-color: color-mix(
+    in srgb,
+    var(--theme-foreground) 62%,
+    transparent
+  );
+  filter: brightness(1.08);
+  transform: scale(1.035);
+}
+
+.theme-settings__avatar,
+.theme-settings__avatar-fallback,
+.theme-settings__profile-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.theme-settings__avatar,
+.theme-settings__profile-avatar img {
+  object-fit: cover;
+}
+
+.theme-settings__avatar-fallback {
+  width: 72%;
+  height: 72%;
+  fill: color-mix(in srgb, var(--theme-foreground) 76%, transparent);
+}
+
+.theme-settings__panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  width: min(310px, calc(100vw - 32px));
+  max-height: min(
+    76vh,
+    calc(100vh - var(--account-safe-height) - 18px)
+  );
+  overflow: auto;
+  padding: 18px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--theme-foreground) 22%,
+    transparent
+  );
+  color: var(--theme-foreground);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--theme-foreground) 5%, transparent),
+      transparent 38%
+    ),
+    color-mix(in srgb, var(--theme-background) 88%, transparent);
+  box-shadow: 0 24px 70px color-mix(in srgb, #000 24%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  scrollbar-width: thin;
+  backdrop-filter: blur(24px) saturate(0);
+  transform: translateY(7px) scale(0.985);
+  transform-origin: right bottom;
+  transition:
+    opacity 200ms var(--motion-quiet),
+    transform 300ms var(--motion-snap),
+    border-color var(--theme-transition) var(--motion-quiet),
+    background-color var(--theme-transition) var(--motion-quiet);
+}
+
+.theme-settings[data-open="true"] .theme-settings__panel {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.theme-settings__profile {
+  display: grid;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--theme-foreground);
+  grid-template-columns: 40px 1fr;
+  gap: 11px;
+}
+
+.theme-settings__profile-avatar {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border: 1px solid var(--theme-border);
+  border-radius: 50%;
+  background: var(--theme-surface);
+  place-items: center;
+}
+
+.theme-settings__profile-copy,
+.theme-settings__profile-copy strong,
+.theme-settings__profile-copy small {
+  display: block;
+  min-width: 0;
+}
+
+.theme-settings__profile-copy strong {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.theme-settings__profile-copy small {
+  margin-top: 4px;
+  color: var(--theme-muted);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.theme-settings__group,
+.theme-settings__setting-list,
+.theme-settings__language,
+.theme-settings__account-actions,
+.theme-settings__logout {
+  margin-top: 16px;
+}
+
+.theme-settings__label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--theme-muted);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.035em;
+}
+
+.theme-settings__segments {
+  display: grid;
+  border: 1px solid var(--theme-border);
+}
+
+.theme-settings__segments[data-columns="3"] {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.theme-settings__segments[data-columns="4"] {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.theme-settings__segments button {
+  min-width: 0;
+  min-height: 34px;
+  padding: 0 4px;
+  border: 0;
+  border-left: 1px solid var(--theme-border);
+  outline: none;
+  color: var(--theme-muted);
+  background: transparent;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    color var(--motion-button) var(--motion-quiet),
+    background var(--motion-button) var(--motion-quiet);
+}
+
+.theme-settings__segments button:first-child {
+  border-left: 0;
+}
+
+.theme-settings__segments button:hover {
+  color: var(--theme-foreground);
+}
+
+.theme-settings__segments button[data-active="true"] {
+  color: var(--theme-background);
+  background: var(--theme-foreground);
+}
+
+.theme-settings__setting-list {
+  border-top: 1px solid var(--theme-border);
+}
+
+.theme-settings__switch-row {
+  display: flex;
+  width: 100%;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--theme-border);
+  outline: none;
+  color: var(--theme-foreground);
+  background: transparent;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-settings__switch {
+  position: relative;
+  width: 28px;
+  height: 15px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--theme-foreground) 34%,
+    transparent
+  );
+  border-radius: 10px;
+}
+
+.theme-settings__switch::after {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 9px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--theme-muted);
+  content: "";
+  transition:
+    left 180ms var(--motion-snap),
+    background 180ms var(--motion-quiet);
+}
+
+.theme-settings__switch-row[aria-checked="true"] .theme-settings__switch {
+  border-color: var(--theme-foreground);
+}
+
+.theme-settings__switch-row[aria-checked="true"]
+  .theme-settings__switch::after {
+  left: 15px;
+  background: var(--theme-foreground);
+}
+
+.theme-settings__account-actions {
+  border-top: 2px solid var(--theme-foreground);
+}
+
+.theme-settings__account-action,
+.theme-settings__logout {
+  display: flex;
+  width: 100%;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--theme-border);
+  outline: none;
+  color: var(--theme-foreground);
+  background: transparent;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-settings__account-actions .theme-settings__logout {
+  margin-top: 0;
+}
+
+.theme-settings__account-action:disabled,
+.theme-settings__logout:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.theme-settings__logout-confirm {
+  padding: 14px 0 2px;
+  border-bottom: 1px solid var(--theme-border);
+}
+
+.theme-settings__logout-confirm strong,
+.theme-settings__logout-confirm p {
+  display: block;
+  margin: 0;
+}
+
+.theme-settings__logout-confirm strong {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.theme-settings__logout-confirm p {
+  margin-top: 6px;
+  color: var(--theme-muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.theme-settings__logout-confirm > div {
+  display: grid;
+  margin-top: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.theme-settings__logout-confirm button {
+  min-height: 34px;
+  border: 1px solid var(--theme-border);
+  color: var(--theme-foreground);
+  background: transparent;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-settings__logout-confirm button + button {
+  border-left: 0;
+  color: var(--theme-background);
+  background: var(--theme-foreground);
+}
+
+.theme-settings__trigger:focus-visible,
+.theme-settings__segments button:focus-visible,
+.theme-settings__switch-row:focus-visible,
+.theme-settings__account-action:focus-visible,
+.theme-settings__logout-confirm button:focus-visible,
+.theme-settings__logout:focus-visible {
+  outline: 1px solid var(--theme-foreground);
+  outline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+  :root {
+    --account-safe-width: 78px;
+    --account-safe-height: 76px;
+  }
+
+  .theme-settings {
+    right: max(18px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-settings__trigger,
+  .theme-settings__panel,
+  .theme-settings__segments button,
+  .theme-settings__switch::after {
+    transition-duration: var(--motion-reduced);
+  }
+}
