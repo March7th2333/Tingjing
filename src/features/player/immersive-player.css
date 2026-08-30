@@ -2521,3 +2521,1197 @@
   transform: translate3d(-50%, 0, 0);
   animation: flow-translation-focus 300ms var(--motion-quiet) both;
 }
+
+.immersive-player__lyric-announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  margin: -1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.immersive-player[data-phase="entering"]
+  .flow-listening-space__field {
+  animation: flow-space-enter var(--motion-player-lyric-focus)
+    var(--motion-quiet) 1.05s both;
+}
+
+@keyframes flow-space-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes flow-translation-focus {
+  from {
+    opacity: 0;
+    transform: translate3d(-50%, 4px, 0);
+  }
+
+  to {
+    opacity: 0.72;
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (max-width: 760px) {
+  .immersive-player__lyrics.flow-listening-space {
+    inset: 48px 14px 118px;
+    margin: 0;
+  }
+
+  .flow-lyric {
+    width: min(88vw, 720px);
+  }
+
+  .flow-lyric p {
+    font-size: clamp(36px, 10vw, 68px);
+  }
+
+  .flow-lyric p[data-language="en"] {
+    font-size: clamp(30px, 8.4vw, 54px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-listening-space__field,
+  .flow-lyric,
+  .flow-lyric[data-state="current"],
+  .flow-lyric__translation {
+    animation: none !important;
+  }
+
+  .flow-lyric {
+    transition-duration: var(--motion-reduced);
+  }
+
+  .flow-listening-space__field {
+    transition-duration: var(--motion-reduced);
+    will-change: auto;
+  }
+
+  .flow-lyric[data-near="true"] {
+    will-change: auto;
+  }
+}
+
+/* Listening Space 03 — Typography */
+.immersive-player__lyrics.scroll-lyrics-space {
+  --typography-primary: var(--player-foreground);
+  --typography-context: color-mix(
+    in srgb,
+    var(--player-foreground) 56%,
+    var(--player-background)
+  );
+  --typography-memory: color-mix(
+    in srgb,
+    var(--player-foreground) 54%,
+    var(--player-background)
+  );
+  --typography-architecture-gain: 1.14;
+  --typography-context-gain: 1.08;
+  --typography-structure-opacity: 0.84;
+  --typography-material-opacity: 0.52;
+  --typography-preview: color-mix(
+    in srgb,
+    var(--player-foreground) 42%,
+    var(--player-background)
+  );
+  --typography-breath: color-mix(
+    in srgb,
+    var(--player-foreground) 18%,
+    var(--player-background)
+  );
+  --typography-bed: color-mix(
+    in srgb,
+    var(--player-foreground) 40%,
+    var(--player-background)
+  );
+  --typography-bed-fog: color-mix(
+    in srgb,
+    var(--player-foreground) 30%,
+    var(--player-background)
+  );
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  opacity: 1;
+  perspective: 1280px;
+  perspective-origin: 31.5% var(--typography-gaze-y, 42.5%);
+  pointer-events: auto;
+  text-align: center;
+  transform-style: preserve-3d;
+  visibility: visible;
+}
+
+.immersive-player[data-player-theme="light"]
+  .immersive-player__lyrics.scroll-lyrics-space {
+  --typography-context: color-mix(
+    in srgb,
+    var(--player-foreground) 42%,
+    var(--player-background)
+  );
+  --typography-memory: color-mix(
+    in srgb,
+    var(--player-foreground) 50%,
+    var(--player-background)
+  );
+  --typography-architecture-gain: 1.38;
+  --typography-context-gain: 1.25;
+  --typography-structure-opacity: 0.96;
+  --typography-material-opacity: 0.68;
+  --typography-preview: color-mix(
+    in srgb,
+    var(--player-foreground) 30%,
+    var(--player-background)
+  );
+  --typography-breath: color-mix(
+    in srgb,
+    var(--player-foreground) 14%,
+    var(--player-background)
+  );
+  --typography-bed: color-mix(
+    in srgb,
+    var(--player-foreground) 32%,
+    var(--player-background)
+  );
+  --typography-bed-fog: color-mix(
+    in srgb,
+    var(--player-foreground) 24%,
+    var(--player-background)
+  );
+}
+
+.immersive-player__header,
+.immersive-player__controls,
+.immersive-player__user {
+  z-index: 7;
+}
+
+.scroll-lyrics-space__ambient-field {
+  position: absolute;
+  z-index: 1;
+  inset:
+    5%
+    calc(100% - var(--typography-stage-width, 64%))
+    12%
+    0;
+  background:
+    linear-gradient(
+      108deg,
+      transparent 3%,
+      color-mix(in srgb, var(--player-foreground) 8%, transparent) 28%,
+      color-mix(in srgb, var(--player-foreground) 3%, transparent) 62%,
+      transparent 92%
+    ),
+    radial-gradient(
+      ellipse 72% 18% at 38% var(--typography-gaze-y, 42.5%),
+      color-mix(in srgb, var(--player-muted) 10%, transparent),
+      transparent 72%
+    );
+  filter: blur(86px);
+  opacity: calc(
+    0.085
+    + var(--poster-scene-density, 0.4) * 0.012
+    + var(--scroll-interlude-strength, 0) * 0.012
+    + var(--scroll-ending-progress, 0) * 0.11
+  );
+  pointer-events: none;
+  transform: translate3d(0, 0, -80px)
+    scale(calc(
+      0.98
+      + var(--poster-depth-strength, 0.6) * 0.012
+      + var(--scroll-interlude-strength, 0) * 0.03
+      + var(--scroll-ending-progress, 0) * 0.06
+    ));
+  transform-origin: 42% var(--typography-gaze-y, 42.5%);
+  transition:
+    opacity 460ms var(--motion-quiet),
+    transform 640ms var(--motion-quiet);
+}
+
+.scroll-lyrics-space[data-playback-phase="ended"]
+  .scroll-lyrics-space__ambient-field {
+  opacity: 0.18;
+}
+
+.scroll-lyrics-space__lyric-stage {
+  position: absolute;
+  z-index: 2;
+  inset: 0 calc(100% - var(--typography-stage-width, 64%)) 0 0;
+  overflow: visible;
+  pointer-events: none;
+  perspective: 1280px;
+  perspective-origin: 50% var(--typography-gaze-y, 42.5%);
+  transform-style: preserve-3d;
+}
+
+.typography-poster__spatial-bed {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  color: var(--typography-bed);
+  pointer-events: none;
+  transform: translate3d(
+      var(--typography-bed-x, 0),
+      var(--typography-bed-y, 0),
+      -290px
+    )
+    scale(var(--typography-bed-scale, 1));
+  transform-origin: 48% var(--typography-gaze-y, 42.5%);
+}
+
+.typography-poster__bed-fog,
+.typography-poster__bed-line,
+.typography-poster__bed-glyph,
+.typography-poster__bed-material {
+  position: absolute;
+  display: block;
+}
+
+.typography-poster__bed-fog {
+  top: -8%;
+  bottom: -10%;
+  left: 19%;
+  width: clamp(110px, 14vw, 230px);
+  background: linear-gradient(
+    96deg,
+    transparent,
+    var(--typography-bed-fog) 38%,
+    color-mix(in srgb, var(--typography-bed-fog) 62%, transparent) 61%,
+    transparent
+  );
+  opacity: 0.15;
+  filter: blur(72px);
+  transform: skewX(-4deg) scaleX(1.04);
+}
+
+.typography-poster__bed-line {
+  width: 1px;
+  background: currentColor;
+  opacity: 0.12;
+}
+
+.typography-poster__bed-line[data-line="primary"] {
+  top: 8%;
+  bottom: 16%;
+  left: 10.5%;
+}
+
+.typography-poster__bed-line[data-line="secondary"] {
+  top: 31%;
+  right: 9%;
+  bottom: 5%;
+  opacity: 0.08;
+}
+
+.typography-poster__bed-glyph {
+  font-weight: 720;
+  line-height: 0.82;
+  opacity: 0.18;
+  filter: blur(1.2px);
+  text-orientation: upright;
+  writing-mode: vertical-rl;
+}
+
+.typography-poster__bed-glyph[data-edge="left"] {
+  top: 7%;
+  left: -2.5vw;
+  font-size: clamp(84px, 16vh, 190px);
+}
+
+.typography-poster__bed-glyph[data-edge="right"] {
+  right: -1.3vw;
+  bottom: 4%;
+  font-size: clamp(62px, 10vh, 126px);
+  opacity: 0.13;
+  transform: rotate(90deg);
+}
+
+.typography-poster__bed-material {
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 23%, currentColor 0 0.7px, transparent 1px),
+    radial-gradient(circle at 24% 68%, currentColor 0 0.8px, transparent 1.1px),
+    radial-gradient(circle at 46% 17%, currentColor 0 0.7px, transparent 1px),
+    radial-gradient(circle at 72% 76%, currentColor 0 0.8px, transparent 1.1px),
+    radial-gradient(circle at 88% 42%, currentColor 0 0.7px, transparent 1px),
+    repeating-linear-gradient(
+      112deg,
+      transparent 0 26px,
+      currentColor 27px,
+      transparent 28px 54px
+    );
+  opacity: 0.07;
+}
+
+.typography-poster__memory-layer {
+  position: absolute;
+  z-index: 1;
+  inset: -64px 0 -64px -48px;
+  overflow: visible;
+  color: var(--typography-memory);
+  pointer-events: none;
+  transform-style: preserve-3d;
+  -webkit-mask-image:
+    linear-gradient(
+      180deg,
+      transparent 0 64px,
+      #000 128px,
+      #000 calc(100% - 128px),
+      transparent calc(100% - 64px) 100%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0 48px,
+      #000 96px,
+      #000 calc(100% - 72px),
+      transparent 100%
+    );
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(
+      180deg,
+      transparent 0 64px,
+      #000 128px,
+      #000 calc(100% - 128px),
+      transparent calc(100% - 64px) 100%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0 48px,
+      #000 96px,
+      #000 calc(100% - 72px),
+      transparent 100%
+    );
+  mask-composite: intersect;
+}
+
+.typography-poster__architecture-bank,
+.typography-poster__context-layer {
+  position: absolute;
+  /* The parent overscan only owns the feather. Planner coordinates stay
+     anchored to the original lyric-stage box. */
+  inset: 64px 0 64px 48px;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  -webkit-mask-image: radial-gradient(
+    ellipse 30% 27% at 50% var(--typography-gaze-y, 42.5%),
+    rgb(0 0 0 / var(--poster-quiet-center-alpha, 0.36)) 0 38%,
+    rgb(0 0 0 / 0.62) 60%,
+    #000 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 30% 27% at 50% var(--typography-gaze-y, 42.5%),
+    rgb(0 0 0 / var(--poster-quiet-center-alpha, 0.36)) 0 38%,
+    rgb(0 0 0 / 0.62) 60%,
+    #000 100%
+  );
+}
+
+.typography-poster__architecture-bank {
+  opacity: var(--poster-architecture-bank-opacity, 0);
+}
+
+.typography-poster__context-layer {
+  z-index: 1;
+}
+
+.typography-poster__context-buffer {
+  position: absolute;
+  inset: 0;
+  opacity: var(--poster-context-buffer-opacity, 0);
+  pointer-events: none;
+  transform: translate3d(
+    var(--poster-context-buffer-shift-x, 0),
+    0,
+    0
+  );
+  transform-style: preserve-3d;
+}
+
+.typography-poster__memory-glyph {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: block;
+  max-height: 50vh;
+  color: var(--typography-memory);
+  --poster-memory-motion-x: var(--poster-architecture-motion-x, 0px);
+  --poster-memory-motion-y: var(--poster-architecture-motion-y, 0px);
+  font-size: clamp(62px, 11vh, 162px);
+  font-weight: 760;
+  letter-spacing: -0.08em;
+  line-height: 0.82;
+  opacity: calc(
+    var(--poster-memory-opacity, 0)
+      * var(--typography-architecture-gain, 1)
+      * var(--poster-memory-template-gain, 1)
+    + var(--poster-memory-beat-opacity, 0)
+  );
+  filter: blur(var(--poster-memory-blur, 3px));
+  text-orientation: upright;
+  transform:
+    translate3d(
+      calc(-50% + var(--poster-memory-x, 0vw)),
+      calc(
+        var(--poster-memory-y, 50vh)
+        + var(--poster-memory-motion-y)
+      ),
+      var(--poster-memory-depth, -180px)
+    )
+    translateX(var(--poster-memory-motion-x))
+    rotate(var(--poster-memory-rotation, 0deg))
+    scale(calc(
+      var(--poster-memory-scale, 1)
+      + var(--poster-memory-beat-scale, 0)
+    ));
+  transform-origin: center;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+}
+
+.typography-poster__memory-glyph[data-memory-kind^="context"] {
+  --poster-memory-motion-x: var(--poster-context-motion-x, 0px);
+  --poster-memory-motion-y: var(--poster-context-motion-y, 0px);
+  max-height: 34vh;
+  font-size: clamp(28px, 4.4vh, 54px);
+  font-weight: 620;
+  letter-spacing: 0.035em;
+  line-height: 0.94;
+  opacity: calc(
+    var(--poster-memory-opacity, 0)
+      * var(--typography-context-gain, 1)
+    + var(--poster-memory-beat-opacity, 0)
+  );
+}
+
+.typography-poster__memory-glyph[data-memory-kind="context-future"] {
+  font-weight: 520;
+}
+
+.typography-poster__memory-glyph[data-memory-kind="architectural"] {
+  text-shadow: 0 1px 0 color-mix(
+    in srgb,
+    var(--player-background) 22%,
+    transparent
+  );
+}
+
+.immersive-player[data-player-theme="light"]
+  .typography-poster__memory-glyph[data-memory-kind="architectural"] {
+  text-shadow:
+    0 1px 0 color-mix(
+      in srgb,
+      var(--player-background) 64%,
+      transparent
+    ),
+    0 -1px 0 color-mix(
+      in srgb,
+      var(--player-foreground) 3.5%,
+      transparent
+    );
+}
+
+.typography-poster__architecture-bank[data-architecture-template="monument"]
+  .typography-poster__memory-glyph[data-memory-kind="architectural"] {
+  font-size: clamp(82px, 16.5vh, 198px);
+  font-weight: 780;
+  letter-spacing: -0.08em;
+}
+
+.typography-poster__architecture-bank[data-architecture-template="paired"]
+  .typography-poster__memory-glyph[data-memory-kind="architectural"] {
+  font-size: clamp(70px, 12.5vh, 164px);
+  letter-spacing: -0.04em;
+}
+
+.typography-poster__architecture-bank[data-architecture-template="echo"]
+  .typography-poster__memory-glyph[data-memory-kind="architectural"] {
+  font-size: clamp(62px, 10.5vh, 142px);
+  font-weight: 620;
+  letter-spacing: 0.02em;
+}
+
+.typography-poster__architecture-bank[data-architecture-template="crop"]
+  .typography-poster__memory-glyph[data-memory-kind="architectural"] {
+  --poster-memory-template-gain: 0.9;
+  font-size: clamp(92px, 18vh, 218px);
+}
+
+.typography-poster__architecture-bank[data-architecture-template="crop"]
+  .typography-poster__memory-glyph[data-memory-kind="architectural"]:not(
+    [data-memory-rank="0"]
+  ) {
+  font-size: clamp(68px, 12vh, 150px);
+}
+
+.typography-poster__architecture-bank[data-architecture-template="dense"]
+  .typography-poster__memory-glyph[data-memory-kind="architectural"] {
+  font-size: clamp(58px, 9.5vh, 132px);
+  font-weight: 650;
+}
+
+.typography-poster__breath-presence {
+  position: absolute;
+  z-index: 2;
+  inset: 7vh 5.5vw 9vh 4.5vw;
+  overflow: hidden;
+  color: var(--typography-breath);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(2px, 0, -76px) scale(0.99);
+  transform-origin: 48% var(--typography-gaze-y, 42.5%);
+  transition:
+    opacity var(--typography-presence-transition, 900ms) var(--motion-quiet),
+    transform var(--typography-presence-transition, 900ms) var(--motion-quiet);
+}
+
+.scroll-lyrics-space[data-presence-mode="sustained-gap"]
+  .typography-poster__breath-presence {
+  --typography-presence-transition: 700ms;
+  opacity: 1;
+  transform: translate3d(0, 0, -76px) scale(1);
+}
+
+.scroll-lyrics-space[data-presence-mode="lyrics-unavailable"]
+  .typography-poster__breath-presence {
+  --typography-presence-transition: 1200ms;
+  opacity: 1;
+  transform: translate3d(0, 0, -76px) scale(1);
+}
+
+.typography-poster__breath-presence::after {
+  position: absolute;
+  inset: 4% 7% 5% 5%;
+  background:
+    radial-gradient(circle at 14% 31%, currentColor 0 1px, transparent 1.4px),
+    radial-gradient(circle at 31% 67%, currentColor 0 0.8px, transparent 1.2px),
+    radial-gradient(circle at 53% 18%, currentColor 0 1.2px, transparent 1.6px),
+    radial-gradient(circle at 72% 74%, currentColor 0 0.8px, transparent 1.2px),
+    linear-gradient(90deg, transparent 83%, currentColor 83% 83.25%, transparent 83.5%);
+  content: "";
+  opacity: 0.42;
+  transform: translate3d(-1px, 0, -110px);
+  animation: typography-breath-drift 12s var(--motion-quiet) infinite alternate;
+}
+
+.typography-poster__breath-glyph,
+.typography-poster__breath-mark,
+.typography-poster__breath-line,
+.typography-poster__breath-fog {
+  position: absolute;
+  display: block;
+}
+
+.typography-poster__breath-glyph {
+  top: 23%;
+  left: 40%;
+  font-size: clamp(76px, 13vh, 156px);
+  font-weight: 720;
+  line-height: 0.82;
+  opacity: 0.76;
+  filter: blur(1.4px);
+  text-orientation: upright;
+  writing-mode: vertical-rl;
+  animation: typography-breath-drift 11s var(--motion-quiet) infinite alternate;
+}
+
+.typography-poster__breath-mark {
+  right: 18%;
+  bottom: 17%;
+  font-size: clamp(40px, 5.8vh, 68px);
+  font-weight: 500;
+  opacity: 0.46;
+  filter: blur(1px);
+  transform: rotate(90deg);
+}
+
+.typography-poster__breath-line {
+  width: 1px;
+  background: currentColor;
+  opacity: 0.56;
+}
+
+.typography-poster__breath-line[data-line="primary"] {
+  top: 14%;
+  bottom: 18%;
+  left: 18%;
+}
+
+.typography-poster__breath-line[data-line="secondary"] {
+  top: 34%;
+  bottom: 9%;
+  right: 12%;
+  opacity: 0.34;
+}
+
+.typography-poster__breath-fog {
+  top: 7%;
+  bottom: 5%;
+  left: 46%;
+  width: clamp(42px, 5vw, 78px);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    currentColor 46%,
+    transparent
+  );
+  opacity: 0.3;
+  filter: blur(34px);
+  transform: scaleX(1.01);
+  animation: typography-breath-fog 10s var(--motion-quiet) infinite alternate;
+}
+
+@keyframes typography-breath-drift {
+  from {
+    translate: -2px 0;
+  }
+
+  to {
+    translate: 2px 0;
+  }
+}
+
+@keyframes typography-breath-fog {
+  from {
+    opacity: 0.24;
+    transform: scaleX(0.99);
+  }
+
+  to {
+    opacity: 0.34;
+    transform: scaleX(1.01);
+  }
+}
+
+.scroll-lyrics-space__stream {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.scroll-lyric {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: grid;
+  width: auto;
+  max-width: min(52vw, 760px);
+  color: var(--typography-context);
+  opacity: var(--scroll-opacity);
+  filter: blur(var(--scroll-blur));
+  transform:
+    translate3d(
+      calc(-50% + var(--scroll-x)),
+      calc(var(--scroll-y) - 50%),
+      var(--scroll-depth)
+    )
+    scale(var(--scroll-scale));
+  transform-origin: center;
+}
+
+.scroll-lyric__content {
+  display: flex;
+  height: min(var(--scroll-line-height, 58vh), 58vh);
+  max-height: min(58vh, 620px);
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(8px, 1.2vw, 18px);
+  transform-origin: center;
+}
+
+.scroll-lyric p {
+  height: auto;
+  max-height: min(58vh, 620px);
+  margin: 0;
+  color: inherit;
+  font-size: var(--scroll-font-size, clamp(28px, 3.45vw, 54px));
+  font-weight: 560;
+  letter-spacing: 0.04em;
+  line-height: 1.02;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  writing-mode: horizontal-tb;
+}
+
+.scroll-lyric .lyric-reveal-engine[data-variant="scroll"] {
+  display: inline-flex;
+  max-height: min(58vh, 620px);
+  align-items: flex-start;
+  flex-direction: row-reverse;
+  gap: clamp(8px, 1vw, 15px);
+  line-height: inherit;
+  white-space: normal;
+  writing-mode: horizontal-tb;
+}
+
+.scroll-lyric .lyric-reveal-engine__column {
+  display: inline-block;
+  max-height: min(58vh, 620px);
+  line-height: inherit;
+  overflow: visible;
+  text-orientation: upright;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+}
+
+.scroll-lyric--measurement {
+  left: -200vw;
+  visibility: hidden;
+  opacity: 0;
+  filter: none;
+  pointer-events: none;
+  transform: none;
+}
+
+.scroll-lyric--measurement .scroll-lyric__content,
+.scroll-lyric--measurement p {
+  height: auto;
+  max-height: none;
+}
+
+.scroll-lyric--measurement p {
+  text-orientation: upright;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+}
+
+.scroll-lyric[data-live-role="primary"] {
+  z-index: 5;
+  color: var(--typography-primary);
+}
+
+.scroll-lyric[data-active-protected="true"] {
+  opacity: 1;
+}
+
+.scroll-lyric[data-waiting-role="trace"] {
+  color: var(--typography-context);
+}
+
+.scroll-lyric[data-waiting-role="preview"] {
+  color: var(--typography-preview);
+}
+
+.scroll-lyric[data-ending="true"] {
+  z-index: 5;
+}
+
+.scroll-lyric[data-live-role="primary"] p {
+  font-weight: 760;
+  text-shadow: 0 0 28px color-mix(
+    in srgb,
+    var(--player-foreground) 14%,
+    transparent
+  );
+}
+
+.scroll-lyric .lyric-reveal-engine__unit {
+  will-change: auto;
+}
+
+.scroll-lyric[data-live-role="primary"]
+  .lyric-reveal-engine__unit[data-character-state="current"] {
+  will-change: transform, opacity, filter;
+}
+
+.scroll-lyric[data-live-role="primary"]
+  .lyric-reveal-engine__unit[data-character-color="muted"] {
+  color: var(--typography-preview);
+}
+
+.scroll-lyric[data-live-role="primary"]
+  .lyric-reveal-engine__unit[data-character-color="primary"] {
+  color: var(--typography-primary);
+}
+
+.scroll-lyric[data-live-role="departing"] {
+  z-index: 3;
+  color: var(--typography-context);
+}
+
+.scroll-lyric[data-live-role="preview"] {
+  z-index: 1;
+  color: var(--typography-preview);
+}
+
+.scroll-lyric[data-live-role="hidden"] {
+  z-index: 0;
+  visibility: hidden;
+}
+
+.scroll-lyric__translation {
+  display: block;
+  max-height: min(58vh, 620px);
+  margin: 0;
+  color: var(--player-muted);
+  font-size: clamp(11px, 1.15vw, 15px);
+  font-weight: 450;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  opacity: 0;
+  text-orientation: upright;
+  visibility: hidden;
+  writing-mode: vertical-rl;
+}
+
+.scroll-lyric[data-live-role="primary"] .scroll-lyric__translation {
+  visibility: visible;
+  animation: scroll-translation-in 260ms var(--motion-quiet) both;
+}
+
+.scroll-album-space {
+  position: absolute;
+  z-index: 4;
+  top: var(--typography-album-y, 45.5%);
+  right: clamp(24px, 4.2vw, 68px);
+  display: grid;
+  width: min(28vw, 420px);
+  max-height: calc(100vh - 220px);
+  align-content: center;
+  justify-items: start;
+  color: var(--player-foreground);
+  pointer-events: none;
+  text-align: left;
+  transform: translateY(-50%);
+}
+
+.scroll-album-space::before {
+  position: absolute;
+  top: clamp(-26px, -2vh, -14px);
+  right: 0;
+  left: clamp(12px, 2vw, 26px);
+  height: 1px;
+  background: color-mix(
+    in srgb,
+    var(--player-foreground) 24%,
+    transparent
+  );
+  content: "";
+}
+
+.scroll-album-space__visual {
+  position: relative;
+  width: min(24vw, 350px);
+  aspect-ratio: 1;
+  transform-origin: 52% 58%;
+  animation: scroll-album-breathe 18s ease-in-out infinite alternate;
+}
+
+.scroll-album-space__visual::after {
+  position: absolute;
+  right: clamp(-18px, -1.4vw, -8px);
+  bottom: -23px;
+  color: color-mix(
+    in srgb,
+    var(--player-foreground) 26%,
+    transparent
+  );
+  content: "03";
+  font-size: clamp(42px, 5vw, 74px);
+  font-weight: 800;
+  letter-spacing: -0.08em;
+  line-height: 1;
+}
+
+.scroll-album-space__cover,
+.scroll-album-space__echo {
+  position: absolute;
+  inset: 0;
+  background:
+    var(--album-space-cover) center / cover no-repeat,
+    linear-gradient(
+      142deg,
+      color-mix(
+        in srgb,
+        var(--album-space-accent) 32%,
+        var(--album-space-fallback)
+      ),
+      var(--album-space-fallback) 56%,
+      color-mix(in srgb, black 22%, var(--album-space-fallback))
+    );
+}
+
+.scroll-album-space__echo {
+  border: 1px solid color-mix(
+    in srgb,
+    var(--player-foreground) 12%,
+    transparent
+  );
+  filter: grayscale(1) contrast(0.86);
+  opacity: 0.08;
+}
+
+.scroll-album-space__echo[data-echo="far"] {
+  transform: translate3d(-22px, 18px, -52px) scale(0.96);
+}
+
+.scroll-album-space__echo[data-echo="near"] {
+  opacity: 0.12;
+  transform: translate3d(15px, -12px, -24px) scale(0.985);
+}
+
+.scroll-album-space__cover {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--player-foreground) 28%,
+    transparent
+  );
+  box-shadow:
+    0 30px 90px color-mix(
+      in srgb,
+      var(--player-background) 48%,
+      transparent
+    ),
+    0 1px 0 color-mix(
+      in srgb,
+      var(--player-foreground) 18%,
+      transparent
+    ) inset;
+}
+
+.scroll-album-space__cover::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    color-mix(in srgb, white 7%, transparent),
+    transparent 28%,
+    color-mix(in srgb, black 6%, transparent)
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.scroll-album-space__cover img {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scroll-album-space__fallback {
+  position: absolute;
+  z-index: 1;
+  inset: clamp(18px, 2vw, 30px);
+  display: grid;
+  align-content: end;
+  color: var(--album-space-text);
+}
+
+.scroll-album-space__fallback strong {
+  max-width: 86%;
+  font-size: clamp(26px, 4vw, 58px);
+  font-weight: 800;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+  text-wrap: balance;
+}
+
+.scroll-album-space__fallback small {
+  margin-top: clamp(10px, 1.5vh, 18px);
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+}
+
+.scroll-album-space__fallback em {
+  margin-top: 4px;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 450;
+  letter-spacing: 0;
+  line-height: 1.35;
+  opacity: 0.68;
+}
+
+.scroll-album-space__copy {
+  position: relative;
+  display: grid;
+  width: min(24vw, 350px);
+  gap: 4px;
+  margin-top: clamp(20px, 3vh, 32px);
+  padding: 0 clamp(2px, 0.5vw, 8px);
+}
+
+.scroll-album-space__eyebrow {
+  margin-bottom: clamp(7px, 1.2vh, 12px);
+  color: var(--player-subtle);
+  font-size: 8px;
+  font-weight: 650;
+  letter-spacing: 0.055em;
+}
+
+.scroll-album-space__copy strong {
+  overflow: hidden;
+  max-width: 100%;
+  color: var(--player-foreground);
+  font-size: clamp(19px, 2vw, 30px);
+  font-weight: 780;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.scroll-album-space__translation {
+  color: var(--player-muted);
+  font-size: clamp(10px, 0.9vw, 13px);
+  font-weight: 450;
+  letter-spacing: -0.01em;
+}
+
+.scroll-album-space__artist {
+  margin-top: clamp(8px, 1.2vh, 13px);
+  color: var(--player-foreground);
+  font-size: 10px;
+  font-weight: 620;
+}
+
+.scroll-album-space__album,
+.scroll-album-space__release {
+  color: var(--player-subtle);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+}
+
+@keyframes scroll-album-breathe {
+  0% {
+    transform: translate3d(-2px, 2px, 0) scale(0.995);
+  }
+
+  48% {
+    transform: translate3d(2px, -3px, 0) scale(1.004);
+  }
+
+  100% {
+    transform: translate3d(-1px, -6px, 0) scale(1.009);
+  }
+}
+
+@keyframes scroll-translation-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 0.62;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .immersive-player__lyrics.scroll-lyrics-space {
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .scroll-lyrics-space__lyric-stage {
+    right: calc(100% - var(--typography-stage-width, 64%));
+  }
+
+  .scroll-lyric {
+    max-width: 61vw;
+  }
+
+  .scroll-lyric p {
+    font-size: clamp(25px, 5.6vw, 44px);
+  }
+
+  .scroll-album-space {
+    right: clamp(14px, 2.4vw, 28px);
+    width: 28vw;
+  }
+
+  .scroll-album-space__visual,
+  .scroll-album-space__copy {
+    width: min(26vw, 250px);
+  }
+
+  .scroll-album-space__copy strong {
+    font-size: clamp(15px, 2.8vw, 23px);
+  }
+
+  .scroll-album-space__release,
+  .scroll-album-space__translation {
+    display: none;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .immersive-player__lyrics.scroll-lyrics-space,
+  .scroll-lyrics-space__lyric-stage {
+    perspective: none;
+  }
+
+  .scroll-lyric,
+  .scroll-lyric__translation,
+  .typography-poster__memory-glyph,
+  .typography-poster__breath-presence,
+  .typography-poster__breath-presence::after,
+  .typography-poster__breath-glyph,
+  .typography-poster__breath-fog,
+  .scroll-album-space__visual {
+    animation: none !important;
+    transition-duration: var(--motion-reduced);
+  }
+
+  .scroll-lyric {
+    transform:
+      translate3d(
+        calc(-50% + var(--scroll-x)),
+        calc(var(--scroll-y) - 50%),
+        0
+      )
+      scale(var(--scroll-scale));
+  }
+
+  .scroll-lyric[data-live-role="primary"] .scroll-lyric__translation {
+    visibility: visible;
+    opacity: 0.62;
+    transform: translateY(0);
+  }
+
+  .typography-poster__memory-glyph {
+    filter: blur(var(--poster-memory-blur, 0.8px));
+    transform:
+      translate3d(
+        calc(-50% + var(--poster-memory-x, 0vw)),
+        var(--poster-memory-y, 50vh),
+        0
+      )
+      rotate(var(--poster-memory-rotation, 0deg))
+      scale(var(--poster-memory-scale, 1));
+  }
+}
