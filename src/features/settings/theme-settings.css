@@ -184,3 +184,199 @@
 .theme-settings__segments[data-columns="4"] {
   grid-template-columns: repeat(4, 1fr);
 }
+
+.theme-settings__segments button {
+  min-width: 0;
+  min-height: 34px;
+  padding: 0 4px;
+  border: 0;
+  border-left: 1px solid var(--theme-border);
+  outline: none;
+  color: var(--theme-muted);
+  background: transparent;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    color var(--motion-button) var(--motion-quiet),
+    background var(--motion-button) var(--motion-quiet);
+}
+
+.theme-settings__segments button:first-child {
+  border-left: 0;
+}
+
+.theme-settings__segments button:hover {
+  color: var(--theme-foreground);
+}
+
+.theme-settings__segments button[data-active="true"] {
+  color: var(--theme-background);
+  background: var(--theme-foreground);
+}
+
+.theme-settings__setting-list {
+  border-top: 1px solid var(--theme-border);
+}
+
+.theme-settings__switch-row {
+  display: flex;
+  width: 100%;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--theme-border);
+  outline: none;
+  color: var(--theme-foreground);
+  background: transparent;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-settings__switch {
+  position: relative;
+  width: 28px;
+  height: 15px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--theme-foreground) 34%,
+    transparent
+  );
+  border-radius: 10px;
+}
+
+.theme-settings__switch::after {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 9px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--theme-muted);
+  content: "";
+  transition:
+    left 180ms var(--motion-snap),
+    background 180ms var(--motion-quiet);
+}
+
+.theme-settings__switch-row[aria-checked="true"] .theme-settings__switch {
+  border-color: var(--theme-foreground);
+}
+
+.theme-settings__switch-row[aria-checked="true"]
+  .theme-settings__switch::after {
+  left: 15px;
+  background: var(--theme-foreground);
+}
+
+.theme-settings__account-actions {
+  border-top: 2px solid var(--theme-foreground);
+}
+
+.theme-settings__account-action,
+.theme-settings__logout {
+  display: flex;
+  width: 100%;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--theme-border);
+  outline: none;
+  color: var(--theme-foreground);
+  background: transparent;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-settings__account-actions .theme-settings__logout {
+  margin-top: 0;
+}
+
+.theme-settings__account-action:disabled,
+.theme-settings__logout:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.theme-settings__logout-confirm {
+  padding: 14px 0 2px;
+  border-bottom: 1px solid var(--theme-border);
+}
+
+.theme-settings__logout-confirm strong,
+.theme-settings__logout-confirm p {
+  display: block;
+  margin: 0;
+}
+
+.theme-settings__logout-confirm strong {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.theme-settings__logout-confirm p {
+  margin-top: 6px;
+  color: var(--theme-muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.theme-settings__logout-confirm > div {
+  display: grid;
+  margin-top: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.theme-settings__logout-confirm button {
+  min-height: 34px;
+  border: 1px solid var(--theme-border);
+  color: var(--theme-foreground);
+  background: transparent;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-settings__logout-confirm button + button {
+  border-left: 0;
+  color: var(--theme-background);
+  background: var(--theme-foreground);
+}
+
+.theme-settings__trigger:focus-visible,
+.theme-settings__segments button:focus-visible,
+.theme-settings__switch-row:focus-visible,
+.theme-settings__account-action:focus-visible,
+.theme-settings__logout-confirm button:focus-visible,
+.theme-settings__logout:focus-visible {
+  outline: 1px solid var(--theme-foreground);
+  outline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+  :root {
+    --account-safe-width: 78px;
+    --account-safe-height: 76px;
+  }
+
+  .theme-settings {
+    right: max(18px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-settings__trigger,
+  .theme-settings__panel,
+  .theme-settings__segments button,
+  .theme-settings__switch::after {
+    transition-duration: var(--motion-reduced);
+  }
+}
