@@ -21,6 +21,8 @@ npm run build
 cargo test --manifest-path src-tauri/Cargo.toml --lib
 ```
 
+Pull requests and pushes to `main` run these frontend checks on Node.js 22.18.0 and 24, plus native Rust tests on macOS and Windows. Tests that require live provider services remain opt-in and are not run in CI.
+
 Add focused regression tests for behavior changes. Visual changes should include the exact window size, source-build version, reproduction steps, and before/after evidence without exposing personal data.
 
 ## Pull requests
