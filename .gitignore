@@ -10,6 +10,7 @@ src-tauri/gen/
 .codex-backups/
 backups/
 artifacts/
+release-artifacts/
 
 # Local environment and credentials
 .env

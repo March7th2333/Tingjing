@@ -55,7 +55,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - name: Install stable Rust
-        run: rustup update stable --no-self-update
+      - name: Install pinned Rust toolchain
+        run: rustup toolchain install 1.97.1 --profile minimal --no-self-update
       - name: Test native code
-        run: cargo +stable test --manifest-path src-tauri/Cargo.toml --lib --locked
+        run: cargo test --manifest-path src-tauri/Cargo.toml --lib --locked

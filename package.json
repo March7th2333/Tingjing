@@ -31,6 +31,7 @@
     "test:player-foundation": "node --test tests/playbackQueue.test.ts tests/playerPreferences.test.ts tests/playbackVolume.test.ts tests/playbackSessionStore.test.ts tests/webMediaSession.test.ts",
     "test:i18n": "node --test tests/i18n.test.ts",
     "build": "tsc -b && vite build",
+    "release:verify": "node scripts/release/verifyReleaseVersion.mjs",
     "preview": "vite preview",
     "tauri": "tauri"
   },
@@ -42,7 +43,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@tauri-apps/cli": "^2.0.0",
+    "@tauri-apps/cli": "2.11.4",
     "@types/node": "^24.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
