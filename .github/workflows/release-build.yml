@@ -1,0 +1,159 @@
+name: Release build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '24.14.0'
+  RUST_VERSION: '1.97.1'
+
+jobs:
+  preflight:
+    name: Verify source and tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install locked frontend dependencies
+        run: npm ci
+      - name: Verify release versions and pinned toolchains
+        run: npm run release:verify
+        env:
+          RELEASE_TAG: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: Confirm the build did not modify tracked source
+        run: test -z "$(git status --porcelain --untracked-files=no)"
+
+  build:
+    name: Build ${{ matrix.platform }}
+    needs: preflight
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            platform: macos-arm64
+          - os: windows-2025
+            platform: windows-x64
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install locked frontend dependencies
+        run: npm ci
+      - name: Install pinned Rust toolchain
+        run: rustup toolchain install ${{ env.RUST_VERSION }} --profile minimal --no-self-update
+      - name: Test native code on release platform
+        run: cargo test --manifest-path src-tauri/Cargo.toml --lib --locked
+      - name: Build macOS Apple Silicon DMG
+        if: matrix.platform == 'macos-arm64'
+        run: npm run tauri build -- --bundles dmg
+      - name: Verify macOS application architecture and contents
+        if: matrix.platform == 'macos-arm64'
+        run: |
+          dmg=(src-tauri/target/release/bundle/dmg/*.dmg)
+          test "${#dmg[@]}" -eq 1
+          mount_point="$(mktemp -d)"
+          trap 'hdiutil detach "$mount_point" -quiet || true; rmdir "$mount_point" || true' EXIT
+          hdiutil attach "${dmg[0]}" -readonly -nobrowse -mountpoint "$mount_point"
+          test -x "$mount_point/听境.app/Contents/MacOS/inside-the-song"
+          file "$mount_point/听境.app/Contents/MacOS/inside-the-song" | grep -q 'arm64'
+      - name: Build Windows x64 NSIS installer
+        if: matrix.platform == 'windows-x64'
+        run: npm run tauri build -- --bundles nsis --config src-tauri/tauri.windows.conf.json
+      - name: Verify Windows application architecture
+        if: matrix.platform == 'windows-x64'
+        shell: pwsh
+        run: |
+          $binary = 'src-tauri/target/release/inside-the-song.exe'
+          if (-not (Test-Path $binary)) { throw "Missing application binary: $binary" }
+          $bytes = [System.IO.File]::ReadAllBytes($binary)
+          $peOffset = [BitConverter]::ToInt32($bytes, 0x3c)
+          $machine = [BitConverter]::ToUInt16($bytes, $peOffset + 4)
+          if ($machine -ne 0x8664) { throw "Expected x64 PE machine 0x8664, got 0x$($machine.ToString('x4'))" }
+      - name: Confirm the build did not modify tracked source
+        shell: bash
+        run: test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Prepare named asset, checksum, and build metadata
+        run: node scripts/release/prepareReleaseArtifact.mjs ${{ matrix.platform }}
+      - name: Upload immutable release candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-${{ matrix.platform }}
+          path: release-artifacts/*
+          if-no-files-found: error
+          retention-days: 14
+
+  draft-release:
+    name: Create draft GitHub Release
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Download all verified platform artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: release-*
+          path: release
+          merge-multiple: true
+      - name: Verify checksums and build consolidated manifest
+        run: |
+          cat release/SHA256SUMS-*.txt | sort > release/SHA256SUMS.txt
+          cd release
+          sha256sum --check SHA256SUMS.txt
+      - name: Create draft release with explicit signing status
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            echo "Release ${GITHUB_REF_NAME} already exists; refusing to replace it."
+            exit 1
+          fi
+          printf '%s\n' \
+            'Automated, checksum-verified release candidates built from this tag.' \
+            '' \
+            '- macOS: Apple Silicon DMG' \
+            '- Windows: x64 NSIS installer' \
+            '- Signing status: no Apple Developer ID or Windows Authenticode distribution signature; macOS is not notarized' \
+            '- Integrity: verify downloads with `SHA256SUMS.txt`' \
+            '' \
+            'This release remains a draft until signing and final installation checks are complete.' \
+            > release-notes.md
+          gh release create "${GITHUB_REF_NAME}" \
+            release/*.dmg \
+            release/*.exe \
+            release/SHA256SUMS.txt \
+            release/build-metadata-*.json \
+            --repo "${GITHUB_REPOSITORY}" \
+            --verify-tag \
+            --draft \
+            --title "听境 Tingjing ${GITHUB_REF_NAME}" \
+            --notes-file release-notes.md

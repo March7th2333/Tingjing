@@ -23,6 +23,14 @@ cargo test --manifest-path src-tauri/Cargo.toml --lib
 
 Pull requests and pushes to `main` run these frontend checks on Node.js 22.18.0 and 24, plus native Rust tests on macOS and Windows. Tests that require live provider services remain opt-in and are not run in CI.
 
+## Release candidates
+
+The tag-triggered release workflow builds a macOS Apple Silicon DMG and Windows
+x64 NSIS installer only after the repository checks pass. It records checksums,
+lockfile digests, source metadata, and the current unsigned status without
+overwriting an existing Release. See [docs/RELEASING.md](docs/RELEASING.md) for
+the versioning, artifact, and signing boundaries.
+
 Add focused regression tests for behavior changes. Visual changes should include the exact window size, source-build version, reproduction steps, and before/after evidence without exposing personal data.
 
 ## Pull requests
