@@ -24,7 +24,21 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": {
+        "default-src": "'self' customprotocol: asset:",
+        "script-src": "'self'",
+        "style-src": "'self' 'unsafe-inline'",
+        "font-src": "'self' data:",
+        "img-src": "'self' asset: http://asset.localhost blob: data: https://*.qq.com https://*.qlogo.cn https://*.qqmusic.qq.com https://*.music.126.net https://*.scdn.co https://*.spotifycdn.com",
+        "media-src": "'self' blob: https://*.qq.com https://*.qqmusic.qq.com https://*.music.126.net https://*.scdn.co https://*.spotifycdn.com",
+        "connect-src": "ipc: http://ipc.localhost https://*.qq.com https://*.qqmusic.qq.com https://*.music.126.net https://*.scdn.co https://*.spotifycdn.com",
+        "worker-src": "'self' blob:",
+        "object-src": "'none'",
+        "base-uri": "'none'",
+        "frame-ancestors": "'none'",
+        "form-action": "'none'"
+      },
+      "devCsp": null
     }
   },
   "bundle": {

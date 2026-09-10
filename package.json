@@ -19,7 +19,7 @@
     "dev": "vite",
     "typecheck": "tsc -b",
     "lint": "eslint src --max-warnings=0",
-    "test": "npm run test:i18n && node --test tests/spotifyProvider.test.ts && npm run test:lyrics && npm run test:requests && npm run test:audio-analysis && npm run test:typography && npm run test:player-foundation && node --test tests/playbackReturn.test.ts tests/dailyListeningStore.test.ts tests/qrPollingPolicy.test.ts tests/welcomeSession.test.ts",
+    "test": "npm run test:i18n && node --test tests/spotifyProvider.test.ts tests/tauriCsp.test.ts && npm run test:lyrics && npm run test:requests && npm run test:audio-analysis && npm run test:typography && npm run test:player-foundation && node --test tests/playbackReturn.test.ts tests/dailyListeningStore.test.ts tests/qrPollingPolicy.test.ts tests/welcomeSession.test.ts",
     "test:qq-lyrics": "node --test tests/qqLyrics.test.ts",
     "test:netease-lyrics": "node --test tests/neteaseLyrics.test.ts",
     "test:spotify": "node --test tests/spotifyProvider.test.ts tests/welcomeSession.test.ts tests/playbackQueue.test.ts tests/playbackSessionStore.test.ts",
