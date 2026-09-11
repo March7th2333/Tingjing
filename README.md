@@ -7,6 +7,7 @@
 *Let music fill the screen.*
 
 [![Latest release](https://img.shields.io/github/v/release/March7th2333/Tingjing?display_name=tag&sort=semver)](https://github.com/March7th2333/Tingjing/releases/latest)
+[![CI](https://github.com/March7th2333/Tingjing/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/March7th2333/Tingjing/actions/workflows/ci.yml)
 [![Downloads](https://img.shields.io/github/downloads/March7th2333/Tingjing/total)](https://github.com/March7th2333/Tingjing/releases)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue)](./LICENSE)
 [![Stars](https://img.shields.io/github/stars/March7th2333/Tingjing?style=flat)](https://github.com/March7th2333/Tingjing/stargazers)
@@ -69,7 +70,7 @@ npm run typecheck
 npm run lint
 npm test
 npm run build
-cargo test --manifest-path src-tauri/Cargo.toml --lib
+cargo +stable test --manifest-path src-tauri/Cargo.toml --lib --locked
 ```
 
 Spotify 开发需要在 [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) 创建应用，登记回调地址 `http://127.0.0.1/callback`，并通过登录页或 `VITE_SPOTIFY_CLIENT_ID` 提供公开 Client ID。不要在桌面应用中加入 Client Secret。
