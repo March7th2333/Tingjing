@@ -1,0 +1,81 @@
+name: Bug 报告
+description: 报告可复现的功能、界面或播放问题
+title: "[Bug] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。提交前请先搜索现有 Issue，并移除二维码、Cookie、Token、账号 ID、私人歌单和本机绝对路径。
+
+  - type: input
+    id: version
+    attributes:
+      label: 听境版本
+      description: 请填写 Release 版本或提交 SHA。
+      placeholder: 例如 v0.1.1 或 dc3ea68
+    validations:
+      required: true
+
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: 操作系统
+      options:
+        - macOS Apple Silicon
+        - Windows x64
+        - 其他开发环境
+    validations:
+      required: true
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: 音乐来源
+      options:
+        - 与音乐来源无关
+        - 网易云音乐
+        - QQ 音乐
+        - Spotify
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 复现步骤
+      description: 请提供最短、稳定的复现步骤。
+      placeholder: |
+        1. 打开……
+        2. 选择……
+        3. 出现……
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际结果
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 已脱敏的补充信息
+      description: 可附日志或截图；请先移除账号资料、凭据和私人音乐库内容。
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 隐私确认
+      options:
+        - label: 我已移除二维码、Cookie、Token、账号 ID、私人歌单和本机绝对路径。
+          required: true
