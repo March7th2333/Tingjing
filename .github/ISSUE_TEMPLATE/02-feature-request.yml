@@ -1,0 +1,57 @@
+name: 功能建议
+description: 提议一个克制、可验证的听境改进
+title: "[建议] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请先搜索现有 Issue。听境优先维护连续的音乐空间、真实时间数据、账号隔离和清晰的第三方服务边界。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 想解决的问题
+      description: 请描述使用场景和当前阻碍，不要只写功能名称。
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案
+      description: 说明用户可见的行为和最小可交付范围。
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 涉及区域
+      options:
+        - 音乐墙与收藏浏览
+        - 播放与队列
+        - 歌词与 Listening Space
+        - 网易云音乐
+        - QQ 音乐
+        - Spotify
+        - 设置、隐私或发布
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 考虑过的替代方案
+      description: 可选；说明为什么现有功能或更小的改动不足以解决问题。
+
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: 边界确认
+      options:
+        - label: 此建议不要求绕过 DRM、付费访问、地区限制或账号授权。
+          required: true
+        - label: 此建议不要求提交真实凭据、私人歌单或受版权保护的媒体内容。
+          required: true
