@@ -24,6 +24,17 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 如何确认改进已完成
+      description: 请列出可以由使用者或测试直接验证的结果。
+      placeholder: |
+        - 当我……时，可以看到……
+        - 在未登录其他音乐来源时，仍然……
+    validations:
+      required: true
+
   - type: dropdown
     id: area
     attributes:
