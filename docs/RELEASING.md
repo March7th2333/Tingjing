@@ -39,6 +39,16 @@ are never overwritten.
 Manual workflow runs build and retain the same verified artifacts for 14 days but
 do not create a Release.
 
+## Before publishing a draft
+
+Download both installers and `SHA256SUMS.txt` from the draft, then verify the
+downloaded bytes against the published checksums. On macOS, run
+`shasum -a 256 -c SHA256SUMS.txt` in the download directory. On Windows, compare
+`Get-FileHash <installer> -Algorithm SHA256` with the matching checksum line.
+Confirm that each installer name, architecture, and version matches the tag and
+that the unsigned-artifact warning remains visible in the release notes. Do not
+publish a draft with a missing asset or mismatched digest.
+
 ## Signing boundary
 
 This workflow does not configure Apple Developer ID signing, Apple notarization,
