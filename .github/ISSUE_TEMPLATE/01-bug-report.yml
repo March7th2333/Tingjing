@@ -40,6 +40,18 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: 发生频率
+      description: 帮助判断问题是否稳定复现。
+      options:
+        - 每次都发生
+        - 偶尔发生
+        - 仅发生过一次
+    validations:
+      required: true
+
   - type: textarea
     id: reproduction
     attributes:
