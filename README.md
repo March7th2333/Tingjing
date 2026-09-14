@@ -28,6 +28,8 @@
 
 当前安装包没有 Apple Developer ID、Apple 公证或 Windows Authenticode 签名，因此系统可能显示安全提醒。请只从本仓库的 [Releases](https://github.com/March7th2333/Tingjing/releases) 下载，并核对 Release 中的 SHA-256。
 
+下载后可在 macOS 终端运行 `shasum -a 256 <安装包路径>`，或在 Windows PowerShell 运行 `Get-FileHash <安装包路径> -Algorithm SHA256`。将得到的 64 位摘要与对应 Release 说明中的 SHA-256 逐字比较；不一致时不要安装。
+
 ## 核心体验
 
 - **空间化音乐收藏**：封面轨道、音乐墙与连续 Cover Portal 转场。
