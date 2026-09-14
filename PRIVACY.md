@@ -20,10 +20,12 @@
 
 ## 删除与退出
 
-在应用中退出账号会清除对应 Provider 会话。卸载应用未必会自动删除操作系统保留的应用数据；如需完全清除，请同时删除 `space.tingjing.player` 对应的应用数据目录。
+在应用中退出账号会清除对应 Provider 会话，但不等于清空全部本地数据：偏好、播放状态、听歌时长或缓存可能仍保留。目前尚无统一的一键清理入口（跟踪于 [Issue #7](https://github.com/March7th2333/Tingjing/issues/7)）。卸载应用未必会自动删除操作系统保留的应用数据；如需完全清除，请同时删除 `space.tingjing.player` 对应的应用数据目录。
 
 提交问题或日志前，请删除二维码、Cookie、Token、账号 ID、私人歌单、桌面截图和本机绝对路径。不要在公开 Issue 中提交凭据。
 
 ---
 
 Tingjing is a local desktop application. It currently has no Tingjing-operated account server, cloud listening-time service, or first-party analytics telemetry. Provider sessions, library metadata, playback state, local listening time, lyric offsets, language, and theme preferences may be stored in the OS application-data directory or WebView localStorage. Data is exchanged directly with the provider selected by the user and remains subject to that provider's privacy policy.
+
+Signing out clears the relevant Provider session, but may leave local preferences, playback state, listening time, or caches. A unified in-app data cleanup control is not yet available; see [Issue #7](https://github.com/March7th2333/Tingjing/issues/7). Uninstalling may also leave application data behind.
