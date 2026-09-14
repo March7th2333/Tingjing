@@ -49,6 +49,25 @@ test("counts real playing time but not paused wall time", () => {
   );
 });
 
+test("ignores stored listening data with an invalid update timestamp", () => {
+  const now = new Date(2026, 7, 12, 10, 0).getTime();
+  const store = new DailyListeningStore({
+    storage: {
+      getItem: () => JSON.stringify({
+        version: 1,
+        durationMs: 60_000,
+        updatedAt: -1,
+      }),
+      setItem: () => {},
+    },
+    wallNow: () => now,
+  });
+
+  const summary = store.getSummary("qq", "user-a");
+  assert.equal(summary.durationMs, null);
+  assert.equal(summary.updatedAt, now);
+});
+
 test("keeps providers and accounts isolated", () => {
   const harness = createHarness(new Date(2026, 7, 12, 11, 0));
   harness.store.start("qq", "user-a");

@@ -292,6 +292,8 @@ export class DailyListeningStore {
         || !Number.isFinite(parsed.durationMs)
         || parsed.durationMs < 0
         || typeof parsed.updatedAt !== "number"
+        || !Number.isFinite(parsed.updatedAt)
+        || parsed.updatedAt < 0
       ) {
         return null;
       }
