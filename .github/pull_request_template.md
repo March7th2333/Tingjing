@@ -8,11 +8,17 @@
 
 ## 验证结果
 
+<!-- 只勾选本次实际运行且通过的检查；不要用其他人的 CI 结果代替本地结果。 -->
+
 - [ ] `npm run typecheck`
 - [ ] `npm run lint`
 - [ ] `npm test`
 - [ ] `npm run build`
 - [ ] `cargo +stable test --manifest-path src-tauri/Cargo.toml --lib --locked`
+
+未运行或失败的检查及原因：
+
+<!-- 例如：仅修改文档，未运行桌面构建；或注明当前失败项与日志链接。 -->
 
 ## 影响范围
 
