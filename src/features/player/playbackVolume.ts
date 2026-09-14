@@ -5,7 +5,10 @@ export function clampPlaybackVolume(
   fallback = defaultPlaybackVolume,
 ) {
   if (typeof value !== "number" || !Number.isFinite(value)) {
-    return Math.max(0, Math.min(1, fallback));
+    const safeFallback = Number.isFinite(fallback)
+      ? fallback
+      : defaultPlaybackVolume;
+    return Math.max(0, Math.min(1, safeFallback));
   }
   return Math.max(0, Math.min(1, value));
 }

@@ -10,6 +10,8 @@ test("playback volume clamps persistent user values", () => {
   assert.equal(clampPlaybackVolume(0.42), 0.42);
   assert.equal(clampPlaybackVolume(8), 1);
   assert.equal(clampPlaybackVolume(Number.NaN, 0.75), 0.75);
+  assert.equal(clampPlaybackVolume(undefined, Number.NaN), 1);
+  assert.equal(clampPlaybackVolume(Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY), 1);
 });
 
 test("transition gain multiplies rather than overwrites user volume", () => {
